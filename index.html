@@ -146,6 +146,15 @@
       font-size: 0.85rem;
       cursor: pointer;
     }
+      .tab-pill-colour {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #1a4145;
+      color: #e5e7eb;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
     .tab-pill:hover {
       background: #030712;
     }
@@ -957,7 +966,7 @@
           effect:
             'Range: 16"<br><br>' +
             'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Power Surge (CV 15): Deals +2 MW before the push."
+            "Flux Burn (CV 15): Deals +2 MW before the push."
         },
         {
           id: "graviticMaelstrom",
@@ -967,17 +976,17 @@
           effect:
             'Range: 12", 3" AoE<br><br>' +
             'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Power Surge (CV 19): Fighters dragged suffer D3+2 MW."
+            "Flux Burn (CV 19): Fighters dragged suffer D3+2 MW."
         },
         {
           id: "spectralChains",
           name: "SPECTRAL CHAINS",
-          cv: 17,
+          cv: 13,
           points: 0,
           effect:
-            'Range: 12"<br><br>' +
-            "Target Fighter may immediately be moved up to 6 inches by the Conjuring Warlocks Player.<br><br>" +
-            "Power Surge (CV 19): Target also suffers 1 MW if it repositions in its own activation this turn."
+            'Range: 16"<br><br>' +
+            "Target suffers –2 Move and cannot Dash this round.<br><br>" +
+            "Flux Burn (CV 15): Target also suffers 1 MW if it attempts a Charge."
         },
         {
           id: "stolenSight",
@@ -987,7 +996,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target suffers –3 to Shoot until end of Round; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Power Surge (CV 14): –4 to Shoot, –3 to Fight."
+            "Flux Burn (CV 14): –4 to Shoot, –3 to Fight."
         },
         {
           id: "twistOfWill",
@@ -997,7 +1006,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Power Surge (CV 16): Target also cannot Charge until next turn."
+            "Flux Burn (CV 16): Target also cannot Charge until next turn."
         },
         {
           id: "voidfireBlast",
@@ -1007,7 +1016,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Pick any point. All models within 2\" suffer 2D3 MW. Warlock suffers 1 MW.<br><br>" +
-            "Power Surge (CV 20): Radius becomes 4\"."
+            "Flux Burn (CV 20): Radius becomes 4\"."
         },
         {
           id: "blazingWind",
@@ -1017,7 +1026,7 @@
           effect:
             'Range: 12"<br><br>' +
             'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Power Surge (CV 15): D3+1 Damage and 4\" push."
+            "Flux Burn (CV 15): D3+1 Damage and 4\" push."
         },
         {
           id: "fireblast",
@@ -1027,7 +1036,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target suffers D3+1 Damage.<br><br>" +
-            "Power Surge (CV 15): Target also gains a Fire token."
+            "Flux Burn (CV 15): Target also gains a Fire token."
         },
         {
           id: "lightningBolt",
@@ -1037,7 +1046,7 @@
           effect:
             "Range: —<br><br>" +
             "Target suffers D3+2 MW.<br><br>" +
-            "Power Surge (CV 17): D3+3 MW."
+            "Flux Burn (CV 17): D3+3 MW."
         },
         {
           id: "mendFlesh",
@@ -1047,7 +1056,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Power Surge (CV 12): Restore D3+2 HP and remove 1 Poison/Burning token."
+            "Flux Burn (CV 12): Restore D3+2 HP and remove 1 Poison/Burning token."
         },
         {
           id: "circleOfWarding",
@@ -1057,7 +1066,7 @@
           effect:
             'Range: 3" aura<br><br>' +
             "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Power Surge (CV 13): Circle lasts until next activation."
+            "Flux Burn (CV 13): Circle lasts until next activation."
         },
         {
           id: "arcaneAegis",
@@ -1067,7 +1076,7 @@
           effect:
             'Range: 6"<br><br>' +
             "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Power Surge (CV 15): Target ignores first 2 Damage from next attack."
+            "Flux Burn (CV 15): Target ignores first 2 Damage from next attack."
         },
         {
           id: "spectralDecoy",
@@ -1077,7 +1086,7 @@
           effect:
             "Range: Self<br><br>" +
             "First attack against the Warlock before next activation automatically misses.<br><br>" +
-            "Power Surge (CV 14): On 5+, reflect that missed ranged attack for D3 Damage."
+            "Flux Burn (CV 14): On 5+, reflect that missed ranged attack for D3 Damage."
         },
         {
           id: "soulflameSurge",
@@ -1087,7 +1096,7 @@
           effect:
             'Range: 12"<br><br>' +
             'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Power Surge (CV 16): Affect two Fighters instead of one."
+            "Flux Burn (CV 16): Affect two Fighters instead of one."
         },
         {
           id: "veilOfShadows",
@@ -1097,7 +1106,7 @@
           effect:
             'Range: 6"<br><br>' +
             "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
-            "Power Surge (CV 16): Target may act normally; remove Hidden immediately."
+            "Flux Burn (CV 16): Target may act normally; remove Hidden immediately."
         },
         {
           id: "reanimateTheDead",
@@ -1107,7 +1116,7 @@
           effect:
             "Range: Self (3\" placement)<br><br>" +
             "Summon a Shambling Corpse (HP4, Move4\", Fight9+, AP1, ATK3, DMG2/3).<br><br>" +
-            "Power Surge (CV 18): Summon two instead."
+            "Flux Burn (CV 18): Summon two instead."
         },
         {
           id: "phantasmalHorror",
@@ -1117,7 +1126,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Power Surge (CV 17): Must roll ≤ AP instead."
+            "Flux Burn (CV 17): Must roll ≤ AP instead."
         },
         {
           id: "siphonLife",
@@ -1127,7 +1136,7 @@
           effect:
             'Range: 8"<br><br>' +
             "Target suffers D3 MW; Warlock heals the same amount.<br><br>" +
-            "Power Surge (CV 16): D3+2 MW/heal."
+            "Flux Burn (CV 16): D3+2 MW/heal."
         },
         {
           id: "veilOfSouls",
@@ -1137,7 +1146,7 @@
           effect:
             "Range: Self<br><br>" +
             "Until next activation, Warlock gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Power Surge (CV 18): Warlock instead gains +2 DEF."
+            "Flux Burn (CV 18): Warlock instead gains +2 DEF."
         },
         {
           id: "etherealBody",
@@ -1147,7 +1156,7 @@
           effect:
             "Range: Self<br><br>" +
             "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Power Surge (CV 14): Also gain +2 DEF until next turn."
+            "Flux Burn (CV 14): Also gain +2 DEF until next turn."
         }
       ];
 
@@ -1360,6 +1369,7 @@
 
       // FIGHTER STATE
       var fighter = {
+        name: "",
         stats: {},
         ccWeapons: [],
         rangedWeapons: [],
@@ -1421,6 +1431,36 @@
         html += "<br><span style='color:#f97316;'>Total: " + computeTotal() + " pts</span>";
         html += "</p>";
 
+
+        // --- Snapshot (for screenshots) ---
+        html += "<div class='summary-pill' style='margin-top:0.25rem;'>";
+        html += "<div class='summary-category-title'>Snapshot</div>";
+        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem;'>";
+        for (var si = 0; si < STAT_CONFIG.length; si++) {
+          var scfg = STAT_CONFIG[si];
+          var v = fighter.stats[scfg.key];
+          html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:78px;text-align:center;'>";
+          html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>" + scfg.label + "</div>";
+          html += "<div style='font-weight:700; font-size:1.05rem; margin-top:0.05rem;'>" + v + (scfg.unit || "") + "</div>";
+          html += "</div>";
+        }
+        html += "</div>";
+
+        var wLabel = getWarlockLabel();
+        html += "<div style='margin-top:0.6rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;'>";
+        html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:160px;'>";
+        html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>Warlock</div>";
+        html += "<div style='font-weight:700; font-size:1.02rem; margin-top:0.05rem;'>" + wLabel + "</div>";
+        html += "</div>";
+        html += "</div>";
+
+        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem;'>";
+        html += "<button class='tab-pill-colour' onclick='copyFighterText()'>Copy Text</button>";
+        html += "<button class='tab-pill-colour' onclick='printFighterCard()'>Print Card</button>";
+        html += "</div>";
+        html += "<p style='margin:0.45rem 0 0; font-size:0.82rem; color:#9ca3af;'>Tip: use Copy Text for pasting the whole profile into a document or use Print Card to generate a simple Fighter Card.</p>";
+        html += "</div>";
+
         function renderList(title, arr) {
   html += '<div class="summary-pill">';
   html += '<div class="summary-category-title">' + title + '</div>';
@@ -1431,7 +1471,7 @@
     html += "<ul style='padding-left:1.1rem; margin:0; font-size:0.9rem;'>";
     for (var i = 0; i < arr.length; i++) {
       var x = arr[i];
-      var main = x.profile || x.effect || "";
+      var main = (x.profile || x.effect || "").replace(/<br\s*\/?>/gi, "\n\n");
       var pts = x.points || 0;
       html += "<li style='margin-bottom:0.15rem;'>" +
               x.name + " (" + pts + " pts)" +
@@ -1457,7 +1497,181 @@
       }
 
       // STAT COST
-      function recalcStatCost () {
+      
+      // ===== Copy / Print (snapshot) =====
+      function getWarlockLabel () {
+        return fighter.isMasterWarlock ? "Master Warlock" : (fighter.isWarlock ? "Warlock" : "None");
+      }
+
+      function buildCopyText () {
+        var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+        var lines = [];
+        lines.push(nm + " — " + computeTotal() + " pts");
+        lines.push("");
+
+        // Stats
+        var statBits = [];
+        for (var i = 0; i < STAT_CONFIG.length; i++) {
+          var sc = STAT_CONFIG[i];
+          statBits.push(sc.label + " " + fighter.stats[sc.key] + (sc.unit || ""));
+        }
+        lines.push(statBits.join(" · "));
+        lines.push("Warlock: " + getWarlockLabel());
+        lines.push("");
+
+        function cleanMultiline (s) {
+          return String(s || "")
+            // Convert any <br>, <br/>, <br />, or <br ...> variants into real line breaks
+            .replace(/<br\s*\/?>/gi, "\n\n")
+            .replace(/<br[^>]*>/gi, "\n\n")
+            // Also catch slightly malformed variants like "<br<"
+            .replace(/<br</gi, "\n\n")
+            .replace(/\r\n/g, "\n")
+            // Collapse excessive blank space
+            .replace(/\n{3,}/g, "\n\n")
+            .trim();
+        }
+
+        function listBlock (title, arr) {
+          lines.push(title + ":");
+          if (!arr || !arr.length) {
+            lines.push("  - None");
+            lines.push("");
+            return;
+          }
+
+          for (var j = 0; j < arr.length; j++) {
+            var x = arr[j];
+            var pts = x.points || 0;
+            lines.push("  - " + x.name + " (" + pts + " pts)");
+
+            var main = cleanMultiline(x.profile || x.effect || "");
+            if (main) {
+              var bits = main.split(/\n+/);
+              for (var bi = 0; bi < bits.length; bi++) {
+                var line = bits[bi].trim();
+                if (!line) continue;
+                lines.push("      " + line);
+              }
+            }
+          }
+          lines.push("");
+        }
+
+        listBlock("Close Combat Weapons", fighter.ccWeapons);
+        listBlock("Ranged Weapons", fighter.rangedWeapons);
+        listBlock("Abilities", fighter.abilities);
+        listBlock("Leader Abilities", fighter.leaderAbilities);
+        listBlock("Spells", fighter.spells);
+        listBlock("Equipment", fighter.equipment);
+
+        return lines.join("\n");
+      }
+
+window.copyFighterText = function () {
+  try {
+    var txt = buildCopyText();
+
+    // Convert HTML line breaks to real ones
+    txt = txt.replace(/<br\s*\/?>/gi, "\n\n");
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function(){
+        alert("Copied!");
+      }).catch(function(){
+        window.prompt("Copy this text:", txt);
+      });
+    } else {
+      window.prompt("Copy this text:", txt);
+    }
+  } catch (e) {
+    alert("Copy failed: " + e);
+  }
+};
+
+      window.printFighterCard = function () {
+        try {
+          var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+          var total = computeTotal();
+          var warlockLabel = getWarlockLabel();
+
+          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+          function listHtml(title, arr) {
+            var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
+            if (!arr || !arr.length) return out + "<div class='muted'>None</div></div>";
+            out += "<ul>";
+            for (var i=0;i<arr.length;i++){
+              var x=arr[i];
+              var pts = x.points || 0;
+
+              // Turn stored <br> tags (and any newlines) into real HTML line breaks on the printed card
+              var mainRaw = (x.profile || x.effect || "");
+              mainRaw = String(mainRaw).replace(/<br\s*\/?>/gi, "\n").replace(/\r\n/g, "\n");
+              var rulesHtml = esc(mainRaw).replace(/\n+/g, "<br>");
+
+              out += "<li><b>" + esc(x.name) + "</b> <span class='muted'>(" + pts + " pts)</span>";
+              if (mainRaw) out += "<br><span class='muted'>" + rulesHtml + "</span>";
+              out += "</li>";
+            }
+            out += "</ul></div>";
+            return out;
+          }var stats = "";
+          for (var i=0;i<STAT_CONFIG.length;i++){
+            var sc=STAT_CONFIG[i];
+            stats += "<span class='stat'><span class='k'>" + esc(sc.label) + "</span> <span class='v'>" + esc(fighter.stats[sc.key] + (sc.unit||"")) + "</span></span>";
+          }
+
+          var w = window.open("", "_blank");
+          if (!w) { alert("Popup blocked — allow popups to print the card."); return; }
+
+          var doc = "";
+          doc += "<!doctype html><html><head><meta charset='utf-8'><title>" + esc(nm) + " — " + total + " pts</title>";
+          doc += "<style>";
+          doc += "body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:20px;color:#111;background:#fff;}";
+          doc += ".card{border:2px solid #111;border-radius:14px;padding:16px;max-width:900px;}";
+          doc += ".top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}";
+          doc += ".name{font-size:26px;font-weight:800;}";
+          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;}";
+          doc += ".meta{margin-top:6px;font-size:13px;color:#333;}";
+          doc += ".stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}";
+          doc += ".stat{border:1px solid #111;border-radius:10px;padding:6px 8px;min-width:84px;text-align:center;}";
+          doc += ".stat .k{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#444;}";
+          doc += ".stat .v{display:block;font-size:16px;font-weight:800;margin-top:2px;}";
+          doc += ".grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}";
+          doc += ".block{border:1px solid #111;border-radius:12px;padding:10px;}";
+          doc += ".block-title{font-weight:900;margin-bottom:6px;}";
+          doc += "ul{margin:0;padding-left:18px;}";
+          doc += "li{margin-bottom:6px;}";
+          doc += ".muted{color:#555;font-size:12px;}";
+          doc += "@media print{body{margin:0} .card{border:none;border-radius:0}}";
+          doc += "</style></head><body>";
+
+          doc += "<div class='card'>";
+          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div><div class='pts'>" + total + " pts</div></div>";
+          doc += "<div class='stats'>" + stats + "</div>";
+          doc += "<div class='grid'>";
+          doc += listHtml("Close Combat Weapons", fighter.ccWeapons);
+          doc += listHtml("Ranged Weapons", fighter.rangedWeapons);
+          doc += listHtml("Abilities", fighter.abilities);
+          doc += listHtml("Leader Abilities", fighter.leaderAbilities);
+          doc += listHtml("Spells", fighter.spells);
+          doc += listHtml("Equipment", fighter.equipment);
+          doc += "</div></div>";
+          doc += "</body></html>";
+
+          w.document.open();
+          w.document.write(doc);
+          w.document.close();
+
+          setTimeout(function(){ try { w.focus(); w.print(); } catch(e){} }, 250);
+        } catch (e) {
+          alert("Print failed: " + e);
+        }
+      };
+
+
+function recalcStatCost () {
         var total = 0;
         for (var i = 0; i < STAT_CONFIG.length; i++) {
           var cfg = STAT_CONFIG[i];
@@ -1538,6 +1752,12 @@
           + '<div class="points-box-inline stats-total-floating">'
           + '  Total Points: <span id="totalPoints">0</span>'
           + '</div>';
+        // Fighter name
+        html += '<div style="margin-bottom:0.65rem; margin-top:0.15rem;">';
+        html += '  <div style="font-size:0.75rem; text-transform:uppercase; color:#9aa1a8; margin-bottom:0.15rem;">Fighter Name</div>';
+        html += '  <input id="fighter-name-input" type="text" placeholder="Enter name..." style="width:100%; padding:0.4rem 0.6rem; border-radius:8px; border:1px solid #2a2d31; background:#141619; color:#e5e7eb;">';
+        html += '</div>';
+
 
         // Stat pills
         html += '<div class="stats-row">';
@@ -1571,6 +1791,23 @@
 
         html += '</div>'; // end .card
         container.innerHTML = html;
+
+
+        // Name input handler (debounced to avoid heavy re-render while typing)
+        var nameInput = document.getElementById("fighter-name-input");
+        if (nameInput) {
+          nameInput.value = fighter.name || "";
+          var __nameDebounce = null;
+          nameInput.addEventListener("input", function () {
+            fighter.name = this.value || "";
+            if (__nameDebounce) clearTimeout(__nameDebounce);
+            __nameDebounce = setTimeout(function () { updateSummary(); }, 150);
+          });
+          nameInput.addEventListener("blur", function () {
+            fighter.name = this.value || "";
+            updateSummary();
+          });
+        }
 
         // --- Stat pill handlers ---
         var pills = container.getElementsByClassName("stat-pill");
