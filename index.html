@@ -1595,7 +1595,23 @@ window.copyFighterText = function () {
           var total = computeTotal();
           var warlockLabel = getWarlockLabel();
 
-          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+          
+
+          // HP pips (◯) for print card
+          var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
+          var maxPips = 30; // prevent absurdly long lines if someone sets HP very high
+          var pipCount = Math.max(0, Math.min(hpVal, maxPips));
+          
+          // Build HP pips in rows of max 15 per line
+          var pipsPerRow = 15;
+          var rows = [];
+          for (var i = 0; i < pipCount; i += pipsPerRow) {
+            rows.push("◯".repeat(Math.min(pipsPerRow, pipCount - i)));
+          }
+          var hpPips = rows.join("<br>");
+          if (hpVal > maxPips) hpPips += "<br>+" + (hpVal - maxPips);
+
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
           function listHtml(title, arr) {
             var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
@@ -1632,7 +1648,11 @@ window.copyFighterText = function () {
           doc += ".card{border:2px solid #111;border-radius:14px;padding:16px;max-width:900px;}";
           doc += ".top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}";
           doc += ".name{font-size:26px;font-weight:800;}";
-          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;}";
+          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap; display:inline-block;}";
+          doc += ".right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}";
+          doc += ".hp-row{font-size:12px;color:#333;display:flex;gap:6px;align-items:center;max-width:380px;}";
+          doc += ".hp-label{font-weight:800;}";
+          doc += ".hp-pips{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace;letter-spacing:2px;line-height:1.2;font-size:1.75em;}";
           doc += ".meta{margin-top:6px;font-size:13px;color:#333;}";
           doc += ".stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}";
           doc += ".stat{border:1px solid #111;border-radius:10px;padding:6px 8px;min-width:84px;text-align:center;}";
@@ -1648,7 +1668,9 @@ window.copyFighterText = function () {
           doc += "</style></head><body>";
 
           doc += "<div class='card'>";
-          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div><div class='pts'>" + total + " pts</div></div>";
+          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div>"
+          + "<div class='right'><div class='pts'>" + total + " pts</div>"
+          + "<div class='hp-row'><span class='hp-label'>HP:</span> <span class='hp-pips'>" + hpPips + "</span></div></div></div>";
           doc += "<div class='stats'>" + stats + "</div>";
           doc += "<div class='grid'>";
           doc += listHtml("Close Combat Weapons", fighter.ccWeapons);
