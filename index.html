@@ -322,6 +322,8 @@
   
 /* Print only the generated card (avoid blank first page) */
 @media print {
+  body.print-card-mode { background: transparent !important; }
+
   @page { margin: 10mm; }
   body.print-card-mode .app { display: none !important; }
   body.print-card-mode #generated-card-overlay {
@@ -338,6 +340,22 @@
     transform: none !important;
   }
 }
+
+
+  /* Toolbar texture toggle */
+  .cc-tex-toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:12px;
+    color:#111;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 6px 10px;
+  }
+  .cc-tex-toggle input{ accent-color: #111; }
 
 </style>
 </head>
@@ -2864,6 +2882,18 @@ box-sizing:border-box;
       var tb = document.createElement("div");
       tb.id = "generated-card-toolbar";
 
+      // texture toggle (card background)
+      var texWrap = document.createElement("label");
+      texWrap.className = "cc-tex-toggle";
+      var texChk = document.createElement("input");
+      texChk.type = "checkbox";
+      texChk.checked = (localStorage.getItem("dr_card_texture") !== "0");
+      var texTxt = document.createElement("span");
+      texTxt.textContent = "Texture";
+      texWrap.appendChild(texChk);
+      texWrap.appendChild(texTxt);
+
+
       var btnBack = document.createElement("button");
       btnBack.textContent = "Back";
       btnBack.onclick = function(){
@@ -2876,6 +2906,7 @@ box-sizing:border-box;
       btnPrint.textContent = "Print";
       btnPrint.onclick = function(){ window.print(); };
 
+      tb.appendChild(texWrap);
       tb.appendChild(btnBack);
       tb.appendChild(btnPrint);
       ov.appendChild(tb);
@@ -2888,7 +2919,16 @@ box-sizing:border-box;
       // card
       var card = document.createElement("div");
       card.className = "print-card clean-card";
-      if (texUrl) { card.style.backgroundImage = "url('" + texUrl + "')"; } else { card.style.backgroundImage = "none"; }
+      function applyTexture(){
+        var on = (localStorage.getItem("dr_card_texture") !== "0");
+        if (on && texUrl) { card.style.backgroundImage = "url('" + texUrl + "')"; }
+        else { card.style.backgroundImage = "none"; }
+      }
+      texChk.addEventListener("change", function(){
+        localStorage.setItem("dr_card_texture", this.checked ? "1" : "0");
+        applyTexture();
+      });
+      applyTexture();
 
       // logo
       var logo = document.createElement("img");
