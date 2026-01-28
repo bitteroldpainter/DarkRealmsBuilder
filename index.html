@@ -319,7 +319,30 @@
     .weapons-layout .selected-column {
       flex: 1 1 0;
     }
-  </style>
+  
+/* Print only the generated card overlay */
+@media print {
+  body { background: #fff !important; }
+  /* Hide everything by default */
+  body * { visibility: hidden !important; }
+  /* Show overlay + card */
+  #generated-card-overlay, #generated-card-overlay * { visibility: visible !important; }
+  #generated-card-overlay {
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #generated-card-overlay .card-wrap{
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  /* If overlay isn't open, fall back to printing the page */
+}
+
+</style>
 </head>
 <body>
   <div class="app">
@@ -1391,6 +1414,10 @@
           equipment: 0
         }
       };
+      // Expose state for card generator
+      window.fighter = fighter;
+      window.computeTotal = computeTotal;
+
 
       // TOTALS
       function computeTotal () {
@@ -1456,7 +1483,7 @@
 
         html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem;'>";
         html += "<button class='tab-pill-colour' onclick='copyFighterText()'>Copy Text</button>";
-        html += "<button class='tab-pill-colour' onclick='printFighterCard()'>Print Card</button>";
+        html += "<button class='tab-pill-colour' onclick='generateFighterCard()'>Generate Card</button>";
         html += "</div>";
         html += "<p style='margin:0.45rem 0 0; font-size:0.82rem; color:#9ca3af;'>Tip: use Copy Text for pasting the whole profile into a document or use Print Card to generate a simple Fighter Card.</p>";
         html += "</div>";
@@ -1595,23 +1622,7 @@ window.copyFighterText = function () {
           var total = computeTotal();
           var warlockLabel = getWarlockLabel();
 
-          
-
-          // HP pips (◯) for print card
-          var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
-          var maxPips = 30; // prevent absurdly long lines if someone sets HP very high
-          var pipCount = Math.max(0, Math.min(hpVal, maxPips));
-          
-          // Build HP pips in rows of max 15 per line
-          var pipsPerRow = 15;
-          var rows = [];
-          for (var i = 0; i < pipCount; i += pipsPerRow) {
-            rows.push("◯".repeat(Math.min(pipsPerRow, pipCount - i)));
-          }
-          var hpPips = rows.join("<br>");
-          if (hpVal > maxPips) hpPips += "<br>+" + (hpVal - maxPips);
-
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
           function listHtml(title, arr) {
             var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
@@ -1648,11 +1659,7 @@ function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")
           doc += ".card{border:2px solid #111;border-radius:14px;padding:16px;max-width:900px;}";
           doc += ".top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}";
           doc += ".name{font-size:26px;font-weight:800;}";
-          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap; display:inline-block;}";
-          doc += ".right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}";
-          doc += ".hp-row{font-size:12px;color:#333;display:flex;gap:6px;align-items:center;max-width:380px;}";
-          doc += ".hp-label{font-weight:800;}";
-          doc += ".hp-pips{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace;letter-spacing:2px;line-height:1.2;font-size:1.75em;}";
+          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;}";
           doc += ".meta{margin-top:6px;font-size:13px;color:#333;}";
           doc += ".stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}";
           doc += ".stat{border:1px solid #111;border-radius:10px;padding:6px 8px;min-width:84px;text-align:center;}";
@@ -1668,9 +1675,7 @@ function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")
           doc += "</style></head><body>";
 
           doc += "<div class='card'>";
-          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div>"
-          + "<div class='right'><div class='pts'>" + total + " pts</div>"
-          + "<div class='hp-row'><span class='hp-label'>HP:</span> <span class='hp-pips'>" + hpPips + "</span></div></div></div>";
+          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div><div class='pts'>" + total + " pts</div></div>";
           doc += "<div class='stats'>" + stats + "</div>";
           doc += "<div class='grid'>";
           doc += listHtml("Close Combat Weapons", fighter.ccWeapons);
@@ -1815,19 +1820,47 @@ function recalcStatCost () {
         container.innerHTML = html;
 
 
-        // Name input handler (debounced to avoid heavy re-render while typing)
+        // Name input handler (idle/debounced to avoid heavy re-render while typing)
         var nameInput = document.getElementById("fighter-name-input");
         if (nameInput) {
           nameInput.value = fighter.name || "";
-          var __nameDebounce = null;
+          var __nameTimer = null;
+          var __idleHandle = null;
+          function scheduleNameUpdate() {
+            // cancel pending
+            if (__nameTimer) { clearTimeout(__nameTimer); __nameTimer = null; }
+            if (__idleHandle && window.cancelIdleCallback) { cancelIdleCallback(__idleHandle); __idleHandle = null; }
+
+            var run = function () {
+              __idleHandle = null;
+              __nameTimer = null;
+              updateSummary();
+            };
+
+            // Prefer idle callback so typing stays snappy on big builds
+            if (window.requestIdleCallback) {
+              __idleHandle = requestIdleCallback(run, { timeout: 600 });
+            } else {
+              __nameTimer = setTimeout(run, 250);
+            }
+          }
+
           nameInput.addEventListener("input", function () {
             fighter.name = this.value || "";
-            if (__nameDebounce) clearTimeout(__nameDebounce);
-            __nameDebounce = setTimeout(function () { updateSummary(); }, 150);
+            scheduleNameUpdate();
           });
+
+          // Force immediate update on blur / Enter
           nameInput.addEventListener("blur", function () {
             fighter.name = this.value || "";
             updateSummary();
+          });
+          nameInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              fighter.name = this.value || "";
+              updateSummary();
+              this.blur();
+            }
           });
         }
 
@@ -2589,5 +2622,477 @@ function recalcStatCost () {
       });
     })();
   </script>
+
+
+<!-- Clean card renderer override (DOM-based; avoids template-literal string editing pitfalls) -->
+<style id="darkrealms-clean-card-css">
+  /* Overlay */
+  #generated-card-overlay{
+    position:fixed; inset:0; z-index:9999;
+    display:none;
+    background:#fff;
+    overflow:auto;
+    padding:24px;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#111;
+  }
+  #generated-card-toolbar{
+    max-width: 980px;
+    margin: 0 auto 12px auto;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    align-items:center;
+  }
+  #generated-card-toolbar button{
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    background: #fff;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* Card frame */
+  .print-card.clean-card{
+    width: 820px;
+    height: 718px; /* 8:7 of 820 */
+    margin: 0 auto;
+    border: 2px solid #111;
+    border-radius: 0;
+    box-sizing: border-box;
+    padding: 16px 18px 18px;
+    overflow: hidden; /* fixed frame */
+    display:flex;
+    flex-direction:column;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    background-repeat: repeat;
+    background-size: 600px auto;
+  }
+
+  .cc-logo{width:66%; max-width:260px; height:auto; display:block; margin: 0 auto; opacity:0.98;}
+
+.cc-header{
+  display:grid;
+  grid-template-columns: 260px 1fr 260px; /* left | logo | right */
+  align-items:start;
+  gap:12px;
+}
+  .cc-header-left{justify-self:start;}
+  .cc-header-center{justify-self:center; text-align:center;}
+  .cc-header-right{width:260px;}
+
+  
+  .cc-leftpill{
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    flex: 1 1 auto;
+box-sizing:border-box;
+  
+    width: 260px;
+    max-width: 260px;
+}
+  .cc-name{font-weight: 900; font-size: 20px; margin-bottom: 4px; color:#111;}
+  .cc-meta{font-size: 12px; color:#111;}
+  .cc-right{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-end;
+    flex: 0 0 auto;
+  }
+  .cc-pts{
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 8px 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    font-weight: 900;
+    color:#111;
+    min-width: 110px;
+    text-align:center;
+  }
+  .cc-hp{
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 8px 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    color:#111;
+    min-width: 110px;
+  }
+  .hp-pips{
+  display:grid;
+  grid-template-columns: repeat(12, 16px);
+  grid-auto-rows: 16px;
+  gap: 4px 6px;
+  align-content:start;
+  justify-content:start; /* prevents squish */
+}
+  .hp-pip{width:16px;height:16px;border-radius:50%;border:2px solid #111;background:#fff;box-sizing:border-box;}
+
+  .cc-stats{
+    margin-top: 12px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap:8px;
+  }
+  .cc-stat{
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 8px 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    text-align:center;
+  
+    color:#111;
+  }
+
+  
+  .cc-stat-label{font-size:12px; font-weight:800; opacity:0.85; margin-bottom:2px; color:#111;}
+  .cc-stat-val{font-size:19px; font-weight:900; line-height:1.05; color:#111; display:block;}
+/* Single options pill */
+  .cc-options-pill{
+    margin-top: 14px;
+    flex: 1 1 auto;
+    min-height: 0;
+    display:flex;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    padding-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    overflow: hidden;
+    position: relative;
+    position: relative; position: relative;
+    box-sizing: border-box;
+  }
+  .cc-options-inner{
+    flex:1;
+    display:block;
+    /* Two-column flow */
+    column-count: 2;
+    column-gap: 16px;
+    column-fill: auto;
+    /* Scalable typography */
+    --opt-scale: 1;
+    font-size: calc(13px * var(--opt-scale));
+    line-height: calc(1.25 * var(--opt-scale));
+    padding-bottom: 10px;
+    
+  }
+  .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 18px 0;}
+  .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
+
+  .cc-sec + .cc-sec{
+    border-top: 1px solid rgba(0,0,0,0.15);
+    padding-top: 8px;
+  }
+
+  .cc-list{margin:0; padding-left: 18px;}
+  .cc-item{margin: 0 0 6px 0;break-inside: avoid; page-break-inside: avoid;}
+
+  .cc-muted{color:#555; font-weight: 600;}
+  .cc-item > div{break-inside: avoid; page-break-inside: avoid;}
+
+  @media print{
+    body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    #generated-card-toolbar{display:none !important;}
+    #generated-card-overlay{position:static; padding:0;}
+    .print-card.clean-card{margin:0; box-shadow:none;}
+  }
+</style>
+
+<script>
+(function(){
+  function esc(s){
+    return (s==null?"":String(s))
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  function brToText(html){
+    return (html||"").replace(/<br\s*\/?>/gi,"\n").replace(/&nbsp;/g," ");
+  }
+  function renderRulesHtml(main){
+    if (!main) return "";
+    var txt = String(main).replace(/<br\s*\/?>/gi,"\n");
+    var lines = txt.split(/\n+/);
+    return lines.map(function(l){
+      l = l.trim();
+      return l ? "<div>" + esc(l) + "</div>" : "";
+    }).join("");
+  }
+  function getBaseHref(){
+    var href = (window.location && window.location.href) ? window.location.href : "";
+    return href.replace(/[#?].*$/, "");
+  }
+  function buildHpPips(hp){
+    var n = Math.max(0, Math.min(99, parseInt(hp||0,10)||0));
+    var wrap = document.createElement("span");
+    wrap.className = "hp-pips";
+    for (var i=0;i<n;i++){
+      var d = document.createElement("span");
+      d.className = "hp-pip";
+      wrap.appendChild(d);
+    }
+    return wrap;
+  }
+
+  function ensureOverlay(){
+    var ov = document.getElementById("generated-card-overlay");
+    if (!ov){
+      ov = document.createElement("div");
+      ov.id = "generated-card-overlay";
+      document.body.appendChild(ov);
+    }
+    return ov;
+  }
+
+  // Replace the existing Generate Card with a clean DOM-based renderer.
+  window.generateFighterCard = function(){
+    try{
+      var ov = ensureOverlay();
+      ov.innerHTML = "";
+
+      // toolbar
+      var tb = document.createElement("div");
+      tb.id = "generated-card-toolbar";
+
+      var btnBack = document.createElement("button");
+      btnBack.textContent = "Back";
+      btnBack.onclick = function(){
+        ov.style.display = "none";
+        document.body.style.overflow = "";
+      };
+
+      var btnPrint = document.createElement("button");
+      btnPrint.textContent = "Print";
+      btnPrint.onclick = function(){ window.print(); };
+
+      tb.appendChild(btnBack);
+      tb.appendChild(btnPrint);
+      ov.appendChild(tb);
+
+      // base URLs for assets (same as existing builder approach)
+      var baseHref = getBaseHref();
+      var logoUrl = (window.DARKREALMS_CARD_LOGO_URL) ? (new URL(window.DARKREALMS_CARD_LOGO_URL, baseHref)).href : "";
+      var texUrl  = (window.DARKREALMS_CARD_TEX_URL) ? (new URL(window.DARKREALMS_CARD_TEX_URL, baseHref)).href : "";
+
+      // card
+      var card = document.createElement("div");
+      card.className = "print-card clean-card";
+      if (texUrl) { card.style.backgroundImage = "url('" + texUrl + "')"; } else { card.style.backgroundImage = "none"; }
+
+      // logo
+      var logo = document.createElement("img");
+      logo.className = "cc-logo";
+      logo.onerror = function(){ this.style.display="none"; };
+      if (logoUrl) { logo.src = logoUrl; } else { logo.style.display = "none"; }
+      logo.alt = "Mortalis";
+      // name + points
+      var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+      var total = computeTotal ? computeTotal() : 0;
+      var psyLabel = "None";
+      if (fighter.isMasterWarlock) psyLabel = "Master Warlock";
+      else if (fighter.isWarlock) psyLabel = "Warlock";
+
+      // Header grid: Name | Logo | Points/HP
+      var header = document.createElement("div");
+      header.className = "cc-header";
+
+      var headerLeft = document.createElement("div");
+      headerLeft.className = "cc-header-left";
+
+      var headerCenter = document.createElement("div");
+      headerCenter.className = "cc-header-center";
+      headerCenter.appendChild(logo);
+
+      var headerRight = document.createElement("div");
+      headerRight.className = "cc-header-right";
+
+      var left = document.createElement("div");
+      left.className = "cc-leftpill";
+      var nameEl = document.createElement("div");
+      nameEl.className = "cc-name";
+      nameEl.textContent = nm;
+      var metaEl = document.createElement("div");
+      metaEl.className = "cc-meta";
+      metaEl.innerHTML = "Warlock: <b>" + esc(psyLabel) + "</b>";
+      left.appendChild(nameEl);
+      left.appendChild(metaEl);
+      headerLeft.appendChild(left);
+
+      var right = document.createElement("div");
+      right.className = "cc-right";
+      var pts = document.createElement("div");
+      pts.className = "cc-pts";
+      pts.textContent = total + " pts";
+
+      var hpBox = document.createElement("div");
+      hpBox.className = "cc-hp";
+      var hp = (fighter.stats && (fighter.stats.HP!=null)) ? fighter.stats.HP : (fighter.stats && fighter.stats.hp!=null ? fighter.stats.hp : 0);
+      var hpLabel = document.createElement("span");
+      hpLabel.textContent = "HP:";
+      hpBox.appendChild(hpLabel);
+      hpBox.appendChild(buildHpPips(hp));
+
+      right.appendChild(pts);
+      right.appendChild(hpBox);
+      headerRight.appendChild(right);
+
+      header.appendChild(headerLeft);
+      header.appendChild(headerCenter);
+      header.appendChild(headerRight);
+      card.appendChild(header);
+
+      // stats pills
+      var statsWrap = document.createElement("div");
+      statsWrap.className = "cc-stats";
+      var s = fighter.stats || {};
+      // order (attempt common Mortalis order; fall back to existing keys)
+      var order = ["Move","M","DEF","Defense","AP","HP","ATK","Attack","Fight","Shoot"];
+      var used = {};
+      order.forEach(function(k){
+        var v = (s[k]!=null)?s[k]:null;
+        if (v==null) return;
+        used[k]=true;
+        var p = document.createElement("div");
+        p.className = "cc-stat";
+        p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(v) + "</div>";
+        statsWrap.appendChild(p);
+      });
+      Object.keys(s).forEach(function(k){
+        if (used[k]) return;
+        var p = document.createElement("div");
+        p.className = "cc-stat";
+        p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(s[k]) + "</div>";
+        statsWrap.appendChild(p);
+      });
+      card.appendChild(statsWrap);
+
+      // options pill
+      var optPill = document.createElement("div");
+      optPill.className = "cc-options-pill";
+      var optInner = document.createElement("div");
+      optInner.className = "cc-options-inner";
+      optPill.appendChild(optInner);
+      card.appendChild(optPill);
+
+      function addSection(title, arr, mainKey){
+        if (!arr || !arr.length) return;
+        var sec = document.createElement("div");
+        sec.className = "cc-sec";
+        var t = document.createElement("div");
+        t.className = "cc-sec-title";
+        t.textContent = title;
+        sec.appendChild(t);
+
+        var ul = document.createElement("ul");
+        ul.className = "cc-list";
+        arr.forEach(function(x){
+          var li = document.createElement("li");
+          li.className = "cc-item";
+          var pts = x.points || 0;
+          var main = x.profile || x.effect || "";
+          var rulesHtml = renderRulesHtml(main);
+          li.innerHTML = "<b>" + esc(x.name) + "</b> <span class='cc-muted'>(" + pts + " pts)</span>" +
+                         (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
+          ul.appendChild(li);
+        });
+        sec.appendChild(ul);
+        optInner.appendChild(sec);
+      }
+
+      addSection("Close Combat Weapons", fighter.ccWeapons);
+      addSection("Ranged Weapons", fighter.rangedWeapons);
+      addSection("Abilities", fighter.abilities);
+      addSection("Leader Abilities", fighter.leaderAbilities);
+      addSection("Spells", fighter.spells);
+      addSection("Equipment", fighter.equipment);
+
+      // mount
+      ov.appendChild(card);
+      ov.style.display = "block";
+      document.body.style.overflow = "hidden";
+
+      // autoscale only options: use scrollWidth overflow from columns
+      function fitOptions(){
+        try{
+          var cs = window.getComputedStyle(optPill);
+          var padL = parseFloat(cs.paddingLeft)  || 0;
+          var padR = parseFloat(cs.paddingRight) || 0;
+          var padT = parseFloat(cs.paddingTop)   || 0;
+          var padB = parseFloat(cs.paddingBottom)|| 0;
+
+          // Available content box inside the padded pill
+          var availH = Math.max(0, optPill.clientHeight - padT - padB);
+          var availW = Math.max(0, optPill.clientWidth  - padL - padR);
+
+          optInner.style.boxSizing = "border-box";
+          optInner.style.height = availH + "px";
+          optInner.style.width  = availW + "px";
+
+          function applyScale(s){
+            optInner.style.setProperty("--opt-scale", s.toFixed(4));
+          }
+          function fits(){
+            var w = optInner.scrollWidth || 0;
+            var h = optInner.scrollHeight || 0;
+            return (w <= availW + 1) && (h <= availH + 1);
+          }
+
+          applyScale(1.0);
+          if (fits()) return;
+
+          var lo = 0.20, hi = 1.0, best = 0.20;
+          for (var i=0;i<14;i++){
+            var mid = (lo + hi) / 2;
+            applyScale(mid);
+            if (fits()){
+              best = mid;
+              lo = mid;
+            } else {
+              hi = mid;
+            }
+          }
+          applyScale(best);
+
+          // Safety: never draw outside pill
+          optInner.style.overflow = "hidden";
+        }catch(e){}
+      }
+      function fitSoon(){
+        requestAnimationFrame(function(){ requestAnimationFrame(fitOptions); });
+      }
+      fitSoon();
+      // re-fit after logo image loads (affects layout) and after a short delay
+      try{ logo.addEventListener("load", fitSoon); }catch(e){}
+      setTimeout(fitSoon, 120);
+      // re-fit on resize while overlay is open
+      window.addEventListener("resize", function(){
+        if (ov && ov.style && ov.style.display === "block") fitSoon();
+      }, { passive:true });
+
+      requestAnimationFrame(function(){ requestAnimationFrame(fitOptions); });
+
+    }catch(e){
+      alert("Generate Card failed: " + e);
+    }
+  };
+})();
+</script>
+
+
+
+<script>
+// Back-compat alias
+window.printFighterCard = function(){ if (window.generateFighterCard) return window.generateFighterCard(); };
+</script>
+
 </body>
 </html>
