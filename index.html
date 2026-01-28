@@ -2880,8 +2880,8 @@ box-sizing:border-box;
 
       // base URLs for assets (same as existing builder approach)
       var baseHref = getBaseHref();
-      var logoUrl = (window.DARKREALMS_CARD_LOGO_URL) ? (new URL(window.DARKREALMS_CARD_LOGO_URL, baseHref)).href : "";
-      var texUrl  = (window.DARKREALMS_CARD_TEX_URL) ? (new URL(window.DARKREALMS_CARD_TEX_URL, baseHref)).href : "";
+      var logoUrl = (new URL("./img/darkrealmslogo.png", baseHref)).href : "";
+      var texUrl  = (new URL("./img/darkrealmstexture.jpg", baseHref), baseHref)).href : "";
 
       // card
       var card = document.createElement("div");
