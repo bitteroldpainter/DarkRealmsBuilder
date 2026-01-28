@@ -322,9 +322,9 @@
   
 /* Print only the generated card (avoid blank first page) */
 @media print {
-  body.print-card-mode { background: transparent !important; }
+  body.print-card-mode { background: transparent !important;  margin:0 !important; padding:0 !important; }
 
-  @page { margin: 10mm; }
+  @page { margin: 0; }
   body.print-card-mode .app { display: none !important; }
   body.print-card-mode #generated-card-overlay {
     display: block !important;
@@ -338,6 +338,14 @@
     margin: 0 auto !important;
     box-shadow: none !important;
     transform: none !important;
+  
+    transform: scale(0.95) !important;
+    transform-origin: top center !important;
+    page-break-inside: avoid !important;
+  
+    transform: scale(0.95) !important;
+    transform-origin: top center !important;
+    page-break-inside: avoid !important;
   }
 }
 
