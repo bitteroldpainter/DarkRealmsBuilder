@@ -320,26 +320,23 @@
       flex: 1 1 0;
     }
   
-/* Print only the generated card overlay */
+/* Print only the generated card (avoid blank first page) */
 @media print {
-  body { background: #fff !important; }
-  /* Hide everything by default */
-  body * { visibility: hidden !important; }
-  /* Show overlay + card */
-  #generated-card-overlay, #generated-card-overlay * { visibility: visible !important; }
-  #generated-card-overlay {
+  @page { margin: 10mm; }
+  body.print-card-mode .app { display: none !important; }
+  body.print-card-mode #generated-card-overlay {
+    display: block !important;
     position: static !important;
     inset: auto !important;
     background: transparent !important;
     padding: 0 !important;
     margin: 0 !important;
   }
-  #generated-card-overlay .card-wrap{
+  body.print-card-mode #generated-card-overlay .card-wrap{
     margin: 0 auto !important;
     box-shadow: none !important;
     transform: none !important;
   }
-  /* If overlay isn't open, fall back to printing the page */
 }
 
 </style>
@@ -377,6 +374,10 @@
   </div>
 
   <script>
+  // Dark Realms card assets
+  window.DARKREALMS_CARD_LOGO_URL = "img/darkrealmslogo.png";
+  window.DARKREALMS_CARD_TEX_URL  = "img/darkrealmstexture.jpg";
+
     (function () {
       // STAT + COST CONFIG
       var STAT_CONFIG = [
@@ -2867,6 +2868,7 @@ box-sizing:border-box;
       btnBack.textContent = "Back";
       btnBack.onclick = function(){
         ov.style.display = "none";
+        document.body.classList.remove("print-card-mode");
         document.body.style.overflow = "";
       };
 
@@ -2880,8 +2882,8 @@ box-sizing:border-box;
 
       // base URLs for assets (same as existing builder approach)
       var baseHref = getBaseHref();
-      var logoUrl = (new URL("./img/darkrealmslogo.png", baseHref)).href : "";
-      var texUrl  = (new URL("./img/darkrealmstexture.jpg", baseHref), baseHref)).href : "";
+      var logoUrl = (window.DARKREALMS_CARD_LOGO_URL) ? (new URL(window.DARKREALMS_CARD_LOGO_URL, baseHref)).href : "";
+      var texUrl  = (window.DARKREALMS_CARD_TEX_URL) ? (new URL(window.DARKREALMS_CARD_TEX_URL, baseHref)).href : "";
 
       // card
       var card = document.createElement("div");
@@ -3018,6 +3020,7 @@ box-sizing:border-box;
       // mount
       ov.appendChild(card);
       ov.style.display = "block";
+      document.body.classList.add("print-card-mode");
       document.body.style.overflow = "hidden";
 
       // autoscale only options: use scrollWidth overflow from columns
