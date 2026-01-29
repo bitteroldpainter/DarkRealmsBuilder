@@ -413,7 +413,7 @@
   <script>
   // Dark Realms card assets
   window.DARKREALMS_CARD_LOGO_URL = "img/darkrealmslogo.png";
-  window.DARKREALMS_CARD_TEX_URL  = "img/darkrealmstexture.jpg";
+  window.DARKREALMS_CARD_TEX_URL  = "img/darkrealmstextureparchment.jpg";
 
     (function () {
       // STAT + COST CONFIG
@@ -1713,7 +1713,7 @@ window.copyFighterText = function () {
           doc += "</style></head><body>";
 
           doc += "<div class='card'>";
-          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div><div class='meta'>Warlock: <b>" + esc(warlockLabel) + "</b></div></div><div class='pts'>" + total + " pts</div></div>";
+          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div></div><div class='pts'>" + total + " pts</div></div>";
           doc += "<div class='stats'>" + stats + "</div>";
           doc += "<div class='grid'>";
           doc += listHtml("Close Combat Weapons", fighter.ccWeapons);
@@ -2695,7 +2695,7 @@ function recalcStatCost () {
   /* Card frame */
   .print-card.clean-card{
     width: 820px;
-    height: 718px; /* 8:7 of 820 */
+    height: 660px; /* 8:7 of 820 */
     margin: 0 auto;
     border: 2px solid #111;
     border-radius: 0;
@@ -2705,15 +2705,15 @@ function recalcStatCost () {
     display:flex;
     flex-direction:column;
     box-shadow: 0 10px 30px rgba(0,0,0,.18);
-    background-repeat: repeat;
-    background-size: 600px auto;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .cc-logo{width:66%; max-width:260px; height:auto; display:block; margin: 0 auto; opacity:0.98;}
 
 .cc-header{
   display:grid;
-  grid-template-columns: 260px 1fr 260px; /* left | logo | right */
+  grid-template-columns: 260px 260px 260px; /* left | logo | right */
   align-items:start;
   gap:12px;
 }
@@ -2726,15 +2726,16 @@ function recalcStatCost () {
     background: rgba(255,255,255,0.92);
     border: 1px solid rgba(0,0,0,0.25);
     border-radius: 14px;
-    padding: 10px 12px;
+    padding: 10px 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     flex: 1 1 auto;
-box-sizing:border-box;
-  
+    box-sizing:border-box;
     width: 260px;
     max-width: 260px;
+    margin-top: 20px;
+    margin-left: 20px;
 }
-  .cc-name{font-weight: 900; font-size: 20px; margin-bottom: 4px; color:#111;}
+  .cc-name{font-weight: 900; font-size: 16px; margin-bottom: 4px; color:#111;}
   .cc-meta{font-size: 12px; color:#111;}
   .cc-right{
     display:flex;
@@ -2751,30 +2752,40 @@ box-sizing:border-box;
     box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     font-weight: 900;
     color:#111;
-    min-width: 110px;
+    min-width: 50px;
     text-align:center;
+    margin-top: 20px;
+    margin-right: 45px;
+    margin-bottom: 30px;
   }
   .cc-hp{
-    background: rgba(255,255,255,0.92);
-    border: 1px solid rgba(0,0,0,0.25);
-    border-radius: 14px;
-    padding: 8px 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-    color:#111;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    align-items: center; 
     min-width: 110px;
+    margin-right: 20px;
   }
   .hp-pips{
   display:grid;
-  grid-template-columns: repeat(12, 16px);
-  grid-auto-rows: 16px;
+  grid-template-columns: repeat(12, 20px);
+  grid-auto-rows: 20px;
   gap: 4px 6px;
-  align-content:start;
-  justify-content:start; /* prevents squish */
+  min-width: 260px;
+  display: flex;
+  margin-left: auto;
+  margin-right: 25px;
+  align-content: start;
+  justify-content: end;
+  justify-items: end; /* prevents squish */
 }
-  .hp-pip{width:16px;height:16px;border-radius:50%;border:2px solid #111;background:#fff;box-sizing:border-box;}
+  .hp-pip{width:20px;height:20px;border-radius:50%;border:2px solid #111;background:#fff;box-sizing:border-box;}
 
   .cc-stats{
     margin-top: 12px;
+    margin-left: 20px;
+    margin-right: 20px; 
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap:8px;
@@ -2791,7 +2802,7 @@ box-sizing:border-box;
   }
 
   
-  .cc-stat-label{font-size:12px; font-weight:800; opacity:0.85; margin-bottom:2px; color:#111;}
+  .cc-stat-label{font-size:12px; font-weight:800; opacity:0.85; margin-bottom:2px; text-transform: uppercase; color:#111;}
   .cc-stat-val{font-size:19px; font-weight:900; line-height:1.05; color:#111; display:block;}
 /* Single options pill */
   .cc-options-pill{
@@ -2983,9 +2994,7 @@ box-sizing:border-box;
       nameEl.textContent = nm;
       var metaEl = document.createElement("div");
       metaEl.className = "cc-meta";
-      metaEl.innerHTML = "Warlock: <b>" + esc(psyLabel) + "</b>";
       left.appendChild(nameEl);
-      left.appendChild(metaEl);
       headerLeft.appendChild(left);
 
       var right = document.createElement("div");
@@ -2998,7 +3007,7 @@ box-sizing:border-box;
       hpBox.className = "cc-hp";
       var hp = (fighter.stats && (fighter.stats.HP!=null)) ? fighter.stats.HP : (fighter.stats && fighter.stats.hp!=null ? fighter.stats.hp : 0);
       var hpLabel = document.createElement("span");
-      hpLabel.textContent = "HP:";
+      hpLabel.textContent = "";
       hpBox.appendChild(hpLabel);
       hpBox.appendChild(buildHpPips(hp));
 
