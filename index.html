@@ -3033,14 +3033,24 @@ function recalcStatCost () {
         used[k]=true;
         var p = document.createElement("div");
         p.className = "cc-stat";
-        p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(v) + "</div>";
+       var _k = String(k).toLowerCase();
+var _vv = String(v ?? "");
+if (_k === "move") _vv += '"';
+else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
+
+p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
         statsWrap.appendChild(p);
       });
       Object.keys(s).forEach(function(k){
         if (used[k]) return;
         var p = document.createElement("div");
         p.className = "cc-stat";
-        p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(s[k]) + "</div>";
+       var _k = String(k).toLowerCase();
+var _vv = String((s && s[k] != null) ? s[k] : "");
+if (_k === "move") _vv += '"';
+else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
+
+p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
         statsWrap.appendChild(p);
       });
       card.appendChild(statsWrap);
