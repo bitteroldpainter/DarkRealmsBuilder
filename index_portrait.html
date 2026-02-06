@@ -2993,7 +2993,7 @@ function recalcStatCost () {
         // Locked output size (must match your standalone cropper)
         var OUT_W = 682, OUT_H = 592;
         var TRI_BORDER_COLOR = "#D8E2D7";
-        var TRI_BORDER_WIDTH = 14;
+        var TRI_BORDER_WIDTH = 8;
 
         // state
         var img = null;
@@ -3425,11 +3425,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   .cc-logo{width:66%; max-width:260px; height:auto; display:block; margin: 0 auto; opacity:0.98;}
-.cc-logo.cc-logo-portrait{width:auto; max-width:220px; max-height:150px; height:auto; object-fit:contain;}
-/* Ensure HP pips render above the header portrait */
-.cc-header, .cc-header-left, .cc-header-center, .cc-header-right{position:relative;}
-.cc-logo.cc-logo-portrait{position:relative; z-index:1; pointer-events:none;}
-.cc-hp, .hp-pips{position:relative; z-index:5;}
+
+  /* --- Big portrait behind header + stat pills (stops before options pill) --- */
+  .cc-topwrap{position:relative;}
+  .cc-bg-portrait{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    height:100%;
+    width:auto;
+    max-width:none;
+    z-index:1;
+    pointer-events:none;
+  }
+  /* Ensure header + stats + HP pips render above portrait */
+  .cc-header, .cc-stats{position:relative; z-index:5;}
+  .cc-hp, .hp-pips{position:relative; z-index:6;}
 
 
 
@@ -3505,7 +3517,7 @@ document.addEventListener("DOMContentLoaded", function () {
   .hp-pip{width:20px;height:20px;border-radius:50%;border:2px solid #111;background:#fff;box-sizing:border-box;}
 
   .cc-stats{
-    margin-top: 0px;
+    margin-top: 12px;
     margin-left: 20px;
     margin-right: 20px; 
     display:grid;
@@ -3682,17 +3694,25 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       applyTexture();
 
-      // logo / portrait (portrait replaces logo when present)
+      // logo + portrait
+      // If a portrait exists, we render it as a BIG background image behind the header + stat pills
+      // (wrapped in .cc-topwrap so it naturally stops before the options pill).
+      var hasPortrait = fighter && fighter.portraitDataUrl && String(fighter.portraitDataUrl).trim();
+
+      var bgPortrait = null;
+      if (hasPortrait) {
+        bgPortrait = document.createElement("img");
+        bgPortrait.className = "cc-bg-portrait";
+        bgPortrait.src = String(fighter.portraitDataUrl).trim();
+        bgPortrait.alt = "Portrait";
+        bgPortrait.onerror = function(){ this.style.display = "none"; };
+      }
+
+      // Keep the header logo slot empty when portrait is present (saves space / avoids overlap)
       var logo = document.createElement("img");
       logo.className = "cc-logo";
       logo.onerror = function(){ this.style.display="none"; };
-
-      var hasPortrait = fighter && fighter.portraitDataUrl && String(fighter.portraitDataUrl).trim();
-      if (hasPortrait) {
-        logo.src = String(fighter.portraitDataUrl).trim();
-        logo.classList.add("cc-logo-portrait");
-        logo.alt = "Portrait";
-      } else if (logoUrl) {
+      if (!hasPortrait && logoUrl) {
         logo.src = logoUrl;
         logo.alt = "Mortalis";
       } else {
@@ -3750,7 +3770,12 @@ document.addEventListener("DOMContentLoaded", function () {
       header.appendChild(headerLeft);
       header.appendChild(headerCenter);
       header.appendChild(headerRight);
-      card.appendChild(header);
+
+      // Wrap header + stats so the big portrait background naturally stops before options pill
+      var topWrap = document.createElement("div");
+      topWrap.className = "cc-topwrap";
+      if (bgPortrait) topWrap.appendChild(bgPortrait);
+      topWrap.appendChild(header);
 
       // stats pills
       var statsWrap = document.createElement("div");
@@ -3785,7 +3810,8 @@ else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
 p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
         statsWrap.appendChild(p);
       });
-      card.appendChild(statsWrap);
+      topWrap.appendChild(statsWrap);
+      card.appendChild(topWrap);
 
       // options pill
       var optPill = document.createElement("div");
