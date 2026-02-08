@@ -1680,8 +1680,11 @@
       var x = arr[i];
       var main = (x.profile || x.effect || "").replace(/<br\s*\/?>/gi, "\n\n");
       var pts = x.points || 0;
+      var meta = (title === "Spells")
+        ? ("CV " + (x.cv != null ? x.cv : ""))
+        : (pts + " pts");
       html += "<li style='margin-bottom:0.15rem;'>" +
-              x.name + " (" + pts + " pts)" +
+              x.name + " (" + meta + ")" +
               (main ? " — " + main : "") +
               "</li>";
     }
@@ -3961,9 +3964,12 @@ function addSection(title, arr, mainKey){
           var li = document.createElement("li");
           li.className = "cc-item";
           var pts = x.points || 0;
+          var meta = (title === "Spells")
+            ? ("CV " + (x.cv != null ? x.cv : ""))
+            : (pts + " pts");
           var main = x.profile || x.effect || "";
           var rulesHtml = renderRulesHtml(main);
-          li.innerHTML = "<b>" + esc(x.name) + "</b> <span class='cc-muted'>(" + pts + " pts)</span>" +
+          li.innerHTML = "<b>" + esc(x.name) + "</b> <span class='cc-muted'>(" + meta + ")</span>" +
                          (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
           ul.appendChild(li);
         });
