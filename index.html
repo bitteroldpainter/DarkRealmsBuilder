@@ -337,26 +337,34 @@
   
 /* Print only the generated card (avoid blank first page) */
 @media print {
-  /* Print-safe margins + Safari-friendly centering */
-  @page { margin: 10mm; }
 
-  html, body { background: transparent !important; }
+  /* Print-safe: center the card and shrink via zoom (Safari-friendly; avoids right-side clipping) */
+  @page { margin: 12mm; }
 
-  body.print-card-mode { margin: 0 !important; padding: 0 !important; }
+  body.print-card-mode {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   body.print-card-mode .app { display: none !important; }
 
-  body.print-card-mode #generated-card-overlay{
+  body.print-card-mode #generated-card-overlay {
     display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
     position: static !important;
     inset: auto !important;
+    width: 100% !important;
     background: transparent !important;
-    overflow: visible !important;
-
-    /* Extra "safety" padding for printers/browsers that ignore @page margins */
-    padding: 10mm !important;
     margin: 0 !important;
+
+    /* Fallback for browsers that ignore @page margins */
+    padding: 12mm !important;
+
+    justify-content: center !important;
+    align-items: flex-start !important;
+    overflow: visible !important;
   }
 
   body.print-card-mode #generated-card-overlay .card-wrap{
@@ -364,10 +372,13 @@
     box-shadow: none !important;
     page-break-inside: avoid !important;
 
-    transform: scale(0.95) !important;
-    -webkit-transform: scale(0.95) !important;
-    transform-origin: top center !important;
-    -webkit-transform-origin: top center !important;
+    /* Key Safari fix: use zoom instead of transform scaling */
+    transform: none !important;
+    -webkit-transform: none !important;
+    zoom: 0.87 !important;
+
+    /* Never exceed printable width */
+    max-width: 100% !important;
   }
 }
 
