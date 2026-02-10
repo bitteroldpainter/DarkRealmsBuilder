@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
- <title>Mortalis Fighter Builder</title>
+ <title>Dark Realms Fighter Builder</title>
 
   <style>
     * {
@@ -28,7 +28,6 @@
       margin-bottom: 1rem;
     }
     
-
     .top-actions{
       display:flex;
       gap:0.5rem;
@@ -42,6 +41,7 @@
       padding: 0.3rem 0.75rem;
       font-size: 0.85rem;
     }
+
 .top-title {
       font-size: 1.4rem;
       font-weight: 600;
@@ -49,8 +49,8 @@
     .points-box-inline {
       padding: 0.4rem 0.7rem;
       border-radius: 0.5rem;
-      background: #2b1400;
-      border: 1px solid #ff8c00;
+      background: #061D26;
+      border: 1px solid #3aa79f;
       font-weight: 600;
     }
     .card {
@@ -74,7 +74,7 @@
     }
     .stat-pill {
       background: #141619;
-      border: 1px solid #ff9f1c;
+      border: 1px solid #59A199;
       border-radius: 12px;
       padding: 0.45rem 0.7rem;
       display: flex;
@@ -118,7 +118,7 @@
       background: #374151;
     }
 
-    /* Psyker block */
+    /* Warlock block */
     .warlock-box {
       margin-top: 0.75rem;
       padding-top: 0.5rem;
@@ -161,11 +161,11 @@
       font-size: 0.85rem;
       cursor: pointer;
     }
-    .tab-pill-colour {
+      .tab-pill-colour {
       padding: 0.3rem 0.75rem;
       border-radius: 999px;
       border: 1px solid #374151;
-      background: #f08102;
+      background: #3aa79f;
       color: #e5e7eb;
       font-size: 0.85rem;
       cursor: pointer;
@@ -174,32 +174,9 @@
       background: #030712;
     }
     .tab-pill.active {
-      background: #ff8c00;
+      background: #3aa79f;
       color: #ffffff;
       border-color: #101213;
-    }
-
-    /* Sub-tabs (used inside Ranged Weapons) */
-    .subtabs-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:0.4rem;
-      margin:0.25rem 0 0.75rem;
-    }
-    .subtab-pill{
-      padding:0.2rem 0.6rem;
-      border-radius:999px;
-      border:1px solid #374151;
-      background:#101216;
-      color:#e5e7eb;
-      cursor:pointer;
-      font-size:0.85rem;
-      line-height:1.2;
-    }
-    .subtab-pill:hover{ border-color:#6b7280; }
-    .subtab-pill.active{
-      background:#1f2937;
-      border-color:#9ca3af;
     }
 
     /* Generic lists (weapons, abilities, etc.) */
@@ -221,8 +198,8 @@
     .item-row {
       padding: 0.35rem 0.5rem;
       border-radius: 0.5rem;
-      background: #101216;
-      border: 1px solid #ff9f1c;
+      background: #061D26;
+      border: 1px solid #59A199;
       display: flex;
       flex-direction: column;
       gap: 0.3rem;
@@ -258,7 +235,7 @@
     }
     .item-actions button {
       border: none;
-      background: #ff8c00;
+      background: #3aa79f;
       color: #111827;
       padding: 0.25rem 0.55rem;
       border-radius: 0.375rem;
@@ -309,7 +286,7 @@
   font-weight: 600;
   margin: 0 0 0.35rem;
   padding-bottom: 0rem;
-  border-bottom: 1px solid #ff8c00;
+  border-bottom: 1px solid #3aa79f;
   display: inline-block;
 }
       /* Total Points inside Stats box */
@@ -335,8 +312,8 @@
   right: 1rem;
   padding: 0.25rem 0.6rem;
   border-radius: 10px;
-  background: #2b1400;
-  border: 1px solid #ff8c00;
+  background: #061D26;
+  border: 1px solid #3aa79f;
   font-weight: 600;
   font-size: 1rem;
   white-space: nowrap;
@@ -358,61 +335,58 @@
       flex: 1 1 0;
     }
   
-    /* Toolbar texture toggle */
-    .cc-tex-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:800;
-      font-size:12px;
-      color:#111;
-      background: rgba(255,255,255,0.92);
-      border: 1px solid rgba(0,0,0,0.25);
-      border-radius: 12px;
-      padding: 6px 10px;
-    }
-    .cc-tex-toggle input{ accent-color: #111; }
+/* Print only the generated card (avoid blank first page) */
+@media print {
+  /* Print-safe margins + Safari-friendly centering */
+  @page { margin: 10mm; }
 
-    /* Print only the generated card (no blank first page) */
-    @media print {
-      /* Safari-safe print: keep content in normal flow (no fixed/flex/vh), but ensure it fits the page */
-      @page { margin: 0; }
+  html, body { background: transparent !important; }
 
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #fff !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+  body.print-card-mode { margin: 0 !important; padding: 0 !important; }
+  body.print-card-mode .app { display: none !important; }
 
-      body.print-card-mode .app { display:none !important; }
+  body.print-card-mode #generated-card-overlay{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    overflow: visible !important;
 
-      body.print-card-mode #generated-card-overlay{
-        display:block !important;
-        position: static !important;
-        inset: auto !important;
-        overflow: visible !important;
-        padding: 0 !important;
-        background: transparent !important;
-      }
+    /* Extra "safety" padding for printers/browsers that ignore @page margins */
+    padding: 10mm !important;
+    margin: 0 !important;
+  }
 
-      body.print-card-mode #generated-card-toolbar{ display:none !important; }
+  body.print-card-mode #generated-card-overlay .card-wrap{
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
 
-      /* Center the card horizontally */
-      body.print-card-mode #generated-card-overlay .print-card{
-        display: block !important;
-        margin: 0 auto !important;
-        /* Prevent Safari portrait clipping by scaling within the printable width */
-        -webkit-transform-origin: top center !important;
-        transform-origin: top center !important;
-        -webkit-transform: scale(0.84) !important;
-        transform: scale(0.84) !important;
-        /* Some Safari builds honor zoom better than transform for print */
-        zoom: 0.84 !important;
-      }
-    }
+    transform: scale(0.95) !important;
+    -webkit-transform: scale(0.95) !important;
+    transform-origin: top center !important;
+    -webkit-transform-origin: top center !important;
+  }
+}
 
+
+
+  /* Toolbar texture toggle */
+  .cc-tex-toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:12px;
+    color:#111;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 6px 10px;
+  }
+  .cc-tex-toggle input{ accent-color: #111; }
 
 
     /* ===== Portrait Cropper Overlay ===== */
@@ -505,8 +479,7 @@
 <body>
   <div class="app">
     <header class="top-bar">
-
-     <div class="top-title">Mortalis Fighter Builder</div>
+     <div class="top-title">Dark Realms Fighter Builder</div>
      <div class="top-actions">
        <button class="tab-pill-colour" id="btn-save-json" type="button">Save Profile</button>
        <label class="tab-pill" style="cursor:pointer;">
@@ -514,10 +487,8 @@
          <input id="file-load-json" type="file" accept="application/json" hidden>
        </label>
 
-       <button class="tab-pill" id="btn-portrait" type="button" title="Crop / set portrait">Portrait</button>
- 
-     </div>
-</header>
+       <button class="tab-pill" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none">Portrait</button>     </div>
+    </header>
 
     <main>
       <!-- Stats always visible -->
@@ -529,7 +500,7 @@
         <button class="tab-pill" data-target="section-weapons-ranged">Ranged Weapons</button>
         <button class="tab-pill" data-target="section-abilities">Fighter Abilities</button>
         <button class="tab-pill" data-target="section-leader">Leader Abilities</button>
-        <button class="tab-pill" data-target="section-spells">Psychic Powers</button>
+        <button class="tab-pill" data-target="section-spells">Spells</button>
         <button class="tab-pill" data-target="section-equipment">Equipment</button>
         <button class="tab-pill" data-target="section-summary">Summary</button>
       </div>
@@ -551,7 +522,7 @@
     <div class="pc-modal">
       <div class="pc-panel">
         <div class="pc-title">Triangle Portrait Cropper</div>
-        <div class="pc-sub">Upload a photo, then <b>drag</b> to move and <b>scroll</b> (or pinch) to zoom. Output: <b>682×592</b>, triangle points <b>down</b>. Border: <b>8px</b> #D8E2D7.</div>
+        <div class="pc-sub">Upload a photo, then <b>drag</b> to move and <b>scroll</b> (or pinch) to zoom. Output: <b>682×592</b>, triangle points <b>down</b>. Border: <b>2px</b> #D8E2D7.</div>
 
         <input id="pc-file" type="file" accept="image/*" />
 
@@ -575,7 +546,11 @@
     </div>
   </div>
 
-  <script>
+<script>
+  // Dark Realms card assets
+  window.DARKREALMS_CARD_LOGO_URL = "img/darkrealmslogo.png";
+  window.DARKREALMS_CARD_TEX_URL  = "img/darkrealmstextureparchment.jpg";
+
     (function () {
       // STAT + COST CONFIG
       var STAT_CONFIG = [
@@ -590,172 +565,229 @@
 
       // CLOSE COMBAT WEAPONS (example)
      var CC_WEAPONS = [
-  { id: "fistsClaws", name: "Fists/Claws", profile: "ATK User, Hit User, DMG 2/3", points: 0 },
-  { id: "beastClawsBite", name: "Beast Claws/Bite", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
-  { id: "bigBladeAxe", name: "Big Blade/Axe", profile: "ATK User, Hit User, DMG 3/5", points: 3 },
-  { id: "bigChainblade", name: "Big Chainblade", profile: "ATK User, Hit User, DMG 5/6", points: 5 },
-  { id: "bladeAxe", name: "Blade/Axe", profile: "ATK User, Hit User, DMG 3/4", points: 2 },
-  { id: "chainsword", name: "Chainsword", profile: "ATK User, Hit User, DMG 4/5", points: 4 },
-  { id: "hugeHammerAxeBlade", name: "Huge Hammer/Axe/Blade", profile: "ATK User, Hit User, DMG 5/6, Reroll (1)", points: 6 },
-  { id: "monstrousClaws", name: "Monstrous Claws", profile: "ATK User, Hit User, DMG 5/6, MW (1)", points: 6 },
-  { id: "poisonedKnife", name: "Poisoned Knife", profile: "ATK User, Hit User, DMG 3/4, Poison", points: 3 },
-  { id: "poisonedWeapon", name: "Poisoned Weapon", profile: "ATK User, Hit User, DMG 4/5, Poison, Reroll (SR)", points: 6 },
-  { id: "powerFist", name: "Power Fist", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (1)", points: 7 },
-  { id: "powerKnife", name: "Power Knife", profile: "ATK User, Hit User, DMG 3/5, Crits on 9+", points: 4 },
-  { id: "powerRapier", name: "Power Rapier", profile: "ATK User, Hit User, DMG 4/5, Crits on 9+", points: 6 },
-  { id: "powerWeapon", name: "Power Weapon", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+", points: 7 },
-  { id: "psychicStaff", name: "Psychic Staff", profile: "ATK User, Hit User, DMG 4/6, Crits on 9+, Fire", points: 8 },
-  { id: "thunderHammer", name: "Thunder Hammer", profile: "ATK User, Hit User-2, DMG 5/7, Crits on 9+, MW (2)", points: 8 }
+  {
+    id: "fistsClaws",
+    name: "Fists/Claws",
+    profile: "ATK User, Hit User, DMG 2/3",
+    points: 0
+  },
+  {
+    id: "knife",
+    name: "Knife",
+    profile: "ATK User, Hit User, DMG 3/3",
+    points: 1
+  },
+  {
+    id: "beastClawsBite",
+    name: "Beast Claws/Bite",
+    profile: "ATK User, Hit User, DMG 3/4",
+    points: 2
+  },
+  {
+    id: "bladeAxe",
+    name: "Blade/Axe",
+    profile: "ATK User, Hit User, DMG 3/4",
+    points: 2
+  },
+  {
+    id: "bigBladeAxe",
+    name: "Big Blade/Axe",
+    profile: "ATK User, Hit User, DMG 3/5",
+    points: 3
+  },
+  {
+    id: "clubMace",
+    name: "Club/Maze",
+    profile: "ATK User, Hit User, DMG 4/4",
+    points: 3
+  },
+  {
+    id: "spear",
+    name: "Spear",
+    profile: 'ATK User, Hit User, DMG 3/3, Rng 2"',
+    points: 3
+  },
+  {
+    id: "staff",
+    name: "Staff",
+    profile: "ATK User, Hit User, DMG 4/4",
+    points: 3
+  },
+  {
+    id: "greatBlade",
+    name: "Great Blade",
+    profile: "ATK User, Hit User, DMG 4/5",
+    points: 4
+  },
+  {
+    id: "halberd",
+    name: "Halberd",
+    profile: 'ATK User, Hit User, DMG 3/4, Rng 2"',
+    points: 4
+  },
+  {
+    id: "twoHandedBlade",
+    name: "Two Handed Blade",
+    profile: "ATK User, Hit User, DMG 5/6",
+    points: 5
+  },
+  {
+    id: "hugeHammerAxeBlade",
+    name: "Huge Hammer/Axe/Blade",
+    profile: "ATK User, Hit User, DMG 5/6, Reroll (1)",
+    points: 6
+  },
+  {
+    id: "monstrousClaws",
+    name: "Monstrous Claws",
+    profile: "ATK User, Hit User, DMG 5/6, MW (1)",
+    points: 6
+  },
+  {
+    id: "flail",
+    name: "Flail",
+    profile: 'ATK User, Hit User-1, DMG 4/5, Rng 2"',
+    points: 4
+  },
+  {
+    id: "greatHammer",
+    name: "Great Hammer",
+    profile: "ATK User, Hit User-2, DMG 5/7, Reroll (SR)",
+    points: 7
+  }
 ];
 
 
       // RANGED WEAPONS (example)
       var RANGED_WEAPONS = [
-  // --- Pistols / Grenades ---
-  { id: "arcPistol", name: "Arc Pistol", profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3)', points: 4 },
-  { id: "autoLaspistol", name: "Auto/Laspistol", profile: 'ATK 4, Hit User, DMG 2/3, Rng 8"', points: 2 },
-  { id: "boltPistol", name: "Bolt Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2)', points: 3 },
-  { id: "handFlamer", name: "Hand Flamer", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire', points: 5 },
-  { id: "meltaPistol", name: "Melta Pistol", profile: 'ATK 4, Hit User, DMG 6/3, Rng 3", Piercing (-5), MW (4)', points: 7 },
-  { id: "phosphorBlastPistol", name: "Phosphor Blast Pistol", profile: 'ATK 4, Hit User, DMG 3/4, Rng 8", Blast (1")', points: 4 },
-  { id: "plasmaPistol", name: "Plasma Pistol", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Rng 8", Piercing (-3), Crits on 9+; Alt (Supercharged): ATK 4, Hit User, DMG 6/6, Rng 8", Piercing (-4), Crits on 9+, Risky', points: 7 },
-  { id: "rokkitPistol", name: "Rokkit Pistol", profile: 'ATK 6, Hit User, DMG 4/5, Rng 8", Blast (1")', points: 7 },
-  { id: "slugga", name: "Slugga", profile: 'ATK 6, Hit User, DMG 1/2, Rng 8"', points: 2 },
-  { id: "warpflamePistol", name: "Warpflame Pistol", profile: 'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Piercing (-2), Torrent (1"), Fire', points: 6 },
-  { id: "fragGrenade", name: "Frag Grenade", profile: 'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover, One Use Only', points: 2 },
-  { id: "krakGrenade", name: "Krak Grenade", profile: 'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, One Use Only', points: 2 },
-  { id: "meltaBomb", name: "Melta Bomb", profile: 'ATK 4, Hit User-2, DMG 5/6, Rng 6", Blast (2"), Piercing (-2), Ignores Cover, One Use Only, 2 AP action', points: 4 },
-
-  // --- Light / Medium Ranged ---
-  { id: "autoLasgun", name: "Auto/Lasgun", profile: "ATK 4, Hit User, DMG 2/3", points: 3 },
-  { id: "boltGun", name: "Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)", points: 4 },
-  { id: "gaussBlaster", name: "Gauss Blaster", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-2)", points: 5 },
-  { id: "hvyShotgun", name: "Hvy. Shotgun", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 6"', points: 4 },
-  { id: "infernoBoltGun", name: "Inferno Bolt Gun", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
-  { id: "ionRifle", name: "Ion Rifle", profile: "ATK 4, Hit User, DMG 4/5, Piercing Crits (-2)", points: 5 },
-  { id: "neutronBlaster", name: "Neutron Blaster", profile: "ATK 4, Hit User, DMG 3/3, MW (2)", points: 6 },
-  { id: "pulseCarbine", name: "Pulse Carbine", profile: "ATK 4, Hit User, DMG 4/5, Reroll (1)", points: 5 },
-  { id: "shotgun", name: "Shotgun", profile: 'ATK 4, Hit User+2, DMG 3/3, Rng 6"', points: 3 },
-  { id: "shurikenRifle", name: "Shuriken Rifle", profile: "ATK 4, Hit User, DMG 3/4, Piercing (-2)", points: 5 },
-  { id: "teslaCarbine", name: "Tesla Carbine", profile: 'ATK 5, Hit User, DMG 3/3, Deals MW (2) to Fighters within 2" of target', points: 6 },
-
-  // --- Special ---
-  { id: "flamer", name: "Flamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 10", Ignores Cover, Torrent (2"), Fire', points: 10 },
-  { id: "grenadeLauncher", name: "Grenade Launcher", profile: 'ATK 4, Hit User, DMG (Frag) 2/4, Blast (2"); Alt (Krak): ATK 4, Hit User, DMG 4/5, Piercing (-2)', points: 10 },
-  { id: "meltaGun", name: "Melta Gun", profile: 'ATK 4, Hit User, DMG 6/3, Rng 6", Piercing (-5), MW (4)', points: 10 },
-  { id: "neutronRailRifle", name: "Neutron Rail Rifle", profile: "ATK 4, Hit User, DMG 4/4, MW (2)", points: 7 },
-  { id: "plasmaGun", name: "Plasma Gun", profile: 'ATK 4, Hit User, DMG (Std) 5/6, Piercing (-3), Crits on 9+; Alt (Supercharged): ATK 4, Hit User, DMG 6/6, Piercing (-4), Crits on 9+, Risky', points: 10 },
-  { id: "scopedBigShoota", name: "Scoped Big Shoota", profile: 'ATK 5, Hit User+1, DMG 3/3, MW (2), Heavy (Dash)', points: 10 },
-  { id: "shredder", name: "Shredder", profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3)", points: 9 },
-  { id: "sniperRifle", name: "Sniper Rifle", profile: 'ATK 4, Hit User+1, DMG 3/3, Piercing (-2), Ignores Cover, MW (3)', points: 12 },
-  { id: "synapticDisintegrator", name: "Synaptic Disintegrator", profile: 'ATK 4, Hit User+1, DMG 4/3, Piercing (-2), Ignores Cover, MW (2)', points: 14 },
-  { id: "warpflamer", name: "Warpflamer", profile: 'ATK 4, Hit User+2, DMG 4/4, Rng 8", Ignores Cover, Torrent (2"), Piercing (-2), Fire', points: 7 },
-
-  // --- Heavy ---
-  { id: "eavyRokkitLauncha", name: "‘Eavy Rokkit Launcha", profile: 'ATK 6, Hit User+2, DMG 4/5, Blast (1"), Heavy (Dash)', points: 13 },
-  { id: "bigShoota", name: "Big Shoota", profile: "ATK 6, Hit User, DMG 3/4", points: 7 },
-  { id: "chaincannon", name: "Chaincannon", profile: 'ATK 6, Hit User, DMG 4/4, Reroll (1), Heavy (Dash)', points: 10 },
-  { id: "fragCannon", name: "Frag Cannon", profile: 'Mode (Shell): ATK 4, Hit User, DMG 5/7, Piercing (-3); Alt (Shrapnel): ATK 5, Hit User, DMG 4/5, Blast (2")', points: 10 },
-  { id: "heavyBolter", name: "Heavy Bolter", profile: 'ATK 5, Hit User, DMG 5/6, Reroll (1), Heavy (Dash)', points: 10 },
-  { id: "heavyStubber", name: "Heavy Stubber", profile: 'ATK 5, Hit User, DMG 4/5, Heavy (Dash)', points: 6 },
-  { id: "lascannon", name: "Lascannon", profile: 'ATK 4, Hit User, DMG 6/7, Piercing (-2), MW (2), Heavy (Dash)', points: 10 },
-  { id: "missileLauncher", name: "Missile Launcher", profile: 'Mode (Krak): ATK 4, Hit User, DMG 6/7, Piercing (-4), Heavy (Dash); Alt (Frag): ATK 4, Hit User, DMG 3/5, Blast (2"), Piercing Crits (-2), Heavy (Dash)', points: 10 },
-  { id: "multiMelta", name: "Multi Melta", profile: 'ATK 4, Hit User, DMG 6/3, MW (4), Heavy (Dash), Piercing (-5)', points: 13 },
-  { id: "plasmaCannon", name: "Plasma Cannon", profile: 'Mode (Std): ATK 4, Hit User, DMG 5/6, Blast (2"), Piercing (-3), Heavy (Dash); Alt (Supercharged): ATK 4, Hit User, DMG 6/6, Blast (2"), Piercing (-3), Heavy (Dash), Risky', points: 12 },
-  { id: "rokkitLauncha", name: "Rokkit Launcha", profile: 'ATK 6, Hit User, DMG 4/5, Blast (1")', points: 9 },
-  { id: "shurikenCannon", name: "Shuriken Cannon", profile: "ATK 5, Hit User, DMG 4/5", points: 7 },
-  { id: "soulreaperCannon", name: "Soulreaper Cannon", profile: "ATK 6, Hit User, DMG 4/5, Piercing Crits (-2)", points: 12 },
-  { id: "wraithCannon", name: "Wraith Cannon", profile: 'ATK 4, Hit User, DMG 6/3, MW (3), Heavy (Dash), Piercing (-4), Crits on 9+', points: 13 }
+  {
+    id: "blackpowderPistol",
+    name: "Blackpowder Pistol",
+    profile: 'ATK 4, Hit User, DMG 4/5, Rng 8", Piercing (-3), Risky',
+    points: 4
+  },
+  {
+    id: "blackpowderRifle",
+    name: "Blackpowder Rifle",
+    profile: "ATK 4, Hit User, DMG 4/5, Piercing (-3), Risky",
+    points: 9
+  },
+  {
+    id: "blunderbuss",
+    name: "Blunderbuss",
+    profile: 'ATK 4, Hit User+1, DMG 4/4, Rng 6"',
+    points: 4
+  },
+  {
+    id: "bow",
+    name: "Bow",
+    profile: "ATK 4, Hit User, DMG 3/4",
+    points: 2
+  },
+  {
+    id: "breathWeaponBeasts",
+    name: "Breath Weapon (Beasts)",
+    profile:
+      'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Piercing (-2), Torrent (1"), Fire',
+    points: 6
+  },
+  {
+    id: "crossbow",
+    name: "Crossbow",
+    profile: "ATK 4, Hit User, DMG 3/4, Piercing Crits (-2)",
+    points: 4
+  },
+  {
+    id: "flamespurter",
+    name: "Flamespurter",
+    profile:
+      'ATK 4, Hit User+2, DMG 3/4, Rng 6", Ignores Cover, Torrent (1"), Fire',
+    points: 5
+  },
+  {
+    id: "handCrossbow",
+    name: "Hand Crossbow",
+    profile:
+      'ATK 4, Hit User, DMG 3/4, Rng 8", Piercing Crits (-2)',
+    points: 3
+  },
+  {
+    id: "longBow",
+    name: "Long Bow",
+    profile: "ATK 4, Hit User, DMG 4/5, Heavy (Dash)",
+    points: 3
+  },
+  {
+    id: "repeaterBlackpowderGun",
+    name: "Repeater Blackpowder Gun",
+    profile:
+      "ATK 6, Hit User, DMG 4/4, Reroll (SR), Heavy (Dash), Piercing (-3), Risky",
+    points: 10
+  },
+  {
+    id: "repeatingCrossbow",
+    name: "Repeating Crossbow",
+    profile:
+      "ATK 5, Hit User, DMG 4/5, Piercing Crits (-2), Heavy (Dash)",
+    points: 7
+  },
+  {
+    id: "rocketGun",
+    name: "Rocket Gun",
+    profile:
+      'ATK 5, Hit User, DMG 4/5, Blast (1"), Heavy (Dash)',
+    points: 8
+  },
+  {
+    id: "sling",
+    name: "Sling",
+    profile:
+      'ATK 4, Hit User, DMG 2/3, Rng 8"',
+    points: 2
+  },
+  {
+    id: "throwingKnives",
+    name: "Throwing Knives",
+    profile:
+      'ATK 4, Hit User, DMG 3/4, Rng 6"',
+    points: 3
+  },
+  {
+    id: "thrownGlassOrbExplosive",
+    name: "Thrown Glass Orb – Explosive",
+    profile:
+      'ATK 4, Hit User-2, DMG 2/4, Rng 6", Blast (2"), Ignores Cover',
+    points: 6
+  },
+  {
+    id: "thrownGlassOrbFire",
+    name: "Thrown Glass Orb – Fire",
+    profile:
+      'ATK 4, Hit User-2, DMG 2/4, Rng 6", Torrent (1"), Ignores Cover, Fire',
+    points: 6
+  },
+  {
+    id: "thrownGlassOrbPoison",
+    name: "Thrown Glass Orb – Poison",
+    profile:
+      'ATK 4, Hit User-2, DMG 4/5, Rng 6", Piercing (-2), Ignores Cover, Poison',
+    points: 6
+  },
+  {
+    id: "thrownRock",
+    name: "Thrown Rock",
+    profile:
+      'ATK 4, Hit User, DMG 1/2, Rng 8"',
+    points: 0
+  },
+  {
+    id: "thrownSpear",
+    name: "Thrown Spear (Javelin)",
+    profile:
+      'ATK 4, Hit User-1, DMG 3/4, Rng 12"',
+    points: 4
+  }
 ];
-
-      // --- Ranged weapon sub-categories ---
-      // Used to filter the RANGED_WEAPONS list into sub-tabs (selection/points logic is unchanged).
-      var RANGED_CATEGORIES = [
-        { key: "pistols", label: "Pistols/Grenades", ids: [
-          "arcPistol",
-          "autoLaspistol",
-          "boltPistol",
-          "handFlamer",
-          "meltaPistol",
-          "phosphorBlastPistol",
-          "plasmaPistol",
-          "rokkitPistol",
-          "slugga",
-          "warpflamePistol",
-          "fragGrenade",
-          "krakGrenade",
-          "meltaBomb"
-        ]},
-        { key: "light", label: "Light/Medium Ranged", ids: [
-          "autoLasgun",
-          "boltGun",
-          "gaussBlaster",
-          "hvyShotgun",
-          "infernoBoltGun",
-          "ionRifle",
-          "neutronBlaster",
-          "pulseCarbine",
-          "shotgun",
-          "shurikenRifle",
-          "teslaCarbine"
-        ]},
-        { key: "special", label: "Special", ids: [
-          "flamer",
-          "grenadeLauncher",
-          "meltaGun",
-          "neutronRailRifle",
-          "plasmaGun",
-          "scopedBigShoota",
-          "shredder",
-          "sniperRifle",
-          "synapticDisintegrator",
-          "warpflamer"
-        ]},
-        { key: "heavy", label: "Heavy", ids: [
-          "eavyRokkitLauncha",
-          "bigShoota",
-          "chaincannon",
-          "fragCannon",
-          "heavyBolter",
-          "heavyStubber",
-          "lascannon",
-          "missileLauncher",
-          "multiMelta",
-          "plasmaCannon",
-          "rokkitLauncha",
-          "shurikenCannon",
-          "soulreaperCannon",
-          "wraithCannon"
-        ]}
-      ];
-
-      // Remember the last open ranged sub-tab during this session
-      var currentRangedCategory = "pistols";
-
-      function getRangedWeaponsForCategory (catKey) {
-        var key = catKey || "pistols";
-        var i, j;
-
-        // Find the category definition
-        var def = null;
-        for (i = 0; i < RANGED_CATEGORIES.length; i++) {
-          if (RANGED_CATEGORIES[i].key === key) { def = RANGED_CATEGORIES[i]; break; }
-        }
-        if (!def) def = RANGED_CATEGORIES[0];
-
-        // Build set of allowed ids
-        var allow = {};
-        for (j = 0; j < def.ids.length; j++) allow[def.ids[j]] = true;
-
-        // Filter
-        var out = [];
-        for (i = 0; i < RANGED_WEAPONS.length; i++) {
-          if (allow[RANGED_WEAPONS[i].id]) out.push(RANGED_WEAPONS[i]);
-        }
-        return out;
-      }
-
-
 
 
       // FIGHTER ABILITIES (example placeholder)
@@ -1131,7 +1163,7 @@
           effect:
             'Range: 16"<br><br>' +
             'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Power Surge (CV 15): Deals +2 MW before the push."
+            "Flux Burn (CV 15): Deals +2 MW before the push."
         },
         {
           id: "graviticMaelstrom",
@@ -1141,17 +1173,17 @@
           effect:
             'Range: 12", 3" AoE<br><br>' +
             'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Power Surge (CV 19): Fighters dragged suffer D3+2 MW."
+            "Flux Burn (CV 19): Fighters dragged suffer D3+2 MW."
         },
         {
           id: "spectralChains",
           name: "SPECTRAL CHAINS",
-          cv: 17,
+          cv: 13,
           points: 0,
           effect:
-            'Range: 12"<br><br>' +
-            "Target Fighter may immediately be moved up to 6 inches by the Conjuring Warlocks Player.<br><br>" +
-            "Power Surge (CV 19): Target also suffers 1 MW if it repositions in its own activation this turn."
+            'Range: 16"<br><br>' +
+            "Target suffers –2 Move and cannot Dash this round.<br><br>" +
+            "Flux Burn (CV 15): Target also suffers 1 MW if it attempts a Charge."
         },
         {
           id: "stolenSight",
@@ -1161,7 +1193,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target suffers –3 to Shoot until end of Round; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Power Surge (CV 14): –4 to Shoot, –3 to Fight."
+            "Flux Burn (CV 14): –4 to Shoot, –3 to Fight."
         },
         {
           id: "twistOfWill",
@@ -1171,7 +1203,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Power Surge (CV 16): Target also cannot Charge until next turn."
+            "Flux Burn (CV 16): Target also cannot Charge until next turn."
         },
         {
           id: "voidfireBlast",
@@ -1180,8 +1212,8 @@
           points: 0,
           effect:
             'Range: 12"<br><br>' +
-            "Pick any point. All models within 2\" suffer 2D3 MW. Psyker suffers 1 MW.<br><br>" +
-            "Power Surge (CV 20): Radius becomes 4\"."
+            "Pick any point. All models within 2\" suffer 2D3 MW. Warlock suffers 1 MW.<br><br>" +
+            "Flux Burn (CV 20): Radius becomes 4\"."
         },
         {
           id: "blazingWind",
@@ -1191,7 +1223,7 @@
           effect:
             'Range: 12"<br><br>' +
             'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Power Surge (CV 15): D3+1 Damage and 4\" push."
+            "Flux Burn (CV 15): D3+1 Damage and 4\" push."
         },
         {
           id: "fireblast",
@@ -1201,7 +1233,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target suffers D3+1 Damage.<br><br>" +
-            "Power Surge (CV 15): Target also gains a Fire token."
+            "Flux Burn (CV 15): Target also gains a Fire token."
         },
         {
           id: "lightningBolt",
@@ -1211,7 +1243,7 @@
           effect:
             "Range: —<br><br>" +
             "Target suffers D3+2 MW.<br><br>" +
-            "Power Surge (CV 17): D3+3 MW."
+            "Flux Burn (CV 17): D3+3 MW."
         },
         {
           id: "mendFlesh",
@@ -1221,7 +1253,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Power Surge (CV 12): Restore D3+2 HP and remove 1 Poison/Burning token."
+            "Flux Burn (CV 12): Restore D3+2 HP and remove 1 Poison/Burning token."
         },
         {
           id: "circleOfWarding",
@@ -1231,7 +1263,7 @@
           effect:
             'Range: 3" aura<br><br>' +
             "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Power Surge (CV 13): Circle lasts until next activation."
+            "Flux Burn (CV 13): Circle lasts until next activation."
         },
         {
           id: "arcaneAegis",
@@ -1241,7 +1273,7 @@
           effect:
             'Range: 6"<br><br>' +
             "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Power Surge (CV 15): Target ignores first 2 Damage from next attack."
+            "Flux Burn (CV 15): Target ignores first 2 Damage from next attack."
         },
         {
           id: "spectralDecoy",
@@ -1250,8 +1282,8 @@
           points: 0,
           effect:
             "Range: Self<br><br>" +
-            "First attack against the Psyker before next activation automatically misses.<br><br>" +
-            "Power Surge (CV 14): On 5+, reflect that missed ranged attack for D3 Damage."
+            "First attack against the Warlock before next activation automatically misses.<br><br>" +
+            "Flux Burn (CV 14): On 5+, reflect that missed ranged attack for D3 Damage."
         },
         {
           id: "soulflameSurge",
@@ -1261,7 +1293,7 @@
           effect:
             'Range: 12"<br><br>' +
             'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Power Surge (CV 16): Affect two Fighters instead of one."
+            "Flux Burn (CV 16): Affect two Fighters instead of one."
         },
         {
           id: "veilOfShadows",
@@ -1271,7 +1303,7 @@
           effect:
             'Range: 6"<br><br>' +
             "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
-            "Power Surge (CV 16): Target may act normally; remove Hidden immediately."
+            "Flux Burn (CV 16): Target may act normally; remove Hidden immediately."
         },
         {
           id: "reanimateTheDead",
@@ -1281,7 +1313,7 @@
           effect:
             "Range: Self (3\" placement)<br><br>" +
             "Summon a Shambling Corpse (HP4, Move4\", Fight9+, AP1, ATK3, DMG2/3).<br><br>" +
-            "Power Surge (CV 18): Summon two instead."
+            "Flux Burn (CV 18): Summon two instead."
         },
         {
           id: "phantasmalHorror",
@@ -1291,7 +1323,7 @@
           effect:
             'Range: 12"<br><br>' +
             "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Power Surge (CV 17): Must roll ≤ AP instead."
+            "Flux Burn (CV 17): Must roll ≤ AP instead."
         },
         {
           id: "siphonLife",
@@ -1300,8 +1332,8 @@
           points: 0,
           effect:
             'Range: 8"<br><br>' +
-            "Target suffers D3 MW; Psyker heals the same amount.<br><br>" +
-            "Power Surge (CV 16): D3+2 MW/heal."
+            "Target suffers D3 MW; Warlock heals the same amount.<br><br>" +
+            "Flux Burn (CV 16): D3+2 MW/heal."
         },
         {
           id: "veilOfSouls",
@@ -1310,8 +1342,8 @@
           points: 0,
           effect:
             "Range: Self<br><br>" +
-            "Until next activation, Psyker gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Power Surge (CV 18): Psyker instead gains +2 DEF."
+            "Until next activation, Warlock gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
+            "Flux Burn (CV 18): Warlock instead gains +2 DEF."
         },
         {
           id: "etherealBody",
@@ -1321,27 +1353,27 @@
           effect:
             "Range: Self<br><br>" +
             "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Power Surge (CV 14): Also gain +2 DEF until next turn."
+            "Flux Burn (CV 14): Also gain +2 DEF until next turn."
         }
       ];
 
       // EQUIPMENT (unchanged from previous working version)
       var EQUIPMENT = [
         {
-          id: "medipackKIT",
-          name: "Medipack Kit (+)",
+          id: "healingPotions",
+          name: "Healing Potions (+)",
           points: 4,
           effect: '1 AP: Friendly Fighter within 1" regains 2D3 lost HP.'
         },
         {
-          id: "scannerAuspex",
-          name: "Scanner/Auspex",
+          id: "spotterFamiliar",
+          name: "Spotter Familiar",
           points: 4,
           effect: "1 AP: Mark an enemy in LoS. Shooting vs that Fighter gains Reroll (SR) until next turn."
         },
         {
-          id: "blinkPack",
-          name: "Blink Pack/Personal Teleporter (+)",
+          id: "teleportArtifact",
+          name: "Magical Teleport Artifact (+)",
           points: "+50% Stat cost",
           dynamicType: "percentStats",
           dynamicFactor: 0.5,
@@ -1350,7 +1382,7 @@
         },
         {
           id: "flightDevice",
-          name: "Jump Pack/Rokkit Pack/Wings",
+          name: "Magical Flight / Aerial Device / Wings",
           points: "+33% Stat cost",
           dynamicType: "percentStats",
           dynamicFactor: 1/3,
@@ -1364,8 +1396,8 @@
           effect: 'Friendly Fighters within 3" gain +1 to Hit with CC and Shooting attacks.'
         },
         {
-          id: "demolitions",
-          name: "Demolitions (+)",
+          id: "bomb",
+          name: "Bomb (+)",
           points: 6,
           effect:
             "Once per game plant an Explosive Device while moving. 1 AP to detonate: ATK 4, Hit 2+, DMG 5/6, Piercing (-2), Blast (2\")."
@@ -1377,59 +1409,59 @@
           effect: 'Ignore the first 2" of vertical repositioning.'
         },
         {
-          id: "holyRelic",
-          name: "Holy Relic (+)",
+          id: "ancientRelic",
+          name: "Ancient Relic (+)",
           points: 3,
           effect: "User may ignore 1 normal damage attack per game."
         },
         {
-          id: "camoCloak",
-          name: "Camo Cloak",
+          id: "enchantedCloak",
+          name: "Enchanted Cloak",
           points: 4,
           effect:
             "User gains -1 to be hit when in Cover or Hidden (stacks with Cover/Hidden)."
         },
         {
-          id: "forceField",
-          name: "Force Field (+)",
+          id: "arcaneShield",
+          name: "Arcane Shield (+)",
           points: 5,
           effect: "User gains a 9+ Aegis save."
         },
         {
-          id: "combatDrugs",
-          name: "Combat Drugs",
+          id: "enhancingPotions",
+          name: "Enhancing Potions",
           points: 4,
           effect:
             "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn."
         },
         {
-          id: "mastercraftedForcefield",
-          name: "Mastercrafted Force Field (+)",
+          id: "rareArcaneShield",
+          name: "Rare Arcane Shield (+)",
           points: 10,
           effect: "User gains a 7+ Aegis save."
         },
         {
-          id: "suspensorSystem",
-          name: "Suspensor System",
+          id: "heavilyMuscled",
+          name: "Heavily Muscled",
           points: 3,
           effect: "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
         },
         {
-          id: "reconDrone",
-          name: "Recon Drone/Servo Skull",
+          id: "arcaneFamiliar",
+          name: "Arcane Familiar",
           points: 4,
           effect:
             "1 AP: Mark an enemy in LoS. Shooting vs that Fighter ignores negative To Hit modifiers from Light Cover and Hidden until end of turn."
         },
         {
-          id: "commsEquipment",
-          name: "Comms Equipment (+)",
+          id: "warHorn",
+          name: "War Horn / Instrument (+)",
           points: 4,
           effect: '1 AP: Grant a friendly Fighter within 9" +1 AP this round.'
         },
         {
-          id: "shimmerShield",
-          name: "Shimmershield (+)",
+          id: "ringOfProtection",
+          name: "Ring of Protection (+)",
           points: 4,
           effect:
             "User and friendly Fighters within 2\" reduce Piercing of enemy Shooting attacks by 2."
@@ -1442,22 +1474,22 @@
             'Treat any wall <1" thick as Accessible Terrain (may move through at cost of 1" Move).'
         },
         {
-          id: "digitalWeapons",
-          name: "Digital Weapons (+)",
+          id: "clawedGloves",
+          name: "Clawed Gloves (+)",
           points: 2,
           effect:
             "At the start of this Fighter’s CC activation, deal 2 MW to the engaged enemy Fighter."
         },
         {
-          id: "stormShield",
-          name: "Storm Shield (+)",
+          id: "magicalShield",
+          name: "Magical Shield (+)",
           points: 5,
           effect:
             "User gains a 7+ Aegis save and 4 Defense dice in CC when using this shield. May only have Pistol and/or CC weapons as ranged options."
         },
         {
-          id: "commsJammer",
-          name: "Comms Jammer (+)",
+          id: "artifactOfDisruption",
+          name: "Artifact of Disruption (+)",
           points: 5,
           effect:
             "1 AP: Select a visible enemy Fighter; that Fighter must be activated last by your opponent this turn."
@@ -1477,8 +1509,8 @@
             'While visible and within 3" of enemy Fighters, those Fighters reduce the Attack characteristic of their Melee and Ranged weapons by 1.'
         },
         {
-          id: "commandUplink",
-          name: "Command Uplink (+)",
+          id: "spottingTelescope",
+          name: "Spotting Telescope (+)",
           points: 5,
           effect: "Gain 1 extra FP at the start of the battle."
         },
@@ -1490,22 +1522,22 @@
             "Add +1 to both Damage values of this Fighter’s Ranged weapons. Cannot be used on Heavy Weapons."
         },
         {
-          id: "targetingDesignator",
-          name: "Targeting Designator (+)",
+          id: "cannonsBehindLines",
+          name: "Cannons Behind the Lines (+)",
           points: 14,
           effect:
             'Gain an additional Ranged weapon: Cannon Strike – ATK 4, Hit 6+, DMG 3/5, Blast (2"), Heavy (Dash), may be used while Hidden.'
         },
         {
-          id: "laserSight",
-          name: "Laser Sight",
+          id: "telescopicSight",
+          name: "Telescopic Sight",
           points: 3,
           effect:
             'This Fighter’s Ranged weapons with “Rng X” gain +1" range (except Flamers and Grenades).'
         },
         {
-          id: "gravShute",
-          name: "Grav Shute/Sliders",
+          id: "rope",
+          name: "Rope",
           points: 3,
           effect: "This Fighter ignores vertical height when dropping down."
         },
@@ -1517,27 +1549,19 @@
             "Enemy Fighters can only score Critical Hits on 11+ in CC against this Fighter."
         },
         {
-          id: "operationalIntelligence",
-          name: "Operational Intelligence",
+          id: "scoutingIntel",
+          name: "Scouting Intel",
           points: 4,
           effect:
             "Once per battle you may reroll the initiative roll. With Random Activation, return the drawn token and pull another."
         },
-          {
-          id: "markerLights",
-          name: "Markerlights",
-          points: 5,
-          effect:
-            "1 AP action: Place a Markerlight token on an enemy Fighter in this Fighters line of sight. When a Fighter with the Markerlights ability is shooting at a Fighter with Markerlights tokens, its weapons gain No Cover (if 1 token) and No Cover + Reroll(1) (if 2 tokens)"
-        },
         {
-          id: "hyperstaticField",
-          name: "Hyperstatic Field",
+          id: "voltaicSuit",
+          name: "Voltaic Suit",
           points: 5,
           effect:
             'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
         }
-          
       ];
 
       // FIGHTER STATE
@@ -1565,7 +1589,33 @@
           equipment: 0
         }
       };
-      // Expose state for external card renderer
+
+// === Cosmetic display-name overrides (builder + card) ===
+function getDisplayName(item){
+  if(!item) return "";
+  var n = (item.displayNameOverride != null ? String(item.displayNameOverride) : "").trim();
+  if(n) return n;
+  return (item.name != null ? String(item.name) : "");
+}
+function setDisplayNameOverride(item, newName){
+  if(!item) return;
+  var n = (newName != null ? String(newName) : "").trim();
+  if(n){
+    item.displayNameOverride = n;
+  } else {
+    delete item.displayNameOverride;
+  }
+}
+function promptRename(item, fallbackLabel){
+  var current = (item && item.displayNameOverride) ? String(item.displayNameOverride) : "";
+  var base = (item && item.name) ? String(item.name) : (fallbackLabel||"");
+  var val = window.prompt("Rename for card (cosmetic only). Leave blank to reset.", current || base);
+  if(val === null) return false; // cancelled
+  setDisplayNameOverride(item, val);
+  return true;
+}
+
+      // Expose state for card generator
       window.fighter = fighter;
       window.computeTotal = computeTotal;
 
@@ -1598,20 +1648,21 @@
         html += "<p>";
         html += "Base: " + fighter.points.base + " pts";
         html += " · Stats: " + fighter.points.stats + " pts";
-        html += " · Psyker: " + fighter.points.warlock + " pts";
+        html += " · Warlock: " + fighter.points.warlock + " pts";
         html += " · CC Weapons: " + fighter.points.ccWeapons + " pts";
         html += " · Ranged Weapons: " + fighter.points.rangedWeapons + " pts";
         html += "<br>";
         html += "Abilities: " + fighter.points.abilities + " pts";
         html += " · Leader Abilities: " + fighter.points.leaderAbilities + " pts";
-        html += " · Psychic Powers: " + fighter.points.spells + " pts";
+        html += " · Spells: " + fighter.points.spells + " pts";
         html += " · Equipment: " + fighter.points.equipment + " pts";
-        html += "<br><span style='color:#f97316;'>Total: " + computeTotal() + " pts</span>";
+        html += "<br><span style='color:#3aa79f;'>Total: " + computeTotal() + " pts</span>";
         html += "</p>";
 
 
+        // --- Snapshot (for screenshots) ---
         html += "<div class='summary-pill' style='margin-top:0.25rem;'>";
-        html += "<div class='summary-category-title'>Stats</div>";
+        html += "<div class='summary-category-title'>Snapshot</div>";
         html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem;'>";
         for (var si = 0; si < STAT_CONFIG.length; si++) {
           var scfg = STAT_CONFIG[si];
@@ -1623,20 +1674,21 @@
         }
         html += "</div>";
 
-        // Psyker status
-        var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
+        var wLabel = getWarlockLabel();
         html += "<div style='margin-top:0.6rem; display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;'>";
-        html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:140px;'>";
-        html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>Psyker</div>";
-        html += "<div style='font-weight:700; font-size:1.02rem; margin-top:0.05rem;'>" + psyLabel + "</div>";
+        html += "<div style='background:#141619;border:1px solid #2a2d31;border-radius:12px;padding:0.35rem 0.55rem;min-width:160px;'>";
+        html += "<div style='font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase; color:#9aa1a8;'>Warlock</div>";
+        html += "<div style='font-weight:700; font-size:1.02rem; margin-top:0.05rem;'>" + wLabel + "</div>";
         html += "</div>";
         html += "</div>";
 
-        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem;'>";        html += "<button class='tab-pill-colour' onclick='copyFighterText()'>Copy Text</button>";
-        
-        html += "<button class=\'tab-pill-colour\' onclick=\'printFighterCard\(\)\'>Generate Card</button>";
-html += "</div>";
-        html += "<p style='margin:0.45rem 0 0; font-size:0.82rem; color:#9ca3af;'>Tip: Use <b>Copy Text</b> to paste into a document or <b>Generate Card</b> to generate a simple Fighter Card.</p>";
+        html += "<div style='display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.6rem;'>";
+        html += "<button class='tab-pill-colour' onclick='copyFighterText()'>Copy Text</button>";
+        html += "<button class='tab-pill-colour' id='btn-portrait-secondary' onclick='openPortrait()' title='Crop / set portrait'>Portrait</button>";
+
+        html += "<button class='tab-pill-colour' onclick='generateFighterCard()'>Generate Card</button>";
+        html += "</div>";
+        html += "<p style='margin:0.45rem 0 0; font-size:0.82rem; color:#9ca3af;'>Tip: use Copy Text for pasting the whole profile into a document or use Print Card to generate a simple Fighter Card. Use Portrait to upload, crop and insert an image of your Fighter into the card.</p>";
         html += "</div>";
 
         function renderList(title, arr) {
@@ -1649,10 +1701,13 @@ html += "</div>";
     html += "<ul style='padding-left:1.1rem; margin:0; font-size:0.9rem;'>";
     for (var i = 0; i < arr.length; i++) {
       var x = arr[i];
-      var main = x.profile || x.effect || "";
+      var main = (x.profile || x.effect || "").replace(/<br\s*\/?>/gi, "\n\n");
       var pts = x.points || 0;
+      var meta = (title === "Spells")
+        ? ("CV " + (x.cv != null ? x.cv : ""))
+        : (pts + " pts");
       html += "<li style='margin-bottom:0.15rem;'>" +
-              x.name + " (" + pts + " pts)" +
+              x.name + " (" + meta + ")" +
               (main ? " — " + main : "") +
               "</li>";
     }
@@ -1667,63 +1722,48 @@ html += "</div>";
         renderList("Ranged Weapons",        fighter.rangedWeapons);
         renderList("Fighter Abilities",     fighter.abilities);
         renderList("Leader Abilities",      fighter.leaderAbilities);
-        renderList("Psychic Powers",                fighter.spells);
+        renderList("Spells",                fighter.spells);
         renderList("Equipment",             fighter.equipment);
 
         html += "</div>";
         container.innerHTML = html;
+      }
 
-        // --- Fighter name input ---
-        var nameInput = container.querySelector("#fighter-name-input");
-        if (nameInput){
-          nameInput.value = fighter.name || "";
-          nameInput.addEventListener("input", function(){
-            fighter.name = nameInput.value || "";
-            refreshTotal();
-            updateSummary();
-          });
-        }
+      // STAT COST
+      
+      // ===== Copy / Print (snapshot) =====
+      function getWarlockLabel () {
+        return fighter.isMasterWarlock ? "Master Warlock" : (fighter.isWarlock ? "Warlock" : "None");
+      }
 
-
-        // Name input handler
-        var nameInput = document.getElementById("fighter-name-input");
-        if (nameInput) {
-          nameInput.value = fighter.name || "";
-          var __nameDebounce = null;
-          nameInput.addEventListener("input", function () {
-            fighter.name = this.value || "";
-            if (__nameDebounce) clearTimeout(__nameDebounce);
-            __nameDebounce = setTimeout(function () {
-              // Name does not affect points/stats; avoid full rerender while typing.
-              // (Keeps typing snappy even with long lists.)
-            }, 150);
-            });
-          // Also update on blur (useful if paste happens)
-          nameInput.addEventListener("blur", function () {
-            fighter.name = this.value || "";
-          });
-          }
-}
-
-            // ===== Copy Build Text =====
-      function buildExportText () {
-        var lines = [];
+      function buildCopyText () {
         var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+        var lines = [];
         lines.push(nm + " — " + computeTotal() + " pts");
         lines.push("");
 
-        // Stats line
+        // Stats
         var statBits = [];
         for (var i = 0; i < STAT_CONFIG.length; i++) {
           var sc = STAT_CONFIG[i];
           statBits.push(sc.label + " " + fighter.stats[sc.key] + (sc.unit || ""));
         }
         lines.push(statBits.join(" · "));
-
-        // Psyker state
-        var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
-        lines.push("Psyker: " + psyLabel);
+        lines.push("Warlock: " + getWarlockLabel());
         lines.push("");
+
+        function cleanMultiline (s) {
+          return String(s || "")
+            // Convert any <br>, <br/>, <br />, or <br ...> variants into real line breaks
+            .replace(/<br\s*\/?>/gi, "\n\n")
+            .replace(/<br[^>]*>/gi, "\n\n")
+            // Also catch slightly malformed variants like "<br<"
+            .replace(/<br</gi, "\n\n")
+            .replace(/\r\n/g, "\n")
+            // Collapse excessive blank space
+            .replace(/\n{3,}/g, "\n\n")
+            .trim();
+        }
 
         function listBlock (title, arr) {
           lines.push(title + ":");
@@ -1732,319 +1772,41 @@ html += "</div>";
             lines.push("");
             return;
           }
+
           for (var j = 0; j < arr.length; j++) {
             var x = arr[j];
-            var main = x.profile || x.effect || "";
             var pts = x.points || 0;
-            lines.push("  - " + x.name + " (" + pts + " pts)" + (main ? " — " + main : ""));
+            lines.push("  - " + x.name + " (" + pts + " pts)");
+
+            var main = cleanMultiline(x.profile || x.effect || "");
+            if (main) {
+              var bits = main.split(/\n+/);
+              for (var bi = 0; bi < bits.length; bi++) {
+                var line = bits[bi].trim();
+                if (!line) continue;
+                lines.push("      " + line);
+              }
+            }
           }
           lines.push("");
         }
 
         listBlock("Close Combat Weapons", fighter.ccWeapons);
         listBlock("Ranged Weapons", fighter.rangedWeapons);
-        listBlock("Fighter Abilities", fighter.abilities);
+        listBlock("Abilities", fighter.abilities);
         listBlock("Leader Abilities", fighter.leaderAbilities);
-        listBlock("Psychic Powers", fighter.spells);
+        listBlock("Spells", fighter.spells);
         listBlock("Equipment", fighter.equipment);
-
-        lines.push("Breakdown: Base " + fighter.points.base + " · Stats " + fighter.points.stats + " · Psyker " + fighter.points.warlock +
-                   " · CC " + fighter.points.ccWeapons + " · Ranged " + fighter.points.rangedWeapons +
-                   " · Abilities " + fighter.points.abilities + " · Leader " + fighter.points.leaderAbilities +
-                   " · Psychic " + fighter.points.spells + " · Equipment " + fighter.points.equipment);
 
         return lines.join("\n");
       }
 
-      // Exposed to onclick handlers
-      
-      // ===== Print-friendly Card =====
-      
-      // ===== Generate Card (in-page) =====
-      window.generateFighterCard = function () {
-        try {
-          var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
-          var total = computeTotal();
-          var psyLabel = fighter.isMasterWarlock ? "Master Psyker" : (fighter.isWarlock ? "Psyker" : "None");
-
-          // Resolve asset URLs (works locally + GitHub Pages)
-          var baseHref = (window.location && window.location.href) ? window.location.href : "";
-          baseHref = baseHref.replace(/[#?].*$/, "");
-          baseHref = baseHref.replace(/[^\/]*$/, "");
-var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
-
-          // HP pips (rows of 15)
-          var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
-          var maxPips = 30;
-          var pipCount = Math.max(0, Math.min(hpVal, maxPips));
-          var pipsPerRow = 15;
-          var rows = [];
-          for (var pi = 0; pi < pipCount; pi += pipsPerRow) {
-            rows.push("●".repeat(Math.min(pipsPerRow, pipCount - pi)));
-          }
-          var hpPips = rows.join("<br>");
-          if (hpVal > maxPips) hpPips += "<br>+" + (hpVal - maxPips);
-
-          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-          function renderRulesHtml (s) {
-            var t = String(s || "")
-              .replace(/<br\b[^>]*>/gi, "\n")
-              .replace(/<br</gi, "\n")
-              .replace(/\r\n/g, "\n");
-            var parts = t.split(/\n+/);
-            var out = "";
-            for (var i = 0; i < parts.length; i++) {
-              var line = parts[i].trim();
-              if (!line) continue;
-              out += (out ? "<br>" : "") + esc(line);
-            }
-            return out;
-          }
-          // Only include blocks that have content, so the grid compacts nicely
-          var blocks = [];
-          var b;
-          b = listHtml("Close Combat Weapons", fighter.ccWeapons); if (b) blocks.push(b);
-          b = listHtml("Ranged Weapons", fighter.rangedWeapons); if (b) blocks.push(b);
-          b = listHtml("Abilities", fighter.abilities); if (b) blocks.push(b);
-          b = listHtml("Leader Abilities", fighter.leaderAbilities); if (b) blocks.push(b);
-          b = listHtml("Psychic Powers", fighter.spells); if (b) blocks.push(b);
-          b = listHtml("Equipment", fighter.equipment); if (b) blocks.push(b);
-          var gridHtml = "<div class='grid'>" + blocks.join("") + "</div>";
-
-
-
-          function listHtml(title, arr) {
-            if (!arr || !arr.length) return "";
-            var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
-            out += "<ul>";
-            for (var i = 0; i < arr.length; i++) {
-              var x = arr[i];
-              var pts = x.points || 0;
-              var main = (x.profile || x.effect || "");
-              var rulesHtml = renderRulesHtml(main);
-              out += "<li><b>" + esc(x.name) + "</b> <span class='muted'>(" + pts + " pts)</span>";
-              if (rulesHtml) out += "<br><span class='muted'>" + rulesHtml + "</span>";
-              out += "</li>";
-            }
-            out += "</ul></div>";
-            return out;
-          }
-
-          var stats = [];
-          for (var i = 0; i < STAT_CONFIG.length; i++) {
-            var sc = STAT_CONFIG[i];
-            stats.push("<span class='stat'><span class='k'>" + esc(sc.label) + "</span> <span class='v'>" + esc(fighter.stats[sc.key] + (sc.unit||"")) + "</span></span>");
-          }
-
-          // Create / reuse overlay
-          var existing = document.getElementById("generated-card-overlay");
-          if (!existing) {
-            existing = document.createElement("div");
-            existing.id = "generated-card-overlay";
-            existing.style.position = "fixed";
-            existing.style.inset = "0";
-            existing.style.zIndex = "99999";
-            existing.style.overflow = "auto";
-            existing.style.background = "#ffffff";
-            existing.style.padding = "24px";
-            document.body.appendChild(existing);
-          }
-
-          // Hide app UI while in card view (but keep it in DOM)
-          document.body.classList.add("card-view");
-
-          existing.innerHTML =
-            "<div style='max-width:900px;margin:0 auto;'>" +
-              "<div style='display:flex;gap:10px;justify-content:flex-end;margin-bottom:10px;'>" +
-                "<button onclick='window.exitCardView()' style='padding:8px 10px;border-radius:10px;border:1px solid #222;background:#fff;font-weight:800;cursor:pointer;'>Back</button>" +
-                "<button onclick='window.print()' style='padding:8px 10px;border-radius:10px;border:1px solid #222;background:#fff;font-weight:800;cursor:pointer;'>Print</button>" +
-              "</div>" +
-              "<div class='print-card card'>" +
-                "<div style='width:100%;display:block;text-align:center;margin:0 0 12px 0;'>" +"</div>" +
-                "<div class='top'>" +
-                  "<div class='left-pill'><div class='name'>" + esc(nm) + "</div><div class='meta'>Psyker: <b>" + esc(psyLabel) + "</b></div></div>" +
-                  "<div class='right'>" +
-                    "<div class='pts'>" + total + " pts</div>" +
-                    "<div class='hp-row'><span class='hp-label'>HP:</span> <span class='hp-pips'>" + hpPips + "</span></div>" +
-                  "</div>" +
-                "</div>" +
-                "<div class='stats'>" + stats.join('') + "</div>" +
-                gridHtml +
-              "</div>" +
-            "</div>";
-
-          // Hide empty sections on the generated card (removes blocks that would show 'None')
-          try {
-            var overlay = document.getElementById("generated-card-overlay");
-            if (overlay) {
-              var blocks = overlay.querySelectorAll(".print-card .block");
-              blocks.forEach(function (blk) {
-                var ul = blk.querySelector("ul");
-                var muted = blk.querySelector(".muted");
-                if (!ul || (muted && /none/i.test((muted.textContent || "").trim()))) {
-                  blk.remove();
-                }
-              });
-            }
-          } catch (e) {}
-
-          // Fixed 8:7 card ratio with auto-scale-to-fit (no scrolling)
-          try {
-            var overlay = document.getElementById("generated-card-overlay");
-            if (overlay) {
-              var card = overlay.querySelector(".print-card.card");
-              if (card) {
-                // Wrap all card content in a scalable inner container (once)
-                var inner = card.querySelector(".card-inner");
-                if (!inner) {
-                  inner = document.createElement("div");
-                  inner.className = "card-inner";
-                  while (card.firstChild) inner.appendChild(card.firstChild);
-                  card.appendChild(inner);
-                }
-
-                // Measure with no scaling first
-                inner.style.transform = "scale(1)";
-                inner.style.transformOrigin = "top left";
-                inner.style.width = "100%";
-
-                var availH = card.clientHeight;
-                var naturalH = inner.scrollHeight || 0;
-                if (naturalH > 0 && availH > 0) {
-                  var scale = Math.min(1, availH / naturalH);
-                  inner.style.transform = "scale(" + scale.toFixed(4) + ")";
-                  inner.style.width = (100 / scale).toFixed(2) + "%";
-                }
-              }
-            }
-          } catch (e) {}
-
-          // Inject/refresh print-card styles (scoped)
-          var styleId = "generated-card-style";
-          var st = document.getElementById(styleId);
-          if (!st) {
-            st = document.createElement("style");
-            st.id = styleId;
-            document.head.appendChild(st);
-          }
-          st.textContent = `
-            /* Hide the app behind the overlay while generating the card */
-            body.card-view > :not(#generated-card-overlay):not(style):not(script) { display: none !important; }
-
-            /* Print: show only the card */
-            @media print {
-              body.card-view > :not(#generated-card-overlay):not(style):not(script) { display: none !important; }
-              #generated-card-overlay { position: static !important; inset: auto !important; background: transparent !important; padding: 0 !important; }
-              #generated-card-overlay button { display: none !important; }
-            }
-
-            .print-card.card{
-              width:820px;
-              margin:0 auto;
-              background:url('${texUrl}') repeat;
-              background-size:600px auto;
-              border:2px solid #111;
-              border-radius:0;
-              padding:16px 18px 18px;
-              box-shadow:0 10px 30px rgba(0,0,0,.18);
-            }
-            .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
-            .name{font-size:20px;font-weight:900;letter-spacing:1px;}
-            .meta{margin-top:6px;font-size:13px;color:#333;}
-            .pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;display:inline-block;background:rgba(255,255,255,0.88);box-shadow:0 2px 6px rgba(0,0,0,0.25);}
-            .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
-            .hp-row{font-size:12px;color:#333;display:flex;gap:6px;align-items:flex-start;max-width:380px;}
-            .hp-label{font-weight:900;}
-            .hp-pips{display:grid; grid-template-columns: repeat(15, 16px); grid-auto-rows: 16px; gap: 4px 6px; margin-left:6px; align-content:start;}
-            .left-pill{background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.25);border-radius:14px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.25);width:33%;box-sizing:border-box;flex:0 0 33%;}
-            .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
-            .stat{background:rgba(255,255,255,0.88);border:1px solid rgba(0,0,0,0.25);border-radius:14px;padding:6px 8px;min-width:84px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.25);}
-            .stat .k{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#444;}
-            .stat .v{display:block;font-size:16px;font-weight:800;margin-top:2px;}
-            .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:12px;margin-top:14px;align-items:start;}
-            .block{background:rgba(255,255,255,0.88);border-radius:14px;border:1px solid rgba(0,0,0,0.25);box-shadow:0 2px 6px rgba(0,0,0,0.25);padding:10px;}
-            .block-title{font-weight:900;margin-bottom:6px;color:#111;}
-            ul{margin:0;padding-left:18px;}
-            li{margin-bottom:6px;}
-            .muted{color:#555;font-size:12px;}
-          
-            /* card text color fix */
-            .print-card.card, .print-card.card * { color:#111 !important; }
-            .print-card.card .muted { color:#555 !important; }
-            .print-card.card .hp-pips { color:#fff !important; }
-
-            .card-inner{width:100%;transform-origin:top left;}
-
-            @media print { body{-webkit-print-color-adjust:exact;print-color-adjust:exact;} }
-`;
-        
-          // ===== Fixed 8:7 ratio + autoscale-to-fit (no scrolling) =====
-          try {
-            // Enforce fixed frame (8:7) on the generated card
-            var overlay = document.getElementById("generated-card-overlay");
-            if (overlay) {
-              var card = overlay.querySelector(".print-card.card");
-              if (card) {
-                card.style.height = "718px";   // 820 * 7 / 8
-                card.style.overflow = "hidden";
-                card.style.boxSizing = "border-box";
-
-                // Wrap content in a scalable inner container
-                var inner = card.querySelector(".card-inner");
-                if (!inner) {
-                  inner = document.createElement("div");
-                  inner.className = "card-inner";
-                  while (card.firstChild) inner.appendChild(card.firstChild);
-                  card.appendChild(inner);
-                }
-                inner.style.transformOrigin = "top left";
-
-                function fit() {
-                  // reset scale to measure natural size
-                  inner.style.transform = "scale(1)";
-                  inner.style.width = "100%";
-
-                  var availH = card.clientHeight;
-                  var naturalH = inner.scrollHeight || 0;
-                  if (naturalH > 0 && availH > 0) {
-                    var scale = Math.min(1, availH / naturalH);
-                    inner.style.transform = "scale(" + scale.toFixed(4) + ")";
-                    inner.style.width = (100 / scale).toFixed(2) + "%";
-                  }
-                }
-
-                // run after layout settles
-                requestAnimationFrame(function(){ requestAnimationFrame(fit); });
-
-                // Also enable background/color printing where supported
-                st.textContent += "\n@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}\n";
-              }
-            }
-          } catch (e) {}
-} catch (e) {
-          alert("Generate Card failed: " + e);
-        }
-      };
-
-      window.exitCardView = function () {
-        var el = document.getElementById("generated-card-overlay");
-        if (el) el.remove();
-        document.body.classList.remove("card-view");
-      };
-
-
-      // Backward compatibility
-      window.printFighterCard = function () { window.generateFighterCard(); };
-
-
-
 window.copyFighterText = function () {
   try {
-    var txt = buildExportText();
+    var txt = buildCopyText();
 
-    // Convert any HTML line breaks to real ones (safety pass)
-    txt = txt.replace(/<br\s*\/?>/gi, "\n");
+    // Convert HTML line breaks to real ones
+    txt = txt.replace(/<br\s*\/?>/gi, "\n\n");
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(txt).then(function(){
@@ -2060,9 +1822,89 @@ window.copyFighterText = function () {
   }
 };
 
+      window.printFighterCard = function () {
+        try {
+          var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
+          var total = computeTotal();
+          var warlockLabel = getWarlockLabel();
 
-      // STAT COST
-      function recalcStatCost () {
+          function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+          function listHtml(title, arr) {
+            var out = "<div class='block'><div class='block-title'>" + esc(title) + "</div>";
+            if (!arr || !arr.length) return out + "<div class='muted'>None</div></div>";
+            out += "<ul>";
+            for (var i=0;i<arr.length;i++){
+              var x=arr[i];
+              var pts = x.points || 0;
+
+              // Turn stored <br> tags (and any newlines) into real HTML line breaks on the printed card
+              var mainRaw = (x.profile || x.effect || "");
+              mainRaw = String(mainRaw).replace(/<br\s*\/?>/gi, "\n").replace(/\r\n/g, "\n");
+              var rulesHtml = esc(mainRaw).replace(/\n+/g, "<br>");
+
+              out += "<li><b>" + esc(getDisplayName(x)) + "</b> <span class='muted'>(" + pts + " pts)</span>";
+              if (mainRaw) out += "<br><span class='muted'>" + rulesHtml + "</span>";
+              out += "</li>";
+            }
+            out += "</ul></div>";
+            return out;
+          }var stats = "";
+          for (var i=0;i<STAT_CONFIG.length;i++){
+            var sc=STAT_CONFIG[i];
+            stats += "<span class='stat'><span class='k'>" + esc(sc.label) + "</span> <span class='v'>" + esc(fighter.stats[sc.key] + (sc.unit||"")) + "</span></span>";
+          }
+
+          var w = window.open("", "_blank");
+          if (!w) { alert("Popup blocked — allow popups to print the card."); return; }
+
+          var doc = "";
+          doc += "<!doctype html><html><head><meta charset='utf-8'><title>" + esc(nm) + " — " + total + " pts</title>";
+          doc += "<style>";
+          doc += "body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:20px;color:#111;background:#fff;}";
+          doc += ".card{border:2px solid #111;border-radius:14px;padding:16px;max-width:900px;}";
+          doc += ".top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}";
+          doc += ".name{font-size:26px;font-weight:800;}";
+          doc += ".pts{font-size:18px;font-weight:800;padding:6px 10px;border:2px solid #111;border-radius:12px;white-space:nowrap;}";
+          doc += ".meta{margin-top:6px;font-size:13px;color:#333;}";
+          doc += ".stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}";
+          doc += ".stat{border:1px solid #111;border-radius:10px;padding:6px 8px;min-width:84px;text-align:center;}";
+          doc += ".stat .k{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:#444;}";
+          doc += ".stat .v{display:block;font-size:16px;font-weight:800;margin-top:2px;}";
+          doc += ".grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}";
+          doc += ".block{border:1px solid #111;border-radius:12px;padding:10px;}";
+          doc += ".block-title{font-weight:900;margin-bottom:6px;}";
+          doc += "ul{margin:0;padding-left:18px;}";
+          doc += "li{margin-bottom:6px;}";
+          doc += ".muted{color:#555;font-size:12px;}";
+          doc += "@media print{body{margin:0} .card{border:none;border-radius:0}}";
+          doc += "</style></head><body>";
+
+          doc += "<div class='card'>";
+          doc += "<div class='top'><div><div class='name'>" + esc(nm) + "</div></div><div class='pts'>" + total + " pts</div></div>";
+          doc += "<div class='stats'>" + stats + "</div>";
+          doc += "<div class='grid'>";
+          doc += listHtml("Close Combat Weapons", fighter.ccWeapons);
+          doc += listHtml("Ranged Weapons", fighter.rangedWeapons);
+          doc += listHtml("Abilities", fighter.abilities);
+          doc += listHtml("Leader Abilities", fighter.leaderAbilities);
+          doc += listHtml("Spells", fighter.spells);
+          doc += listHtml("Equipment", fighter.equipment);
+          doc += "</div></div>";
+          doc += "</body></html>";
+
+          w.document.open();
+          w.document.write(doc);
+          w.document.close();
+
+          setTimeout(function(){ try { w.focus(); w.print(); } catch(e){} }, 250);
+        } catch (e) {
+          alert("Print failed: " + e);
+        }
+      };
+
+
+function recalcStatCost () {
         var total = 0;
         for (var i = 0; i < STAT_CONFIG.length; i++) {
           var cfg = STAT_CONFIG[i];
@@ -2124,34 +1966,33 @@ window.copyFighterText = function () {
         return text;
       }
 
-                 // INIT STATS SECTION (with Psyker toggles + floating Total Points)
+                 // INIT STATS SECTION (with Warlock toggles + floating Total Points)
       function initStats () {
         var container = document.getElementById("section-stats");
         if (!container) return;
 
         var i, cfg;
-        // Initialize missing stats to base values (do not overwrite loaded/imported values)
-        if (!fighter.stats) fighter.stats = {};
+        // Initialize stats to base values (only if missing)
         for (i = 0; i < STAT_CONFIG.length; i++) {
           cfg = STAT_CONFIG[i];
-          if (fighter.stats[cfg.key] == null) fighter.stats[cfg.key] = cfg.base;
+          if (fighter.stats[cfg.key] == null || isNaN(fighter.stats[cfg.key])) {
+            fighter.stats[cfg.key] = cfg.base;
+          }
         }
 
         var html = '<div class="card"><h2>Core Stats</h2>';
 
-        
-
+        // 🔹 Floating Total Points pill in the top-right of this card
+        html += ''
+          + '<div class="points-box-inline stats-total-floating">'
+          + '  Total Points: <span id="totalPoints">0</span>'
+          + '</div>';
         // Fighter name
         html += '<div style="margin-bottom:0.65rem; margin-top:0.15rem;">';
         html += '  <div style="font-size:0.75rem; text-transform:uppercase; color:#9aa1a8; margin-bottom:0.15rem;">Fighter Name</div>';
         html += '  <input id="fighter-name-input" type="text" placeholder="Enter name..." style="width:100%; padding:0.4rem 0.6rem; border-radius:8px; border:1px solid #2a2d31; background:#141619; color:#e5e7eb;">';
         html += '</div>';
 
-// 🔹 Floating Total Points pill in the top-right of this card
-        html += ''
-          + '<div class="points-box-inline stats-total-floating">'
-          + '  Total Points: <span id="totalPoints">0</span>'
-          + '</div>';
 
         // Stat pills
         html += '<div class="stats-row">';
@@ -2162,21 +2003,21 @@ window.copyFighterText = function () {
             + '  <div class="stat-pill-label">' + cfg.label + '</div>'
             + '  <div class="stat-pill-controls">'
             + '    <button class="stat-btn-vert stat-up">▲</button>'
-            + '    <div class="stat-pill-value"><span class="value-text">' + fighter.stats[cfg.key] + '</span>' + cfg.unit + '</div>'
+            + '    <div class="stat-pill-value"><span class="value-text">' + (fighter.stats[cfg.key] != null ? fighter.stats[cfg.key] : cfg.base) + '</span>' + cfg.unit + '</div>'
             + '    <button class="stat-btn-vert stat-down">▼</button>'
             + '  </div>'
             + '</div>';
         }
         html += '</div>'; // end .stats-row
 
-        // Psyker section
+        // Warlock section
         html += ''
           + '<div class="warlock-box">'
           + '  <label class="warlock-option">'
-          + '    <input type="checkbox" class="warlock-toggle" data-type="warlock"> Psyker (+50% of Stat cost)'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="warlock"' + (fighter.isWarlock ? ' checked' : '') + '> Warlock (+50% of Stat cost)'
           + '  </label>'
           + '  <label class="warlock-option">'
-          + '    <input type="checkbox" class="warlock-toggle" data-type="master"> Master Psyker (+66% of Stat cost)'
+          + '    <input type="checkbox" class="warlock-toggle" data-type="master"' + (fighter.isMasterWarlock ? ' checked' : '') + '> Master Warlock (+66% of Stat cost)'
           + '  </label>'
           + '  <div class="warlock-note">'
           + '    Warlocks gain access to spells. Only one of these options may be active.'
@@ -2185,6 +2026,51 @@ window.copyFighterText = function () {
 
         html += '</div>'; // end .card
         container.innerHTML = html;
+
+
+        // Name input handler (idle/debounced to avoid heavy re-render while typing)
+        var nameInput = document.getElementById("fighter-name-input");
+        if (nameInput) {
+          nameInput.value = fighter.name || "";
+          var __nameTimer = null;
+          var __idleHandle = null;
+          function scheduleNameUpdate() {
+            // cancel pending
+            if (__nameTimer) { clearTimeout(__nameTimer); __nameTimer = null; }
+            if (__idleHandle && window.cancelIdleCallback) { cancelIdleCallback(__idleHandle); __idleHandle = null; }
+
+            var run = function () {
+              __idleHandle = null;
+              __nameTimer = null;
+              updateSummary();
+            };
+
+            // Prefer idle callback so typing stays snappy on big builds
+            if (window.requestIdleCallback) {
+              __idleHandle = requestIdleCallback(run, { timeout: 600 });
+            } else {
+              __nameTimer = setTimeout(run, 250);
+            }
+          }
+
+          nameInput.addEventListener("input", function () {
+            fighter.name = this.value || "";
+            scheduleNameUpdate();
+          });
+
+          // Force immediate update on blur / Enter
+          nameInput.addEventListener("blur", function () {
+            fighter.name = this.value || "";
+            updateSummary();
+          });
+          nameInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              fighter.name = this.value || "";
+              updateSummary();
+              this.blur();
+            }
+          });
+        }
 
         // --- Stat pill handlers ---
         var pills = container.getElementsByClassName("stat-pill");
@@ -2201,9 +2087,7 @@ window.copyFighterText = function () {
           if (!cfgLocal) return;
 
           var valueEl = pill.querySelector(".value-text");
-          
-          valueEl.textContent = fighter.stats[key];
-var upBtn = pill.querySelector(".stat-up");
+          var upBtn = pill.querySelector(".stat-up");
           var downBtn = pill.querySelector(".stat-down");
 
           upBtn.addEventListener("click", function () {
@@ -2237,7 +2121,7 @@ var upBtn = pill.querySelector(".stat-up");
           attachHandlers(pills[p]);
         }
 
-        // --- Psyker toggles ---
+        // --- Warlock toggles ---
         var warlockToggles = container.getElementsByClassName("warlock-toggle");
 
         function syncWarlock () {
@@ -2354,7 +2238,7 @@ var upBtn = pill.querySelector(".stat-up");
           sumL += fighter.leaderAbilities[i].points || 0;
         }
 
-        // Psychic Powers (all 0)
+        // Spells (all 0)
         for (i = 0; i < fighter.spells.length; i++) {
           sumS += fighter.spells[i].points || 0;
         }
@@ -2506,7 +2390,7 @@ var upBtn = pill.querySelector(".stat-up");
               + '  </div>'
               + '  <div class="item-footer">'
               + '    <div></div>'
-              + '    <div class="item-actions"><button class="remove-btn">Remove</button></div>'
+              + '    <div class="item-actions"><button class="rename-btn">Rename</button><button class="remove-btn">Remove</button></div>'
               + '  </div>'
               + '</div>';
           }
@@ -2526,6 +2410,23 @@ var upBtn = pill.querySelector(".stat-up");
               });
             })(removes[i]);
           }
+
+
+var renames = listEl.getElementsByClassName("rename-btn");
+for (i = 0; i < renames.length; i++) {
+  (function (btn) {
+    btn.addEventListener("click", function () {
+      var row = btn.closest(".item-row");
+      var idx = parseInt(row.getAttribute("data-idx"), 10);
+      var it = fighter[targetArrayName][idx];
+      if (promptRename(it)) {
+        refreshTotal();
+        updateSummary();
+        renderSelected();
+      }
+    });
+  })(renames[i]);
+}
         }
 
         var adds = container.getElementsByClassName("add-btn");
@@ -2546,7 +2447,7 @@ var upBtn = pill.querySelector(".stat-up");
               if (!found) return;
 
               if (isSpell && !fighter.isWarlock && !fighter.isMasterWarlock) {
-                alert("You must be a Psyker or Master Psyker to add spells.");
+                alert("You must be a Warlock or Master Warlock to add spells.");
                 return;
               }
 
@@ -2641,7 +2542,7 @@ var upBtn = pill.querySelector(".stat-up");
                 + '  </div>'
                 + '  <div class="item-footer">'
                 + '    <div></div>'
-                + '    <div class="item-actions"><button class="remove-btn" data-type="cc">Remove</button></div>'
+                + '    <div class="item-actions"><button class="rename-btn" data-type="cc">Rename</button><button class="remove-btn" data-type="cc">Remove</button></div>'
                 + '  </div>'
                 + '</div>';
             }
@@ -2662,6 +2563,25 @@ var upBtn = pill.querySelector(".stat-up");
               });
             })(removes[i]);
           }
+
+
+var renames = container.getElementsByClassName("rename-btn");
+for (i = 0; i < renames.length; i++) {
+  (function (btn) {
+    btn.addEventListener("click", function () {
+      var row = btn.closest(".item-row");
+      var idx = parseInt(row.getAttribute("data-idx"), 10);
+      var grp = row.getAttribute("data-group") || btn.getAttribute("data-type");
+      var arr = (grp === "ranged" ? fighter.rangedWeapons : fighter.ccWeapons);
+      var it = arr[idx];
+      if (promptRename(it)) {
+        refreshTotal();
+        updateSummary();
+        renderSelected();
+      }
+    });
+  })(renames[i]);
+}
 
           var upgToggles = container.getElementsByClassName("upgrade-toggle");
           for (i = 0; i < upgToggles.length; i++) {
@@ -2739,62 +2659,31 @@ var upBtn = pill.querySelector(".stat-up");
         var html = '<div class="card"><h2>Ranged Weapons</h2>';
         html += '<div class="flex-columns weapons-layout">';
 
-        html += '<div class="column options-column"><h3>Options</h3>';
-        html += '<div class="subtabs-row ranged-subtabs">';
-        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="pistols">Pistols/Grenades</button>';
-        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="light">Light/Medium Ranged</button>';
-        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="special">Special</button>';
-        html += '  <button class="subtab-pill ranged-cat-pill" data-cat="heavy">Heavy</button>';
-        html += '</div>';
-        html += '<div id="rangedOptions" class="item-list weapons-options-grid"></div></div>';
+        html += '<div class="column options-column"><h3>Options</h3><div class="item-list weapons-options-grid">';
+        var i, r;
+        for (i = 0; i < RANGED_WEAPONS.length; i++) {
+          r = RANGED_WEAPONS[i];
+          html += ''
+            + '<div class="item-row" data-group="ranged" data-id="' + r.id + '">'
+            + '  <div class="item-row-header">'
+            + '    <div class="item-main">'
+            + '      <div class="item-name">' + r.name + '</div>'
+            + '      <div class="item-detail">' + r.profile + '</div>'
+            + '    </div>'
+            + '    <div class="item-points">' + r.points + ' pts</div>'
+            + '  </div>'
+            + '  <div class="item-footer">'
+            + '    <div></div>'
+            + '    <div class="item-actions"><button class="add-weapon">Add</button></div>'
+            + '  </div>'
+            + '</div>';
+        }
+        html += '</div></div>';
 
         html += '<div class="column selected-column"><h3>Selected Ranged Weapons</h3><div id="rangedSelected" class="item-list"></div></div>';
 
         html += '</div></div>';
         container.innerHTML = html;
-        // --- Ranged sub-category rendering ---
-        function setActiveRangedCategoryPills () {
-          var btns = container.getElementsByClassName("ranged-cat-pill");
-          for (var b = 0; b < btns.length; b++) {
-            var btn = btns[b];
-            var isActive = (btn.getAttribute("data-cat") === currentRangedCategory);
-            if (isActive) btn.classList.add("active");
-            else btn.classList.remove("active");
-          }
-        }
-
-        function renderRangedOptions () {
-          var listEl = document.getElementById("rangedOptions");
-          if (!listEl) return;
-
-          var src = getRangedWeaponsForCategory(currentRangedCategory);
-          var oHtml = "";
-          for (var i = 0; i < src.length; i++) {
-            var r = src[i];
-            oHtml += ''
-              + '<div class="item-row" data-group="ranged" data-id="' + r.id + '">'
-              + '  <div class="item-row-header">'
-              + '    <div class="item-main">'
-              + '      <div class="item-name">' + r.name + '</div>'
-              + '      <div class="item-detail">' + r.profile + '</div>'
-              + '    </div>'
-              + '    <div class="item-points">' + r.points + ' pts</div>'
-              + '  </div>'
-              + '  <div class="item-footer">'
-              + '    <div></div>'
-              + '    <div class="item-actions"><button class="add-weapon">Add</button></div>'
-              + '  </div>'
-              + '</div>';
-          }
-          listEl.innerHTML = oHtml || '<p style="font-size:0.9rem; color:#9ca3af;">None</p>';
-        }
-
-        // Initial state
-        if (!currentRangedCategory) currentRangedCategory = "pistols";
-        setActiveRangedCategoryPills();
-        renderRangedOptions();
-
-
 
         function renderSelected () {
           var rEl = document.getElementById("rangedSelected");
@@ -2825,7 +2714,7 @@ var upBtn = pill.querySelector(".stat-up");
                 + '  </div>'
                 + '  <div class="item-footer">'
                 + '    <div></div>'
-                + '    <div class="item-actions"><button class="remove-btn" data-type="ranged">Remove</button></div>'
+                + '    <div class="item-actions"><button class="rename-btn" data-type="ranged">Rename</button><button class="remove-btn" data-type="ranged">Remove</button></div>'
                 + '  </div>'
                 + '</div>';
             }
@@ -2847,7 +2736,26 @@ var upBtn = pill.querySelector(".stat-up");
             })(removes[i]);
           }
 
-          var upgToggles = container.getElementsByClassName("upgrade-toggle");
+          
+
+          var renames = container.getElementsByClassName("rename-btn");
+          for (i = 0; i < renames.length; i++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var row = btn.closest(".item-row");
+                var idx = parseInt(row.getAttribute("data-idx"), 10);
+                var arr = fighter.rangedWeapons;
+                var it = arr[idx];
+                if (promptRename(it)) {
+                  refreshTotal();
+                  updateSummary();
+                  renderSelected();
+                }
+              });
+            })(renames[i]);
+          }
+
+var upgToggles = container.getElementsByClassName("upgrade-toggle");
           for (i = 0; i < upgToggles.length; i++) {
             (function (input) {
               input.addEventListener("change", function () {
@@ -2871,52 +2779,43 @@ var upBtn = pill.querySelector(".stat-up");
           }
         }
 
-        // Handle ranged sub-category tabs + adding weapons via event delegation
-        container.addEventListener("click", function (e) {
-          var t = e.target;
-
-          // Switch sub-category
-          if (t && t.classList && t.classList.contains("ranged-cat-pill")) {
-            var cat = t.getAttribute("data-cat") || "pistols";
-            currentRangedCategory = cat;
-            renderRangedOptions();
-            setActiveRangedCategoryPills();
-            return;
-          }
-
-          // Add weapon
-          if (t && t.classList && t.classList.contains("add-weapon")) {
-            var row = t.closest(".item-row");
-            if (!row) return;
-            var id = row.getAttribute("data-id");
-
-            var i, found = null;
-            for (i = 0; i < RANGED_WEAPONS.length; i++) {
-              if (RANGED_WEAPONS[i].id === id) { found = RANGED_WEAPONS[i]; break; }
-            }
-            if (!found) return;
-
-            fighter.rangedWeapons.push({
-              name: found.name,
-              baseProfile: found.profile,
-              profile: found.profile,
-              basePoints: found.points,
-              points: found.points,
-              upgrades: {
-                poison: false,
-                enchanted: false,
-                cursed: false,
-                truestrike: false,
-                masterCrafted: false
+        var adds = container.getElementsByClassName("add-weapon");
+        for (var k = 0; k < adds.length; k++) {
+          (function (btn) {
+            btn.addEventListener("click", function () {
+              var row = btn.closest(".item-row");
+              var id = row.getAttribute("data-id");
+              var srcArray = RANGED_WEAPONS;
+              var i, found = null;
+              for (i = 0; i < srcArray.length; i++) {
+                if (srcArray[i].id === id) {
+                  found = srcArray[i];
+                  break;
+                }
               }
-            });
+              if (!found) return;
 
-            recalcWeaponPoints();
-            refreshTotal();
-            updateSummary();
-            renderSelected();
-          }
-        });
+              fighter.rangedWeapons.push({
+                name: found.name,
+                baseProfile: found.profile,
+                profile: found.profile,
+                basePoints: found.points,
+                points: found.points,
+                upgrades: {
+                  poison: false,
+                  enchanted: false,
+                  cursed: false,
+                  truestrike: false,
+                  masterCrafted: false
+                }
+              });
+              recalcWeaponPoints();
+              refreshTotal();
+              updateSummary();
+              renderSelected();
+            });
+          })(adds[k]);
+        }
 
         recalcWeaponPoints();
         renderSelected();
@@ -2971,11 +2870,8 @@ var upBtn = pill.querySelector(".stat-up");
         setActiveTab("section-weapons-cc");
       }
 
-      // INIT
-
+      
       // ================= JSON Save/Load + Autosave =================
-      var MRFB_STORAGE_KEY = "mortalis_fighter_autosave_v1";
-
       function deepClone(obj){
         try { return JSON.parse(JSON.stringify(obj)); }
         catch(e){ return null; }
@@ -2990,7 +2886,7 @@ var upBtn = pill.querySelector(".stat-up");
           recalcAbilityPoints();
         }catch(e){}
         return {
-          app: "Mortalis Fighter Builder",
+          app: "Dark Realms Fighter Builder",
           version: 1,
           savedAt: new Date().toISOString(),
           fighter: deepClone(fighter)
@@ -3073,55 +2969,15 @@ var upBtn = pill.querySelector(".stat-up");
         var f = parsed && parsed.fighter ? parsed.fighter : parsed;
         applyImportedFighterState(f);
       }
-
-      function autosaveNow(){
-        try{
-          var payload = buildExportPayload();
-          if (!payload || !payload.fighter) return;
-          localStorage.setItem(MRFB_STORAGE_KEY, JSON.stringify(payload));
-        }catch(e){}
-      }
-
-      var __autosaveTimer = null;
-      function autosaveSoon(){
-        if (__autosaveTimer) clearTimeout(__autosaveTimer);
-        __autosaveTimer = setTimeout(function(){
-          __autosaveTimer = null;
-          autosaveNow();
-        }, 650);
-      }
-
-      function tryLoadAutosave(){
-        try{
-          var raw = localStorage.getItem(MRFB_STORAGE_KEY);
-          if (!raw) return;
-          var parsed = JSON.parse(raw);
-          if (!parsed) return;
-          if (!parsed.fighter) return;
-          applyImportedFighterState(parsed.fighter);
-        }catch(e){
-          // ignore
-        }
-      }
-
-      function clearAutosave(){
-        try{
-          if (__autosaveTimer) { clearTimeout(__autosaveTimer); __autosaveTimer = null; }
-          localStorage.removeItem(MRFB_STORAGE_KEY);
-        }catch(e){}
-      }
-
       function setupJsonUi(){
         var btnSave = document.getElementById("btn-save-json");
         var inputLoad = document.getElementById("file-load-json");
-        var btnClear = document.getElementById("btn-clear-autosave");
-
-        if (btnSave){
+if (btnSave){
           btnSave.addEventListener("click", function(){
             var payload = buildExportPayload();
             var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "fighter";
             var safe = nm.replace(/[^\w\-]+/g, "_").slice(0, 50) || "fighter";
-            downloadJson("mortalis_" + safe + ".json", payload);
+            downloadJson("darkrealms_" + safe + ".json", payload);
           });
         }
 
@@ -3133,7 +2989,6 @@ var upBtn = pill.querySelector(".stat-up");
             reader.onload = function(){
               try{
                 importFromJsonText(String(reader.result || ""));
-                autosaveNow(); // immediately update local autosave with loaded state
                 alert("Loaded!");
               }catch(e){
                 alert("Load failed: " + e.message);
@@ -3144,26 +2999,11 @@ var upBtn = pill.querySelector(".stat-up");
             reader.readAsText(file);
           });
         }
-
-        if (btnClear){
-          btnClear.addEventListener("click", function(){
-            clearAutosave();
-            alert("Autosave cleared.");
-          });
-        }
-
-        // Generic autosave: catch most interactions without editing every handler
-        document.addEventListener("input", autosaveSoon, true);
-        document.addEventListener("change", autosaveSoon, true);
-        document.addEventListener("click", function(e){
-          // Ignore clicks on JSON/autosave controls so we don't immediately re-autosave after clearing
-          if (e.target && e.target.closest && e.target.closest("#btn-save-json, #btn-clear-autosave, #file-load-json")) return;
-          autosaveSoon();
-        }, true);
       }
 
 
-// INIT
+      // INIT
+      
 
       // ================= Portrait Cropper (Integrated) =================
       (function(){
@@ -3350,9 +3190,11 @@ var upBtn = pill.querySelector(".stat-up");
         }
 
         function updatePortraitButton(){
-          if (!btnPortrait) return;
           var has = (fighter && fighter.portraitDataUrl && String(fighter.portraitDataUrl).trim());
-          btnPortrait.textContent = has ? "Portrait ✓" : "Portrait";
+          var label = has ? "Portrait ✓" : "Portrait";
+          if (btnPortrait) btnPortrait.textContent = label;
+          var secondary = document.getElementById("btn-portrait-secondary");
+          if (secondary) secondary.textContent = label;
         }
 
         function openPortrait(){
@@ -3372,6 +3214,10 @@ var upBtn = pill.querySelector(".stat-up");
           // If we already have a portrait, keep it; otherwise just draw placeholder.
           draw();
         }
+
+        // Expose for inline button in the summary panel
+        window.openPortrait = openPortrait;
+
 
         function closePortrait(){
           if (!ov) return;
@@ -3409,8 +3255,7 @@ var upBtn = pill.querySelector(".stat-up");
             }
             try{
               fighter.portraitDataUrl = exportTrianglePNG();
-              autosaveSoon();
-              updateSummary();
+updateSummary();
               refreshTotal();
               closePortrait();
             }catch(err){
@@ -3538,31 +3383,28 @@ var upBtn = pill.querySelector(".stat-up");
         window.__drfb_openPortraitCropper = openPortrait;
 
         // wire at DOMContentLoaded (builder uses DOMContentLoaded already, but this is safe)
-        document.addEventListener("DOMContentLoaded", function(){
-          try { wire(); } catch(e) { console.error(e); }
-          try { setupJsonUi(); } catch(e) { console.error(e); }
-   
-        });
+        document.addEventListener("DOMContentLoaded", wire);
       })();
 
-
-      document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
         initStats();
         initWeaponsCC();
         initWeaponsRanged();
         initSimplePanel("section-abilities", "Fighter Abilities", FIGHTER_ABILITIES, "abilities", false, null);
         initSimplePanel("section-leader",   "Leader Abilities",  LEADER_ABILITIES,  "leaderAbilities", false, 2);
-        initSimplePanel("section-spells",   "Psychic Powers",            SPELLS,            "spells", true, null);
+        initSimplePanel("section-spells",   "Spells",            SPELLS,            "spells", true, null);
         initSimplePanel("section-equipment","Equipment",         EQUIPMENT,         "equipment", false, null);
         refreshTotal();
         updateSummary();
         initTabs();
-      });
+        setupJsonUi();
+});
     })();
   </script>
 
+
 <!-- Clean card renderer override (DOM-based; avoids template-literal string editing pitfalls) -->
-<style id="mortalis-clean-card-css">
+<style id="darkrealms-clean-card-css">
   /* Overlay */
   #generated-card-overlay{
     position:fixed; inset:0; z-index:9999;
@@ -3608,6 +3450,8 @@ var upBtn = pill.querySelector(".stat-up");
     background-size: cover;
   }
 
+  .cc-logo{width:66%; max-width:260px; height:auto; display:none; margin: 0 auto; opacity:0.98;}
+
   /* --- Big portrait behind header + stat pills (stops before options pill) --- */
   .cc-topwrap{position:relative;}
   .cc-bg-portrait{
@@ -3619,12 +3463,15 @@ var upBtn = pill.querySelector(".stat-up");
     width:auto;
     max-width:none;
     z-index:1;
-    pointer-events:none;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,.75));
+    pointer-events:none;
   }
   /* Ensure header + stats + HP pips render above portrait */
   .cc-header, .cc-stats{position:relative; z-index:5;}
   .cc-hp, .hp-pips{position:relative; z-index:6;}
+
+
+
 .cc-header{
   display:grid;
   grid-template-columns: 260px 260px 260px; /* left | logo | right */
@@ -3638,16 +3485,15 @@ var upBtn = pill.querySelector(".stat-up");
   
   .cc-leftpill{
     background: rgba(255,255,255,0.92);
-    border: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid black;
     border-radius: 14px;
     padding: 10px 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     flex: 1 1 auto;
     box-sizing:border-box;
     width: 260px;
     max-width: 260px;
     margin-top: 20px;
-    margin-left: 30px;
+    margin-left: 20px;
 }
   .cc-name{font-weight: 900; font-size: 16px; margin-bottom: 4px; color:#111;}
   .cc-meta{font-size: 12px; color:#111;}
@@ -3660,17 +3506,16 @@ var upBtn = pill.querySelector(".stat-up");
   }
   .cc-pts{
     background: rgba(255,255,255,0.92);
-    border: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid black;
     border-radius: 14px;
     padding: 8px 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     font-weight: 900;
     color:#111;
     min-width: 50px;
     text-align:center;
     margin-top: 20px;
-    margin-right: 30px;
-    margin-bottom: 10px;
+    margin-right: 45px;
+    margin-bottom: 30px;
   }
   .cc-hp{
     background: transparent;
@@ -3689,7 +3534,7 @@ var upBtn = pill.querySelector(".stat-up");
   min-width: 260px;
   display: flex;
   margin-left: auto;
-  margin-right: 15px;
+  margin-right: 25px;
   align-content: start;
   justify-content: end;
   justify-items: end; /* prevents squish */
@@ -3698,17 +3543,17 @@ var upBtn = pill.querySelector(".stat-up");
 
   .cc-stats{
     margin-top: 12px;
+    margin-left: 120px;
+    margin-right: 120px; 
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap:8px;
-    padding: 0 20px;
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+    gap:22px;
   }
   .cc-stat{
     background: rgba(236,241,231,0.95);
-    border: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid black;
     border-radius: 14px;
     padding: 8px 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     text-align:center;
   
     color:#111;
@@ -3717,6 +3562,40 @@ var upBtn = pill.querySelector(".stat-up");
   
   .cc-stat-label{font-size:12px; font-weight:800; opacity:0.85; margin-bottom:2px; text-transform: uppercase; color:#111;}
   .cc-stat-val{font-size:19px; font-weight:900; line-height:1.05; color:#111; display:block;}
+
+  /* --- Weapons profile table (auto from selected weapons) --- */
+  .cc-weapons{
+    margin: 2px 2px 0 2px;
+    background: transparent;
+    border-bottom: 1px solid black;
+
+    padding: 8px 10px;
+
+    box-sizing: border-box;
+  
+    column-span: all;
+    -webkit-column-span: all;
+    break-inside: avoid;
+    margin-bottom: 10px;
+  }
+  .cc-weapons table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .cc-weapons th{
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-align:left;
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+    padding: 4px 6px;
+  }
+  .cc-weapons td{
+    padding: 4px 6px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+  }
+  .cc-weapons tr:last-child td{ border-bottom:none; }
+  .cc-weapons .wname{ font-weight: 900; width: 24%; } /* Weapon Title */
+  .cc-weapons .wnum{ font-weight: 900; text-align:center; white-space:nowrap; }
+  .cc-weapons .wrules{ font-weight: 600; }
 /* Single options pill */
   .cc-options-pill{
     margin-top: 14px;
@@ -3724,12 +3603,12 @@ var upBtn = pill.querySelector(".stat-up");
     min-height: 0;
     display:flex;
     background: rgba(255,255,255,0.88);
-    border: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid black;
     border-radius: 14px;
     padding: 10px;
     padding-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     overflow: hidden;
+    position: relative;
     position: relative; position: relative;
     box-sizing: border-box;
   }
@@ -3747,6 +3626,16 @@ var upBtn = pill.querySelector(".stat-up");
     padding-bottom: 10px;
     
   }
+
+.cc-weapons table thead th:nth-child(5),
+.cc-weapons table tbody td:nth-child(5) {
+  padding-left: 20px;
+}
+.cc-weapons table thead th:nth-child(4),
+.cc-weapons table tbody td:nth-child(4) {
+  padding-left: 10px;
+}
+    
   .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 18px 0;}
   .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
 
@@ -3756,10 +3645,29 @@ var upBtn = pill.querySelector(".stat-up");
   }
 
   .cc-list{margin:0; padding-left: 18px;}
-  .cc-item{margin: 0 0 6px 0;break-inside: avoid; page-break-inside: avoid;}
+  .cc-item{margin: 0 0 6px 0;}
 
   .cc-muted{color:#555; font-weight: 600;}
-  .cc-item > div{break-inside: avoid; page-break-inside: avoid;}
+
+
+    /* Don’t leave the title stranded at the bottom of a column */
+.cc-sec-title{
+  break-after: avoid-column;
+  break-inside: avoid;
+}
+
+/* Keep the first item with the title (so you don’t get “title only”) */
+.cc-sec > .cc-list > li:first-child,
+.cc-sec > p:first-of-type,
+.cc-sec > div:first-of-type {
+  break-inside: avoid;
+}
+
+/* Optional: prevent an individual list item splitting (rare, but nice) */
+.cc-list li{
+  break-inside: avoid;
+}
+
 
   @media print{
     body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
@@ -3767,93 +3675,6 @@ var upBtn = pill.querySelector(".stat-up");
     #generated-card-overlay{position:static; padding:0;}
     .print-card.clean-card{margin:0; box-shadow:none;}
   }
-
-
-    /* ===== Portrait Cropper Overlay ===== */
-    #portrait-cropper-overlay{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.78);
-      display: none;
-      z-index: 99999;
-      padding: 22px 14px;
-      overflow: auto;
-    }
-    #portrait-cropper-overlay.show{ display:block; }
-    #portrait-cropper-overlay .pc-modal{
-      max-width: 1100px;
-      margin: 0 auto;
-      background: #1E2024;
-      border: 1px solid #2a2d31;
-      border-radius: 14px;
-      padding: 14px;
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 16px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.55);
-    }
-    @media (max-width: 980px){
-      #portrait-cropper-overlay .pc-modal{ grid-template-columns: 1fr; }
-    }
-    .pc-panel .pc-title{ font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
-    .pc-panel .pc-sub{ font-size: 0.85rem; color:#9aa1a8; line-height: 1.35; margin-bottom: 12px; }
-    .pc-panel input[type="file"]{
-      width: 100%;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px dashed #2a2d31;
-      background:#141619;
-      color:#e4e7eb;
-    }
-    .pc-actions{ display:flex; gap:0.5rem; flex-wrap:wrap; margin-top: 10px; }
-    .pc-stage{ position:relative; display:flex; justify-content:center; align-items:center; min-height: 520px; }
-    #pc-canvas{
-      width: 100%;
-      max-width: 760px;
-      height: auto;
-      background:#0b0d12;
-      border: 1px solid #2a2d31;
-      border-radius: 16px;
-      touch-action:none;
-      display:block;
-    }
-    .pc-badge{
-      position:absolute;
-      top: 12px;
-      left: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(20,22,25,.85);
-      border: 1px solid #2a2d31;
-      color:#9aa1a8;
-      font-size: 0.82rem;
-      backdrop-filter: blur(6px);
-    }
-    .pc-warn{
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,180,74,.35);
-      background: rgba(255,180,74,.08);
-      color: #ffd7a3;
-      font-size: 0.85rem;
-      line-height: 1.35;
-    }
-
-    /* ===== Fighter Card Portrait Placement ===== */
-    .cc-portrait-wrap{
-      width: 240px;
-      height: 208px;
-      margin-top: 10px;
-      background: transparent;
-    }
-    .cc-portrait-img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* preserves full 682×592 frame */
-      display:block;
-    }
-
 </style>
 
 <script>
@@ -3906,7 +3727,6 @@ var upBtn = pill.querySelector(".stat-up");
     try{
       var ov = ensureOverlay();
       ov.innerHTML = "";
-      document.body.classList.add("print-card-mode");
 
       // toolbar
       var tb = document.createElement("div");
@@ -3917,7 +3737,7 @@ var upBtn = pill.querySelector(".stat-up");
       texWrap.className = "cc-tex-toggle";
       var texChk = document.createElement("input");
       texChk.type = "checkbox";
-      texChk.checked = (localStorage.getItem("mortalis_card_texture") !== "0");
+      texChk.checked = (localStorage.getItem("dr_card_texture") !== "0");
       var texTxt = document.createElement("span");
       texTxt.textContent = "Texture";
       texWrap.appendChild(texChk);
@@ -3928,8 +3748,8 @@ var upBtn = pill.querySelector(".stat-up");
       btnBack.textContent = "Back";
       btnBack.onclick = function(){
         ov.style.display = "none";
-        document.body.style.overflow = "";
         document.body.classList.remove("print-card-mode");
+        document.body.style.overflow = "";
       };
 
       var btnPrint = document.createElement("button");
@@ -3943,38 +3763,54 @@ var upBtn = pill.querySelector(".stat-up");
 
       // base URLs for assets (same as existing builder approach)
       var baseHref = getBaseHref();
-var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
+      var logoUrl = (window.DARKREALMS_CARD_LOGO_URL) ? (new URL(window.DARKREALMS_CARD_LOGO_URL, baseHref)).href : "";
+      var texUrl  = (window.DARKREALMS_CARD_TEX_URL) ? (new URL(window.DARKREALMS_CARD_TEX_URL, baseHref)).href : "";
 
       // card
       var card = document.createElement("div");
       card.className = "print-card clean-card";
       function applyTexture(){
-        var on = (localStorage.getItem("mortalis_card_texture") !== "0");
+        var on = (localStorage.getItem("dr_card_texture") !== "0");
         if (on && texUrl) { card.style.backgroundImage = "url('" + texUrl + "')"; }
         else { card.style.backgroundImage = "none"; }
       }
       texChk.addEventListener("change", function(){
-        localStorage.setItem("mortalis_card_texture", this.checked ? "1" : "0");
+        localStorage.setItem("dr_card_texture", this.checked ? "1" : "0");
         applyTexture();
       });
       applyTexture();
 
-      // top wrapper (header + stats) so portrait stops before options pill
-      var topwrap = document.createElement("div");
-      topwrap.className = "cc-topwrap";
-      if (window.fighter && fighter.portraitDataUrl){
-        var bgp = document.createElement("img");
-        bgp.className = "cc-bg-portrait";
-        bgp.src = fighter.portraitDataUrl;
-        bgp.alt = "Portrait";
-        topwrap.appendChild(bgp);
+      // logo + portrait
+      // If a portrait exists, we render it as a BIG background image behind the header + stat pills
+      // (wrapped in .cc-topwrap so it naturally stops before the options pill).
+      var hasPortrait = fighter && fighter.portraitDataUrl && String(fighter.portraitDataUrl).trim();
+
+      var bgPortrait = null;
+      if (hasPortrait) {
+        bgPortrait = document.createElement("img");
+        bgPortrait.className = "cc-bg-portrait";
+        bgPortrait.src = String(fighter.portraitDataUrl).trim();
+        bgPortrait.alt = "Portrait";
+        bgPortrait.onerror = function(){ this.style.display = "none"; };
+      }
+
+      // Keep the header logo slot empty when portrait is present (saves space / avoids overlap)
+      var logo = document.createElement("img");
+      logo.className = "cc-logo";
+      logo.onerror = function(){ this.style.display="none"; };
+      if (!hasPortrait && logoUrl) {
+        logo.src = logoUrl;
+        logo.alt = "Mortalis";
+      } else {
+        logo.style.display = "none";
+        logo.alt = "Logo";
       }
       // name + points
       var nm = (fighter.name && fighter.name.trim()) ? fighter.name.trim() : "Fighter";
       var total = computeTotal ? computeTotal() : 0;
-      var psyLabel = "No";
-      if (fighter.isMasterWarlock) psyLabel = "Master Psyker";
-      else if (fighter.isWarlock) psyLabel = "Psyker";
+      var psyLabel = "None";
+      if (fighter.isMasterWarlock) psyLabel = "Master Warlock";
+      else if (fighter.isWarlock) psyLabel = "Warlock";
 
       // Header grid: Name | Logo | Points/HP
       var header = document.createElement("div");
@@ -3985,7 +3821,9 @@ var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
 
       var headerCenter = document.createElement("div");
       headerCenter.className = "cc-header-center";
-var headerRight = document.createElement("div");
+      headerCenter.appendChild(logo);
+
+      var headerRight = document.createElement("div");
       headerRight.className = "cc-header-right";
 
       var left = document.createElement("div");
@@ -3996,9 +3834,7 @@ var headerRight = document.createElement("div");
       var metaEl = document.createElement("div");
       metaEl.className = "cc-meta";
       left.appendChild(nameEl);
-     
       headerLeft.appendChild(left);
-
       var right = document.createElement("div");
       right.className = "cc-right";
       var pts = document.createElement("div");
@@ -4009,7 +3845,7 @@ var headerRight = document.createElement("div");
       hpBox.className = "cc-hp";
       var hp = (fighter.stats && (fighter.stats.HP!=null)) ? fighter.stats.HP : (fighter.stats && fighter.stats.hp!=null ? fighter.stats.hp : 0);
       var hpLabel = document.createElement("span");
-      hpLabel.textContent = ":";
+      hpLabel.textContent = "";
       hpBox.appendChild(hpLabel);
       hpBox.appendChild(buildHpPips(hp));
 
@@ -4020,7 +3856,13 @@ var headerRight = document.createElement("div");
       header.appendChild(headerLeft);
       header.appendChild(headerCenter);
       header.appendChild(headerRight);
-      topwrap.appendChild(header);
+
+      // Wrap header + stats so the big portrait background naturally stops before options pill
+      var topWrap = document.createElement("div");
+      var pendingWeaponsWrap = null;
+      topWrap.className = "cc-topwrap";
+      if (bgPortrait) topWrap.appendChild(bgPortrait);
+      topWrap.appendChild(header);
 
       // stats pills
       var statsWrap = document.createElement("div");
@@ -4030,12 +3872,14 @@ var headerRight = document.createElement("div");
       var order = ["Move","M","DEF","Defense","AP","HP","ATK","Attack","Fight","Shoot"];
       var used = {};
       order.forEach(function(k){
-        var v = (s[k]!=null)?s[k]:null;
+                var _kl = String(k).toLowerCase();
+        if (_kl === 'atk' || _kl === 'attack' || _kl === 'fight' || _kl === 'shoot') return;
+var v = (s[k]!=null)?s[k]:null;
         if (v==null) return;
         used[k]=true;
         var p = document.createElement("div");
         p.className = "cc-stat";
-        var _k = String(k).toLowerCase();
+       var _k = String(k).toLowerCase();
 var _vv = String(v ?? "");
 if (_k === "move") _vv += '"';
 else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
@@ -4044,10 +3888,12 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
         statsWrap.appendChild(p);
       });
       Object.keys(s).forEach(function(k){
-        if (used[k]) return;
+                var _kl2 = String(k).toLowerCase();
+        if (_kl2 === 'atk' || _kl2 === 'attack' || _kl2 === 'fight' || _kl2 === 'shoot') return;
+if (used[k]) return;
         var p = document.createElement("div");
         p.className = "cc-stat";
-        var _k = String(k).toLowerCase();
+       var _k = String(k).toLowerCase();
 var _vv = String((s && s[k] != null) ? s[k] : "");
 if (_k === "move") _vv += '"';
 else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
@@ -4055,8 +3901,117 @@ else if (_k === "def" || _k === "fight" || _k === "shoot") _vv += '+';
 p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-stat-val\">" + esc(_vv) + "</div>";
         statsWrap.appendChild(p);
       });
-      topwrap.appendChild(statsWrap);
-      card.appendChild(topwrap);
+      
+// weapons profile table (auto; flexible rows)
+function pickStat(keys){
+  for (var i=0;i<keys.length;i++){
+    var kk = keys[i];
+    if (s && s[kk] != null) return s[kk];
+  }
+  return null;
+}
+function fmtPlus(v){
+  if (v == null || v === "") return "";
+  return String(v) + "+";
+}
+function parseAtk(profile){
+  var m = String(profile||"").match(/\bATK\s*([^,]+)/i);
+  return m ? m[1].trim() : "";
+}
+function parseDmg(profile){
+  var m = String(profile||"").match(/\bDMG\s*([^,]+)/i);
+  return m ? m[1].trim() : "";
+}
+function stripProfile(p){
+  if (!p) return "";
+  var parts = String(p).split(",").map(function(x){return x.trim();}).filter(Boolean);
+  parts = parts.filter(function(x){
+    var xl = x.toLowerCase();
+    if (xl.startsWith("atk")) return false;
+    if (xl.startsWith("hit")) return false;
+    if (xl.startsWith("dmg")) return false;
+    return true;
+  });
+  return parts.join(", ");
+}
+var atkVal   = pickStat(["ATK","Attack","atk","attack"]);
+var fightVal = pickStat(["Fight","fight"]);
+var shootVal = pickStat(["Shoot","shoot"]);
+var weaponRows = [];
+
+(fighter.ccWeapons||[]).forEach(function(w){
+  var prof = (w && (w.profile || w.effect)) || "";
+  weaponRows.push({
+    name:  w ? String(getDisplayName(w)) : "",
+    atk:   (atkVal!=null ? String(atkVal) : ""),
+    dmg:   parseDmg(prof),
+    hit:   fmtPlus(fightVal),
+    rules: stripProfile(prof)
+  });
+});
+
+(fighter.rangedWeapons||[]).forEach(function(w){
+  var prof = (w && (w.profile || w.effect)) || "";
+  weaponRows.push({
+    name:  w ? String(getDisplayName(w)) : "",
+    atk:   parseAtk(prof),
+    dmg:   parseDmg(prof),
+    hit:   fmtPlus(shootVal),
+    rules: stripProfile(prof)
+  });
+});
+
+if (weaponRows.length){
+  var wWrap = document.createElement("div");
+  wWrap.className = "cc-weapons";
+  var t = document.createElement("table");
+  var thead = document.createElement("thead");
+  thead.innerHTML = "<tr>"
+    + "<th>Weapon</th>"
+    + "<th style=\"width:80px; text-align:center;\">ATK</th>"
+    + "<th style=\"width:80px; text-align:center;\">To Hit</th>"
+    + "<th style=\"width:80px; text-align:center;\">DMG</th>"
+    + "<th>Special Rules</th>"
+    + "</tr>";
+  t.appendChild(thead);
+
+  var tbody = document.createElement("tbody");
+  weaponRows.forEach(function(r){
+    var tr = document.createElement("tr");
+
+    var tdN = document.createElement("td");
+    tdN.className = "wname";
+    tdN.textContent = r.name || "";
+    tr.appendChild(tdN);
+
+    var tdA = document.createElement("td");
+    tdA.className = "wnum";
+    tdA.textContent = (r.atk!=null ? String(r.atk) : "");
+    tr.appendChild(tdA);
+
+    var tdH = document.createElement("td");
+    tdH.className = "wnum";
+    tdH.textContent = (r.hit!=null ? String(r.hit) : "");
+    tr.appendChild(tdH);
+
+    var tdD = document.createElement("td");
+    tdD.className = "wnum";
+    tdD.textContent = (r.dmg!=null ? String(r.dmg) : "");
+    tr.appendChild(tdD);
+
+    var tdR = document.createElement("td");
+    tdR.className = "wrules";
+    tdR.textContent = r.rules || "";
+    tr.appendChild(tdR);
+
+    tbody.appendChild(tr);
+  });
+  t.appendChild(tbody);
+  wWrap.appendChild(t);
+  pendingWeaponsWrap = wWrap;
+}
+      topWrap.appendChild(statsWrap);
+      card.appendChild(topWrap);
 
       // options pill
       var optPill = document.createElement("div");
@@ -4066,7 +4021,9 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
       optPill.appendChild(optInner);
       card.appendChild(optPill);
 
-      function addSection(title, arr, mainKey){
+      
+      if (pendingWeaponsWrap) { optInner.appendChild(pendingWeaponsWrap); }
+function addSection(title, arr, mainKey){
         if (!arr || !arr.length) return;
         var sec = document.createElement("div");
         sec.className = "cc-sec";
@@ -4081,26 +4038,27 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
           var li = document.createElement("li");
           li.className = "cc-item";
           var pts = x.points || 0;
+          var meta = (title === "Spells")
+            ? ("CV " + (x.cv != null ? x.cv : ""))
+            : (pts + " pts");
           var main = x.profile || x.effect || "";
           var rulesHtml = renderRulesHtml(main);
-          li.innerHTML = "<b>" + esc(x.name) + "</b> <span class='cc-muted'>(" + pts + " pts)</span>" +
+          li.innerHTML = "<b>" + esc(getDisplayName(x)) + "</b> <span class='cc-muted'>(" + meta + ")</span>" +
                          (rulesHtml ? "<br><span class='cc-muted'>" + rulesHtml + "</span>" : "");
           ul.appendChild(li);
         });
         sec.appendChild(ul);
         optInner.appendChild(sec);
       }
-
-      addSection("Close Combat Weapons", fighter.ccWeapons);
-      addSection("Ranged Weapons", fighter.rangedWeapons);
-      addSection("Abilities", fighter.abilities);
+addSection("Abilities", fighter.abilities);
       addSection("Leader Abilities", fighter.leaderAbilities);
-      addSection("Psychic Powers", fighter.spells);
+      addSection("Spells", fighter.spells);
       addSection("Equipment", fighter.equipment);
 
       // mount
       ov.appendChild(card);
       ov.style.display = "block";
+      document.body.classList.add("print-card-mode");
       document.body.style.overflow = "hidden";
 
       // autoscale only options: use scrollWidth overflow from columns
@@ -4124,7 +4082,6 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
             optInner.style.setProperty("--opt-scale", s.toFixed(4));
           }
           function fits(){
-            // With font-size scaling, scrollWidth/scrollHeight reflect the real layout.
             var w = optInner.scrollWidth || 0;
             var h = optInner.scrollHeight || 0;
             return (w <= availW + 1) && (h <= availH + 1);
@@ -4133,7 +4090,6 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
           applyScale(1.0);
           if (fits()) return;
 
-          // Allow deeper shrinking to guarantee fit (prevents text escaping below pill)
           var lo = 0.20, hi = 1.0, best = 0.20;
           for (var i=0;i<14;i++){
             var mid = (lo + hi) / 2;
@@ -4147,8 +4103,7 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
           }
           applyScale(best);
 
-          // Final clamp: if still overflowing (e.g. single huge unbreakable entry),
-          // force hidden overflow so nothing draws outside the pill.
+          // Safety: never draw outside pill
           optInner.style.overflow = "hidden";
         }catch(e){}
       }
@@ -4156,6 +4111,8 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
         requestAnimationFrame(function(){ requestAnimationFrame(fitOptions); });
       }
       fitSoon();
+      // re-fit after logo image loads (affects layout) and after a short delay
+      try{ logo.addEventListener("load", fitSoon); }catch(e){}
       setTimeout(fitSoon, 120);
       // re-fit on resize while overlay is open
       window.addEventListener("resize", function(){
@@ -4169,6 +4126,26 @@ p.innerHTML = "<div class=\"cc-stat-label\">" + esc(k) + "</div><div class=\"cc-
     }
   };
 })();
+</script>
+
+
+
+<script>
+
+// --- Display name override helper (cosmetic only) ---
+function getDisplayName(item){
+  if(!item) return "";
+  if(typeof item === "string") return item;
+  var n = (item.displayNameOverride != null ? String(item.displayNameOverride) : "").trim();
+  if(n) return n;
+  return (item.name != null ? String(item.name) : "");
+}
+window.getDisplayName = window.getDisplayName || getDisplayName;
+
+
+// Back-compat alias
+window.printFighterCard = function(){ if (window.generateFighterCard) return window.generateFighterCard(); };
+
 </script>
 
 </body>
