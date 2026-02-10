@@ -335,11 +335,45 @@
       flex: 1 1 0;
     }
   
+/* Print only the generated card (avoid blank first page) */
+@media print {
 
+  /* Safari print: prevent right-side clipping */
+  body.print-card-mode #generated-card-overlay{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    overflow: visible !important;
+  }
 
-/* (Print rules moved to the consolidated block near the end of the file.) */
+  body.print-card-mode { background: transparent !important;  margin:0 !important; padding:0 !important; }
 
-
+  @page { margin: 0; }
+  body.print-card-mode .app { display: none !important; }
+  body.print-card-mode #generated-card-overlay {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  body.print-card-mode #generated-card-overlay .card-wrap{
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    transform: none !important;
+  
+    transform: scale(0.95) !important;
+    -webkit-transform: scale(0.95) !important;
+    transform-origin: top center !important;
+    page-break-inside: avoid !important;
+  
+    transform: scale(0.95) !important;
+    transform-origin: top center !important;
+    page-break-inside: avoid !important;
+  }
+    -webkit-transform-origin: top center !important;
+}
 
 
   /* Toolbar texture toggle */
@@ -444,56 +478,6 @@
     }
 
 </style>
-
-<style id="safari-print-center-override">
-@media print {
-  /* Safari portrait: avoid left-edge crop by using normal flow centering + extra safe padding */
-  html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
-  /* Hide everything by default (builder etc.) */
-  body * { visibility: hidden !important; }
-  /* Show only the generated card overlay + card */
-  #generated-card-overlay, #generated-card-overlay * { visibility: visible !important; }
-
-  #generated-card-overlay{
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    /* fallback safe margins even if @page is ignored */
-    padding: 12mm 12mm !important;
-    box-sizing: border-box !important;
-    background: #fff !important;
-    display: block !important;
-    overflow: visible !important;
-  }
-
-  /* Center the card in the available print area */
-  #generated-card{
-    margin: 0 auto !important;
-  }
-
-  /* Keep the card scaling uniform (Safari friendly) */
-  #generated-card{
-    zoom: 0.90 !important;
-  }
-
-  /* Ensure background images print and are centered */
-  #generated-card{
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    background-position: center center !important;
-  }
-
-  /* Never print the toolbar/buttons */
-  #overlay-toolbar, .overlay-toolbar, #print-toolbar, .print-toolbar, #controls, .controls {
-    display: none !important;
-    visibility: hidden !important;
-  }
-}
-</style>
-
 </head>
 <body>
   <div class="app">
@@ -3689,61 +3673,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   @media print{
-  /* Print only the generated card; Safari-friendly sizing & margins */
-  @page { margin: 10mm; }
-
-  html, body{
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff !important;
-    color: #000 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    #generated-card-toolbar{display:none !important;}
+    #generated-card-overlay{position:static; padding:0;}
+    .print-card.clean-card{margin:0; box-shadow:none;}
   }
-
-  /* Hide the builder UI and any on-screen controls */
-  .app{ display:none !important; }
-  #generated-card-toolbar{ display:none !important; }
-
-  /* Make the overlay participate in normal flow for printing */
-  #generated-card-overlay{
-    position: static !important;
-    inset: auto !important;
-    background: #fff !important;
-    /* Fallback margin if @page is ignored */
-    padding: 10mm !important;
-    margin: 0 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
-    overflow: visible !important;
-  }
-
-  /* Prevent Safari clipping: avoid transform scaling; use zoom for uniform shrink */
-  #generated-card-overlay .card-wrap{
-    margin: 0 auto !important;
-    box-shadow: none !important;
-    transform: none !important;
-    -webkit-transform: none !important;
-    transform-origin: top center !important;
-    -webkit-transform-origin: top center !important;
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-
-    /* Adjust this if needed: smaller number = more print-safe */
-    zoom: 0.90 !important;
-  }
-
-  /* Ensure card content/background are centered and not clipped */
-  .print-card.clean-card{
-    margin: 0 !important;
-    box-shadow: none !important;
-    overflow: visible !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-  }
-}
 </style>
 
 <script>
