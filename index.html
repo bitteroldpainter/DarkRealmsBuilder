@@ -3754,10 +3754,52 @@ document.addEventListener("DOMContentLoaded", function () {
       var btnPrint = document.createElement("button");
       btnPrint.textContent = "Print";
       btnPrint.onclick = function(){ window.print(); };
+      async function generateCardPDF(){
+        try{
+          if(!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF){
+            alert("PDF export libraries failed to load. Make sure you're online, then refresh.");
+            return;
+          }
+          var cardEl = ov.querySelector(".print-card") || ov.querySelector(".fighter-card");
+          if(!cardEl){
+            alert("Could not find the card to export.");
+            return;
+          }
+          // Ensure background images are included in the render
+          var canvas = await window.html2canvas(cardEl, {
+            scale: 3,
+            backgroundColor: null,
+            useCORS: true,
+            logging: false
+          });
+          var imgData = canvas.toDataURL("image/png");
+          var jsPDF = window.jspdf.jsPDF;
+          var w = canvas.width, h = canvas.height;
+          var pdf = new jsPDF({
+            orientation: (w >= h) ? "landscape" : "portrait",
+            unit: "px",
+            format: [w, h],
+            compress: true
+          });
+          pdf.addImage(imgData, "PNG", 0, 0, w, h);
+          var nm = (window.fighter && window.fighter.name && window.fighter.name.trim()) ? window.fighter.name.trim() : "fighter-card";
+          pdf.save(nm.replace(/[^a-z0-9\-_]+/gi, "_") + ".pdf");
+        }catch(e){
+          console.error(e);
+          alert("Generate PDF failed: " + (e && e.message ? e.message : e));
+        }
+      }
+
+      var btnPdf = document.createElement("button");
+      btnPdf.textContent = "Generate PDF";
+      btnPdf.title = "Export only the card as a tight PDF (page = card)";
+      btnPdf.onclick = function(){ generateCardPDF(); };
+
 
       tb.appendChild(texWrap);
       tb.appendChild(btnBack);
       tb.appendChild(btnPrint);
+      tb.appendChild(btnPdf);
       ov.appendChild(tb);
 
       // base URLs for assets (same as existing builder approach)
@@ -4147,5 +4189,9 @@ window.printFighterCard = function(){ if (window.generateFighterCard) return win
 
 </script>
 
+
+  <!-- PDF export libs (used by Generate PDF) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </body>
 </html>
