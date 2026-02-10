@@ -338,42 +338,38 @@
 /* Print only the generated card (avoid blank first page) */
 @media print {
 
-  /* Safari print: prevent right-side clipping */
-  body.print-card-mode #generated-card-overlay{
+  @page {
+    margin: 12mm; /* printer-safe margin */
+  }
+
+  body.print-card-mode {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  body.print-card-mode .app {
+    display: none !important;
+  }
+
+  body.print-card-mode #generated-card-overlay {
     display: flex !important;
     justify-content: center !important;
-    align-items: flex-start !important;
-    overflow: visible !important;
-  }
-
-  body.print-card-mode { background: transparent !important;  margin:0 !important; padding:0 !important; }
-
-  @page { margin: 0; }
-  body.print-card-mode .app { display: none !important; }
-  body.print-card-mode #generated-card-overlay {
-    display: block !important;
-    position: static !important;
-    inset: auto !important;
+    align-items: center !important;
+    position: fixed !important;
+    inset: 0 !important;
     background: transparent !important;
     padding: 0 !important;
+  }
+
+  body.print-card-mode #generated-card-overlay .card-wrap {
     margin: 0 !important;
-  }
-  body.print-card-mode #generated-card-overlay .card-wrap{
-    margin: 0 auto !important;
-    box-shadow: none !important;
     transform: none !important;
-  
-    transform: scale(0.95) !important;
-    -webkit-transform: scale(0.95) !important;
-    transform-origin: top center !important;
-    page-break-inside: avoid !important;
-  
-    transform: scale(0.95) !important;
-    transform-origin: top center !important;
+    box-shadow: none !important;
     page-break-inside: avoid !important;
   }
-    -webkit-transform-origin: top center !important;
 }
+
 
 
   /* Toolbar texture toggle */
