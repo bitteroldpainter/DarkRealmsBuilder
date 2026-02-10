@@ -444,6 +444,56 @@
     }
 
 </style>
+
+<style id="safari-print-center-override">
+@media print {
+  /* Safari portrait: avoid left-edge crop by using normal flow centering + extra safe padding */
+  html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  /* Hide everything by default (builder etc.) */
+  body * { visibility: hidden !important; }
+  /* Show only the generated card overlay + card */
+  #generated-card-overlay, #generated-card-overlay * { visibility: visible !important; }
+
+  #generated-card-overlay{
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    /* fallback safe margins even if @page is ignored */
+    padding: 12mm 12mm !important;
+    box-sizing: border-box !important;
+    background: #fff !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  /* Center the card in the available print area */
+  #generated-card{
+    margin: 0 auto !important;
+  }
+
+  /* Keep the card scaling uniform (Safari friendly) */
+  #generated-card{
+    zoom: 0.90 !important;
+  }
+
+  /* Ensure background images print and are centered */
+  #generated-card{
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-position: center center !important;
+  }
+
+  /* Never print the toolbar/buttons */
+  #overlay-toolbar, .overlay-toolbar, #print-toolbar, .print-toolbar, #controls, .controls {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
