@@ -335,40 +335,40 @@
       flex: 1 1 0;
     }
   
-/* Print only the generated card (avoid blank first page) */
 @media print {
 
-  @page {
-    margin: 12mm; /* printer-safe margin */
-  }
+  /* keep things simple for Safari */
+  @page { margin: 12mm; }
 
-  body.print-card-mode {
+  html, body {
     margin: 0 !important;
     padding: 0 !important;
-    background: transparent !important;
+    background: #fff !important;
   }
 
-  body.print-card-mode .app {
-    display: none !important;
-  }
+  /* hide the app, show only the card overlay */
+  body.print-card-mode .app { display: none !important; }
 
   body.print-card-mode #generated-card-overlay {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    position: fixed !important;
-    inset: 0 !important;
+    display: block !important;
+    position: static !important;   /* <- important */
+    inset: auto !important;
+    width: auto !important;
+    height: auto !important;       /* <- avoid 100vh */
     background: transparent !important;
     padding: 0 !important;
   }
 
-  body.print-card-mode #generated-card-overlay .card-wrap {
-    margin: 0 !important;
+  /* center the card in normal flow (Safari-safe) */
+  body.print-card-mode #generated-card-overlay .print-card {
+    display: block !important;
+    margin: 0 auto !important;     /* horizontal center */
     transform: none !important;
     box-shadow: none !important;
-    page-break-inside: avoid !important;
   }
+
 }
+
 
 
 
