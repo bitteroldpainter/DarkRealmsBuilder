@@ -1017,6 +1017,13 @@
       "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
   },
   {
+    id: "sacrificialFollower",
+    name: "Sacrificial Follower",
+    points: 4,
+    effect:
+      'When within 6" of a Friendly Warlock, add 1 WoM token to your Pool each turn. May also suffer any MW suffered by use of WoM tokens, instead of Warlock.'
+  },
+  {
     id: "superhumanWarrior",
     name: "Superhuman Warrior",
     points: 10,
@@ -1161,202 +1168,202 @@
         {
           id: "tempest",
           name: "TEMPEST",
-          cv: 13,
+          cv: 7,
           points: 0,
           effect:
             'Range: 16"<br><br>' +
             'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Flux Burn (CV 15): Deals +2 MW before the push."
+            "Power Surge (CV 9): Deals +2 MW before the push."
         },
         {
           id: "graviticMaelstrom",
           name: "GRAVITIC MAELSTROM",
-          cv: 17,
+          cv: 9,
           points: 0,
           effect:
             'Range: 12", 3" AoE<br><br>' +
             'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Flux Burn (CV 19): Fighters dragged suffer D3+2 MW."
+            "Power Surge (CV 11): Fighters dragged suffer D3+2 MW."
         },
         {
           id: "spectralChains",
           name: "SPECTRAL CHAINS",
-          cv: 13,
+          cv: 8,
           points: 0,
           effect:
             'Range: 16"<br><br>' +
             "Target suffers –2 Move and cannot Dash this round.<br><br>" +
-            "Flux Burn (CV 15): Target also suffers 1 MW if it attempts a Charge."
+            "Power Surge (CV 10): Target also suffers 1 MW if it attempts a Charge."
         },
         {
           id: "stolenSight",
           name: "STOLEN SIGHT",
-          cv: 12,
+          cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target suffers –3 to Shoot until end of Round; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Flux Burn (CV 14): –4 to Shoot, –3 to Fight."
+            "Power Surge (CV 9): –4 to Shoot, –3 to Fight."
         },
         {
           id: "twistOfWill",
           name: "TWIST OF WILL",
-          cv: 14,
+          cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Flux Burn (CV 16): Target also cannot Charge until next turn."
+            "Power Surge (CV 9): Target also cannot Charge until next turn."
         },
         {
           id: "voidfireBlast",
           name: "VOIDFIRE BLAST",
-          cv: 18,
+          cv: 9,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Pick any point. All models within 2\" suffer 2D3 MW. Warlock suffers 1 MW.<br><br>" +
-            "Flux Burn (CV 20): Radius becomes 4\"."
+            "Power Surge (CV 11): Radius becomes 4\"."
         },
         {
           id: "blazingWind",
           name: "BLAZING WIND",
-          cv: 13,
+          cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Flux Burn (CV 15): D3+1 Damage and 4\" push."
+            "Power Surge (CV 9): D3+1 Damage and 4\" push."
         },
         {
           id: "fireblast",
           name: "FIREBLAST",
-          cv: 13,
+          cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target suffers D3+1 Damage.<br><br>" +
-            "Flux Burn (CV 15): Target also gains a Fire token."
+            "Power Surge (CV 9): Target also gains a Fire token."
         },
         {
           id: "lightningBolt",
           name: "LIGHTNING BOLT",
-          cv: 15,
+          cv: 8,
           points: 0,
           effect:
             "Range: —<br><br>" +
             "Target suffers D3+2 MW.<br><br>" +
-            "Flux Burn (CV 17): D3+3 MW."
+            "Power Surge (CV 10): D3+3 MW."
         },
         {
           id: "mendFlesh",
           name: "MEND FLESH",
-          cv: 10,
+          cv: 6,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Flux Burn (CV 12): Restore D3+2 HP and remove 1 Poison/Burning token."
+            "Power Surge (CV 8): Restore D3+2 HP and remove 1 Poison/Burning token."
         },
         {
           id: "circleOfWarding",
           name: "CIRCLE OF WARDING",
-          cv: 11,
+          cv: 6,
           points: 0,
           effect:
             'Range: 3" aura<br><br>' +
             "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Flux Burn (CV 13): Circle lasts until next activation."
+            "Power Surge (CV 8): Circle lasts until next activation."
         },
         {
           id: "arcaneAegis",
           name: "ARCANE AEGIS",
-          cv: 13,
+          cv: 7,
           points: 0,
           effect:
             'Range: 6"<br><br>' +
             "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Flux Burn (CV 15): Target ignores first 2 Damage from next attack."
+            "Power Surge (CV 9): Target ignores first 2 Damage from next attack."
         },
         {
           id: "spectralDecoy",
           name: "SPECTRAL DECOY",
-          cv: 12,
+          cv: 6,
           points: 0,
           effect:
             "Range: Self<br><br>" +
-            "First attack against the Warlock before next activation automatically misses.<br><br>" +
-            "Flux Burn (CV 14): On 5+, reflect that missed ranged attack for D3 Damage."
+            "Until next activation, remove 1 succesful normal attack dice, for each attack on the Warlock.<br><br>" +
+            "Power Surge (CV 8): May remove second succesful attack dice, and suffer 2 MW."
         },
         {
           id: "soulflameSurge",
           name: "SOULFLAME SURGE",
-          cv: 16,
+          cv: 8,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Flux Burn (CV 16): Affect two Fighters instead of one."
+            "Power Surge (CV 10): Affect two Fighters instead of one."
         },
         {
           id: "veilOfShadows",
           name: "VEIL OF SHADOWS",
-          cv: 14,
+          cv: 7,
           points: 0,
           effect:
             'Range: 6"<br><br>' +
             "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
-            "Flux Burn (CV 16): Target may act normally; remove Hidden immediately."
+            "Power Surge (CV 9): Target may act normally; remove Hidden immediately."
         },
         {
           id: "reanimateTheDead",
           name: "REANIMATE THE DEAD",
-          cv: 16,
+          cv: 7,
           points: 0,
           effect:
             "Range: Self (3\" placement)<br><br>" +
             "Summon a Shambling Corpse (HP4, Move4\", Fight9+, AP1, ATK3, DMG2/3).<br><br>" +
-            "Flux Burn (CV 18): Summon two instead."
+            "Power Surge (CV 9): Summon two instead."
         },
         {
           id: "phantasmalHorror",
           name: "PHANTASMAL HORROR",
-          cv: 15,
+          cv: 8,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Flux Burn (CV 17): Must roll ≤ AP instead."
+            "Power Surge (CV 10): Must roll ≤ AP instead."
         },
         {
           id: "siphonLife",
           name: "SIPHON LIFE",
-          cv: 14,
+          cv: 7,
           points: 0,
           effect:
             'Range: 8"<br><br>' +
             "Target suffers D3 MW; Warlock heals the same amount.<br><br>" +
-            "Flux Burn (CV 16): D3+2 MW/heal."
+            "Power Surge (CV 9): D3+2 MW/heal."
         },
         {
           id: "veilOfSouls",
           name: "VEIL OF SOULS",
-          cv: 16,
+          cv: 8,
           points: 0,
           effect:
             "Range: Self<br><br>" +
             "Until next activation, Warlock gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Flux Burn (CV 18): Warlock instead gains +2 DEF."
+            "Power Surge (CV 10): Warlock instead gains +2 DEF."
         },
         {
           id: "etherealBody",
           name: "ETHEREAL BODY",
-          cv: 12,
+          cv: 7,
           points: 0,
           effect:
             "Range: Self<br><br>" +
             "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Flux Burn (CV 14): Also gain +2 DEF until next turn."
+            "Power Surge (CV 9): Also gain +2 DEF until next turn."
         }
       ];
 
@@ -1564,6 +1571,13 @@
           points: 5,
           effect:
             'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
+        },
+          {
+          id: "sorcerousFamiliar",
+          name: "Sorcerous Familiar",
+          points: 4,
+          effect:
+            'Add an extra WoM token to your pool each turn.'
         }
       ];
 
