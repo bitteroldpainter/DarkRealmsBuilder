@@ -477,6 +477,23 @@
       display:block;
     }
 
+
+/* Weapon icon alignment (card + summary) */
+.weapon-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:16px;
+  height:16px;
+  margin-right:6px;
+  vertical-align:middle;
+}
+.weapon-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+}
+
 </style>
 </head>
 <body>
@@ -553,6 +570,13 @@
   // Dark Realms card assets
   window.DARKREALMS_CARD_LOGO_URL = "img/darkrealmslogo.png";
   window.DARKREALMS_CARD_TEX_URL  = "img/darkrealmstextureparchment.jpg";
+
+  // Weapon icons (optional). Set these to your own SVG/PNG paths.
+  // Examples: "img/sword.svg" and "img/bow.svg"
+  // If left blank, the builder falls back to ⚔ / 🏹.
+  window.DARKREALMS_WEAPON_ICON_CC = "img/sword.svg";
+  window.DARKREALMS_WEAPON_ICON_RANGED = "img/crosshair.svg";
+
 
     (function () {
       // STAT + COST CONFIG
@@ -1723,8 +1747,23 @@ function promptRename(item, fallbackLabel){
       var meta = (title === "Spells")
         ? ("CV " + (x.cv != null ? x.cv : ""))
         : (pts + " pts");
+      
+      var iconHtml = "";
+      if(title === "Close Combat Weapons"){
+        var src = window.DARKREALMS_WEAPON_ICON_CC || null;
+        iconHtml = src
+          ? "<span class='weapon-icon'><img onerror=\"this.style.display='none';this.parentNode.textContent='⚔';\" src='" + (function(){try{return (new URL(src, getBaseHref())).href;}catch(e){return src;}})() + "'></span>"
+          : "<span class='weapon-icon'>⚔</span>";
+      }
+      if(title === "Ranged Weapons"){
+        var src2 = window.DARKREALMS_WEAPON_ICON_RANGED || null;
+        iconHtml = src2
+          ? "<span class='weapon-icon'><img onerror=\"this.style.display='none';this.parentNode.textContent='🏹';\" src='" + (function(){try{return (new URL(src2, getBaseHref())).href;}catch(e){return src2;}})() + "'></span>"
+          : "<span class='weapon-icon'>🏹</span>";
+      }
       html += "<li style='margin-bottom:0.15rem;'>" +
-              x.name + " (" + meta + ")" +
+              iconHtml + x.name + " (" + meta + ")" +
+        
               (main ? " — " + main : "") +
               "</li>";
     }
@@ -1860,7 +1899,22 @@ window.copyFighterText = function () {
               mainRaw = String(mainRaw).replace(/<br\s*\/?>/gi, "\n").replace(/\r\n/g, "\n");
               var rulesHtml = esc(mainRaw).replace(/\n+/g, "<br>");
 
-              out += "<li><b>" + esc(getDisplayName(x)) + "</b> <span class='muted'>(" + pts + " pts)</span>";
+              
+              var iconHtml = "";
+              if(title === "Close Combat Weapons"){
+                var src = window.DARKREALMS_WEAPON_ICON_CC || null;
+                iconHtml = src
+                  ? "<span class='weapon-icon'><img src='" + src + "'></span>"
+                  : "<span class='weapon-icon'>⚔</span>";
+              }
+              if(title === "Ranged Weapons"){
+                var src2 = window.DARKREALMS_WEAPON_ICON_RANGED || null;
+                iconHtml = src2
+                  ? "<span class='weapon-icon'><img src='" + src2 + "'></span>"
+                  : "<span class='weapon-icon'>🏹</span>";
+              }
+              out += "<li><b>" + iconHtml + esc(getDisplayName(x)) + "</b> <span class='muted'>(" + pts + " pts)</span>";
+        
               if (mainRaw) out += "<br><span class='muted'>" + rulesHtml + "</span>";
               out += "</li>";
             }
@@ -3684,7 +3738,47 @@ document.addEventListener("DOMContentLoaded", function () {
 .cc-list li{
   break-inside: avoid;
 }
+/* Weapon icon alignment inside card table */
+.print-card.clean-card td.wname{
+  vertical-align: middle;
+}
 
+.print-card.clean-card .weapon-icon{
+  display:inline-block;
+  width:16px;
+  height:16px;
+  margin-right:6px;
+  vertical-align:middle;
+  line-height:0;
+}
+
+.print-card.clean-card .weapon-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+}
+    /* --- Weapon icon + name vertical centering on the CARD --- */
+.cc-weapons td.wname{
+  vertical-align: middle !important; /* override the existing 'top' */
+}
+
+.cc-weapons td.wname .weapon-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:14px;
+  height:14px;
+  margin-right:6px;
+  line-height:0;
+  position:relative;
+  top:-1px; /* tiny optical nudge; change to 0 if not needed */
+}
+
+.cc-weapons td.wname .weapon-icon img{
+  width:100%;
+  height:100%;
+  display:block;
+}
 
   @media print{
     body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
@@ -3959,6 +4053,7 @@ var weaponRows = [];
 (fighter.ccWeapons||[]).forEach(function(w){
   var prof = (w && (w.profile || w.effect)) || "";
   weaponRows.push({
+    type: "cc",
     name:  w ? String(getDisplayName(w)) : "",
     atk:   (atkVal!=null ? String(atkVal) : ""),
     dmg:   parseDmg(prof),
@@ -3970,6 +4065,7 @@ var weaponRows = [];
 (fighter.rangedWeapons||[]).forEach(function(w){
   var prof = (w && (w.profile || w.effect)) || "";
   weaponRows.push({
+    type: "ranged",
     name:  w ? String(getDisplayName(w)) : "",
     atk:   parseAtk(prof),
     dmg:   parseDmg(prof),
@@ -3996,10 +4092,42 @@ if (weaponRows.length){
   weaponRows.forEach(function(r){
     var tr = document.createElement("tr");
 
+    
     var tdN = document.createElement("td");
     tdN.className = "wname";
-    tdN.textContent = r.name || "";
+
+    // weapon type icon (customizable)
+    var iconSpan = document.createElement("span");
+    iconSpan.className = "weapon-icon";
+    if (r.type === "cc") {
+      var src = window.DARKREALMS_WEAPON_ICON_CC || null;
+      if (src) {
+        var img = document.createElement("img");
+        try { img.src = (new URL(src, baseHref)).href; } catch(e){ img.src = src; }
+        img.alt = "CC";
+        img.onerror = function(){ try{ iconSpan.textContent = "⚔"; }catch(e){} };
+        iconSpan.appendChild(img);
+      } else {
+        iconSpan.textContent = "⚔";
+      }
+      tdN.appendChild(iconSpan);
+    } else if (r.type === "ranged") {
+      var src2 = window.DARKREALMS_WEAPON_ICON_RANGED || null;
+      if (src2) {
+        var img2 = document.createElement("img");
+        try { img2.src = (new URL(src2, baseHref)).href; } catch(e){ img2.src = src2; }
+        img2.alt = "R";
+        img2.onerror = function(){ try{ iconSpan.textContent = "🏹"; }catch(e){} };
+        iconSpan.appendChild(img2);
+      } else {
+        iconSpan.textContent = "🏹";
+      }
+      tdN.appendChild(iconSpan);
+    }
+
+    tdN.appendChild(document.createTextNode(r.name || ""));
     tr.appendChild(tdN);
+
 
     var tdA = document.createElement("td");
     tdA.className = "wnum";
