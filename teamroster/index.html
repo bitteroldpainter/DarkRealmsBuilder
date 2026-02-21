@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mortalis / Dark Realms — Team Builder</title>
+  <title>Dark Realms — Team Builder</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:#111823; --panel2:#0f1620;
-    --text:#e9f0ff; --muted:#a7b2c6;
+    --bg:#0b0f14; --panel:#004952; --panel2:#3D3D3D;--panel3:#3AA79F;
+    --text:#e9f0ff;--text2:#000000; --muted:#a7b2c6;
 
     /* NEW border color */
-    --line:#00736b;
+    --line:#54968F;
 
     --accent:#42d3ff; --danger:#ff5c73; --ok:#66ffb3;
   }
@@ -27,9 +27,9 @@
 
   .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   button,.btn{
-    background:var(--panel); color:var(--text);
+    background:var(--panel3); color:var(--text2);
     border:1px solid var(--line); border-radius:10px;
-    padding:10px 12px; cursor:pointer; font-weight:700;
+    padding:10px 12px; cursor:pointer; font-weight:500;
   }
   button:hover{filter:brightness(1.06)}
   button.danger{border-color:var(--line)}
@@ -61,7 +61,7 @@
 
   .rowInline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
   .field, select{
-    background:transparent;
+    background:#0E2226;
     border:1px solid var(--line);
     border-radius:10px;
     padding:8px 10px;
@@ -72,6 +72,18 @@
   select option{color:#0b0f14}
   .field{width:110px}
   .smallField{width:90px}
+
+.stepBtn{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  padding:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  line-height:1;
+}
 
   .grid{display:grid;grid-template-columns:1fr;gap:10px}
   @media (min-width:900px){
@@ -85,7 +97,7 @@
   }
   .fighterHead{
     display:flex;align-items:center;justify-content:space-between;
-    gap:10px;padding:12px 14px;background:rgba(15,22,32,.9)
+    gap:10px;padding:12px 14px;background:#0E2226
   }
   .fighterHead .left{display:flex;flex-direction:column;gap:2px;min-width:0}
   .fighterHead .name{font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
@@ -143,28 +155,28 @@
   <div class="wrap">
     <div class="topbar">
       <div class="title">
-        <h1>Mortalis / Dark Realms — Team Builder</h1>
-        <div class="sub">Load fighter JSONs, sum points, manage roster, and use customizable limit presets.</div>
+        <h1>Dark Realms — Team Builder</h1>
+        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Teams for later editing.</div>
       </div>
       <div class="controls">
-        <label class="pill" for="fileInput">Load Fighter JSON(s)</label>
+        <label class="pill" for="fileInput">Load Fighters (.json)</label>
         <input id="fileInput" type="file" multiple accept=".json,application/json" />
         <button class="accent" id="addFighterBtn">Add Fighter</button>
-        <button class="accent" id="exportBtn">Export Team (.json)</button>
-        <label class="pill" for="teamInput">Import Team (.json)</label>
+        <button class="accent" id="exportBtn">Export Warband (.json)</button>
+        <label class="pill" for="teamInput">Load Warband (.json)</label>
         <input id="teamInput" type="file" accept=".json,application/json" />
-        <button class="danger" id="clearBtn">Clear Team</button>
+        <button class="danger" id="clearBtn">Clear Warband</button>
       </div>
     </div>
 
     <div class="statsRow">
 
       <div class="statCard">
-        <div class="label">Team / Warband Name</div>
+        <div class="label">Warband Name</div>
         <div class="rowInline" style="margin-top:10px">
           <input id="warbandName" type="text"
                  placeholder="e.g. The Ashen Corsairs"
-                 style="width:100%;min-width:0;background:transparent;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-weight:900" />
+                 style="width:100%;min-width:0;background:#0E2226;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-weight:900" />
         </div>
         <div class="notice">Saved in this browser and included in team export.</div>
       </div>
@@ -175,27 +187,18 @@
       </div>
 
       <div class="statCard">
-        <div class="label">Team Total Points</div>
+        <div class="label">Warband Total Points</div>
         <div class="value" id="teamTotal">0</div>
         <div class="notice" id="limitNotice"></div>
       </div>
 
       <div class="statCard">
-        <div class="label">Points Limit</div>
-        <div class="rowInline">
-          <input id="limitInput" class="field" type="number" min="0" step="1" value="0" title="0 disables limit"/>
-          <select id="presetSelect" title="Apply a preset">
-            <option value="">Presets…</option>
-          </select>
-          <button id="applyPresetBtn">Apply</button>
-        </div>
-        <div class="rowInline">
-          <input id="newPresetInput" class="smallField" type="number" min="1" step="1" placeholder="e.g. 125"/>
-          <button id="addPresetBtn">Add</button>
-          <button class="danger" id="removePresetBtn">Remove Selected</button>
-        </div>
-        <div class="notice">Presets are saved in this browser (localStorage).</div>
-      </div>
+  <div class="label">Points Limit</div>
+  <div class="rowInline" style="margin-top:10px">
+    <input id="limitInput" class="field" type="number" min="0" step="1" value="375" title="0 disables limit"/>
+    </div>
+</div>
+
     </div>
 
     <div id="status" class="notice"></div>
@@ -223,15 +226,7 @@
   const exportBtn = el("exportBtn");
   const clearBtn = el("clearBtn");
 
-  const presetSelect = el("presetSelect");
-  const applyPresetBtn = el("applyPresetBtn");
-  const newPresetInput = el("newPresetInput");
-  const addPresetBtn = el("addPresetBtn");
-  const removePresetBtn = el("removePresetBtn");
-
   const addFighterBtn = el("addFighterBtn");
-
-  const PRESET_KEY = "dr_mortalis_teambuilder_presets_v1";
 
   // ---- Roster <-> Fighter Builder bridge (localStorage) ----
   const TEAM_KEY = "dr_roster_team_state_v1";
@@ -241,18 +236,32 @@
   const FIGHTER_BUILDER_URL = "darkrealms_fighter_builder.html";
 
   function saveTeamStateToBrowser(){
-    try{
-      const payload = {
-        version: 1,
-        savedAt: new Date().toISOString(),
-        warbandName: (warbandNameEl?.value || "").trim(),
-        limit: safeNumber(limitInput.value),
-        presets: loadPresets(),
-        team: team
-      };
-      localStorage.setItem(TEAM_KEY, JSON.stringify(payload));
-    }catch(e){}
+  // We try to store the full team (including portraits).
+  // If storage quota is exceeded, we fall back to a portrait-stripped version.
+  function buildPayload(stripPortraits){
+    return {
+      version: 1,
+      savedAt: new Date().toISOString(),
+      warbandName: (warbandNameEl?.value || "").trim(),
+      limit: safeNumber(limitInput.value),
+      team: team.map(entry=>{
+        if(!stripPortraits) return entry;
+        const cloned = JSON.parse(JSON.stringify(entry));
+        if(cloned?.data?.fighter) cloned.data.fighter.portraitDataUrl = "";
+        return cloned;
+      })
+    };
   }
+  try{
+    localStorage.setItem(TEAM_KEY, JSON.stringify(buildPayload(false)));
+  }catch(e){
+    try{
+      localStorage.setItem(TEAM_KEY, JSON.stringify(buildPayload(true)));
+      setStatus("Note: Team saved without portraits (browser storage limit). Exported team files can still include portraits.", false);
+    }catch(e2){}
+  }
+}
+
   function loadTeamStateFromBrowser(){
     try{
       const raw = localStorage.getItem(TEAM_KEY);
@@ -269,13 +278,6 @@
         saveWarbandName(obj.warbandName);
       }
       if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
-
-      // restore presets
-      if (Array.isArray(obj.presets)){
-        const cleaned = obj.presets.map(safeNumber).filter(v => v > 0)
-          .filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
-        if (cleaned.length){ savePresets(cleaned); refreshPresetSelect(); }
-      }
       return true;
     }catch(e){
       return false;
@@ -335,34 +337,6 @@
   function saveWarbandName(name) {
     try { localStorage.setItem(WARBAND_KEY, String(name || "")); }
     catch {}
-  }
-
-  // ---- Presets ----
-  function loadPresets() {
-    try {
-      const raw = localStorage.getItem(PRESET_KEY);
-      const parsed = raw ? JSON.parse(raw) : null;
-      const arr = Array.isArray(parsed) ? parsed : null;
-      const defaults = [375, 400];
-      const merged = (arr && arr.length ? arr : defaults)
-        .map(safeNumber)
-        .filter(v => v > 0)
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .sort((a,b)=>a-b);
-      return merged;
-    } catch {
-      return [50, 75, 100, 125, 150, 200];
-    }
-  }
-  function savePresets(presets) {
-    localStorage.setItem(PRESET_KEY, JSON.stringify(presets));
-  }
-  function refreshPresetSelect(selectedValue="") {
-    const presets = loadPresets();
-    presetSelect.innerHTML = `<option value="">Presets…</option>` + presets.map(v =>
-      `<option value="${v}">${v} pts</option>`
-    ).join("");
-    if (selectedValue) presetSelect.value = String(selectedValue);
   }
 
   // ---- Fighter calculations & rendering ----
@@ -603,14 +577,14 @@
     render();
   }
 
-  function exportTeam() {    const stripPortraits = true;
+  function exportTeam() {
+    const stripPortraits = false;
     const exported = {
       app: "Mortalis / Dark Realms Team Builder",
       version: 1,
       savedAt: new Date().toISOString(),
       warbandName: (warbandNameEl?.value || "").trim(),
       limit: safeNumber(limitInput.value),
-      presets: loadPresets(),
       fighters: team.map(entry => {
         const data = JSON.parse(JSON.stringify(entry.data));
         if (stripPortraits && data?.fighter) data.fighter.portraitDataUrl = "";
@@ -621,7 +595,13 @@
     const blob = new Blob([JSON.stringify(exported, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "team_roster.json";
+    const wb = (warbandNameEl?.value || "").trim();
+const safe = (wb ? wb : "team_roster")
+  .replace(/[^a-z0-9]+/gi, "_")
+  .replace(/^_+|_+$/g, "")
+  .slice(0, 60);
+
+a.download = `${safe}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
     setStatus("Exported team_roster.json");
@@ -641,13 +621,6 @@
       if (typeof obj.warbandName === "string" && warbandNameEl) {
         warbandNameEl.value = obj.warbandName;
         saveWarbandName(obj.warbandName);
-      }
-
-      // Restore presets if present (optional)
-      if (Array.isArray(obj.presets)) {
-        const cleaned = obj.presets.map(safeNumber).filter(v => v > 0)
-          .filter((v,i,a)=>a.indexOf(v)===i).sort((a,b)=>a-b);
-        if (cleaned.length) { savePresets(cleaned); refreshPresetSelect(); }
       }
 
       // Restore limit if present (optional)
@@ -716,43 +689,6 @@
   });
 
   limitInput.addEventListener("input", () => { saveTeamStateToBrowser(); render(); });
-
-  // Preset buttons
-  applyPresetBtn.addEventListener("click", () => {
-    const v = safeNumber(presetSelect.value);
-    if (v > 0) {
-      limitInput.value = String(v);
-      // Persist roster in-browser (used by the Fighter Builder bridge)
-    saveTeamStateToBrowser();
-
-    render();
-      setStatus(`Applied preset: ${v} pts`);
-    }
-  });
-
-  addPresetBtn.addEventListener("click", () => {
-    const v = safeNumber(newPresetInput.value);
-    if (v <= 0) return setStatus("Enter a preset value > 0.", true);
-    const presets = loadPresets();
-    if (!presets.includes(v)) presets.push(v);
-    const cleaned = presets.filter(x => x > 0).filter((x,i,a)=>a.indexOf(x)===i).sort((a,b)=>a-b);
-    savePresets(cleaned);
-    refreshPresetSelect(String(v));
-    newPresetInput.value = "";
-    setStatus(`Added preset: ${v} pts`);
-  });
-
-  removePresetBtn.addEventListener("click", () => {
-    const v = safeNumber(presetSelect.value);
-    if (v <= 0) return setStatus("Select a preset to remove.", true);
-    const presets = loadPresets().filter(x => x !== v);
-    savePresets(presets);
-    refreshPresetSelect("");
-    setStatus(`Removed preset: ${v} pts`);
-  });
-
-  // Init
-  refreshPresetSelect();
 
   // Warband name persistence
   if (warbandNameEl) {
