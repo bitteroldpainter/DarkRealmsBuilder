@@ -12,7 +12,9 @@
       --accent:#00b3a6;
       --line:#1f2a3a;
       --danger:#ff5c6a;
-    }
+          --cardFeatTitleSize: 14px;
+      --cardFeatDescSize: 14px;
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -218,11 +220,114 @@
       font-size: 13px;
       white-space: pre-wrap;
     }
+  
+    /* --- Card view (single-page toggle) --- */
+    .cardPage{
+      display:none;
+      max-width: 1000px;
+      margin: 18px auto 60px;
+      padding: 0 14px;
+    }
+    .cardTopbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(17,24,36,.92), rgba(15,22,33,.92));
+      margin-bottom: 12px;
+    }
+    .cardTopbar .hint{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .cardWrap{
+      width: 820px;
+      height: 660px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .cardBgImg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      z-index:0;
+    }
+    
+    .cardWarbandTitle{
+      text-align:center;
+      font-size:17px;
+      font-weight:900;
+      color:#000;
+      margin:0 0 20px 0;
+    }
+    .cardTitleSpacer{
+      height:110px; /* adjust this to move title down */
+      flex:0 0 auto;
+    }
+
+
+    .cardContent{
+      position:relative;
+      z-index:2;
+      height:100%;
+      padding:70px; /* requested */
+      color:#000;   /* requested */
+      display:flex;
+      flex-direction:column;
+    }
+    .cardBody{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      margin-top:0;
+      overflow:hidden;
+    }
+    .cardFeatBlock{
+      background: transparent; /* requested */
+      border: none;
+      padding: 0;
+    }
+    .cardFeatTitle{
+      font-weight: 900;
+      font-size: var(--cardFeatTitleSize);
+      margin: 0 0 6px 0;
+    }
+    .cardFeatDesc{
+      font-size: var(--cardFeatDescSize);
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    /* Print: only the card */
+    @media print{
+      body{ background:#fff; }
+      .wrap, header, .cats, .note, #toast { display:none !important; }
+      .cardPage{ display:block !important; }
+      .cardTopbar{ display:none !important; }
+      .cardWrap{ border: 0 !important; }
+    }
+
+  
+    /* --- Square card corners override --- */
+    .cardWrap{ border-radius:0 !important; }
+    .cardBgImg{ border-radius:0 !important; }
+
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <div class="wrap" id="pickerPage">
     <header>
       <div>
         <h1>Dark Realms – Feat Picker & Feat Sheet</h1>
@@ -255,6 +360,29 @@
     <div class="note">
       Tip: Put <b>feat-card-bg.jpg</b> next to this HTML file (same folder) to use it as the printed card background.
       In Chrome Print → More settings → enable <b>Background graphics</b> (usually needed for best results).
+    </div>
+  </div>
+
+
+  <!-- Card page (single-page toggle) -->
+  <div class="cardPage" id="cardPage" aria-hidden="true">
+    <div class="cardTopbar">
+      <div class="hint">
+        Tip: If your background image doesn’t print, in Chrome Print → More settings → enable <b>Background graphics</b>.
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="btn-accent" id="btnCardPrint">Print</button>
+        <button id="btnCardBack">Back</button>
+      </div>
+    </div>
+
+    <div class="cardWrap" role="document" aria-label="Feat sheet card">
+      <img class="cardBgImg" src="feat-card-bg.jpg" alt="">
+      <div class="cardContent">
+        <div class="cardTitleSpacer" aria-hidden="true"></div>
+        <div class="cardWarbandTitle" id="cardWarbandTitle"></div>
+        <div class="cardBody" id="cardBody"></div>
+      </div>
     </div>
   </div>
 
@@ -480,147 +608,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function generateCardPage(){
     const feats = selected.map(getFeatById).filter(Boolean);
+
+    // Populate warband title
+    const titleEl = document.getElementById("cardWarbandTitle");
     const tn = (teamName && teamName.value) ? teamName.value.trim() : "";
+    titleEl.textContent = tn;
 
-    // IMPORTANT: per request, NO title text on the printed card.
-    // We'll still set the window title for convenience.
-    const pageTitle = tn ? ("Feat Sheet – " + tn) : "Feat Sheet";
+    // Populate card with ONLY feat title + description
+    const cardBody = document.getElementById("cardBody");
+    cardBody.innerHTML = "";
 
-    const featBlocks = feats.map(f => `
-      <div class="featBlock">
-        <div class="featTitle">${escapeHtml(f.name)}</div>
-        <div class="featDesc">${escapeHtml(f.text)}</div>
-      </div>
-    `).join("");
+    if(feats.length === 0){
+      const empty = document.createElement("div");
+      empty.className = "cardFeatBlock";
+      empty.innerHTML = '<div class="cardFeatDesc">No feats selected.</div>';
+      cardBody.appendChild(empty);
+    } else {
+      feats.forEach(f => {
+        const block = document.createElement("div");
+        block.className = "cardFeatBlock";
 
-    const html = `
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>${escapeHtml(pageTitle)}</title>
+        const t = document.createElement("div");
+        t.className = "cardFeatTitle";
+        t.textContent = f.name;
 
-<style>
-  :root{ --cardW:960px; --cardH:772px; }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    background:#0b0f14;
-    padding:16px;
-  }
-  .topbar{
-    max-width:calc(var(--cardW) + 20px);
-    margin:0 auto 12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-  }
-  .hint{ color:rgba(255,255,255,.75); font-size:13px; }
-  button{
-    cursor:pointer;
-    border:1px solid rgba(255,255,255,.18);
-    background: rgba(0,0,0,.22);
-    color:#fff;
-    border-radius:12px;
-    padding:10px 12px;
-    font-size:13px;
-  }
+        const d = document.createElement("div");
+        d.className = "cardFeatDesc";
+        d.textContent = f.text; // already has spaces instead of \n in this file
 
-  .card{
-    width:var(--cardW);
-    height:var(--cardH);
-    margin:0 auto;
-    position:relative;
-    overflow:hidden;
-    background:#fff;
-    border:0;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .bgImg{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    z-index:0;
-  }
-
-  /* Per request: black text, no dark boxes, no title on card */
-  .content{
-    position:relative;
-    z-index:2;
-    height:100%;
-    padding:80px;
-    color:#000;
-    display:flex;
-    flex-direction:column;
-  }
-
-  /* First block down 190px (not 390) */
-  .body{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-    margin-top:150px;
-    overflow:hidden;
-  }
-
-  .featBlock{
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-  .featTitle{
-    font-weight: 900;
-    font-size: 15px;
-    margin: 0 0 6px 0;
-  }
-  .featDesc{
-    font-size: 15px;
-    line-height: 1.35;
-    white-space: pre-wrap;
-  }
-
-  @media print{
-    body{ padding:0; background:#fff; }
-    .topbar{ display:none !important; }
-  }
-</style>
-
-</head>
-<body>
-  <div class="topbar">
-    <div class="hint">Tip: Chrome Print → More settings → enable “Background graphics” for best background printing.</div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
-      <button onclick="window.print()">Print</button>
-      <button onclick="window.close()">Close</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <img class="bgImg" src="feat-card-bg.jpg" alt="">
-    <div class="content">
-      <div class="body">
-        ${featBlocks || `<div class="featBlock"><div class="featDesc">No feats selected.</div></div>`}
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
-
-    const w = window.open("", "_blank");
-    if(!w){
-      showToast("Popup blocked. Allow popups to open the card page.");
-      return;
+        block.appendChild(t);
+        block.appendChild(d);
+        cardBody.appendChild(block);
+      });
     }
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
+
+    // Toggle to card view
+    document.getElementById("pickerPage").style.display = "none";
+    const cp = document.getElementById("cardPage");
+    cp.style.display = "block";
+    cp.setAttribute("aria-hidden", "false");
   }
+
+  // Card buttons
+  document.getElementById("btnCardBack").addEventListener("click", () => {
+    document.getElementById("cardPage").style.display = "none";
+    document.getElementById("cardPage").setAttribute("aria-hidden", "true");
+    document.getElementById("pickerPage").style.display = "block";
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById("btnCardPrint").addEventListener("click", () => window.print());
 
   btnGenerate.addEventListener("click", () => {
     if(selected.length === 0){
