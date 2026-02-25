@@ -6,8 +6,9 @@
   <title>Dark Realms — Team Builder</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:#1C3F4A; --panel2:#3D3D3D;--panel3:#3AA79F;
-    --text:#e9f0ff;--text2:#000000; --muted:#a7b2c6;
+    --bg:#0b0f14; --panel:#1C3F4A; --panel2:#3D3D3D;--panel3: linear-gradient(180deg, rgba(0,179,166,.22), rgba(0,0,0,.12));
+      border-color: rgba(0,179,166,.45);;
+    --text:#e9f0ff;--text2:#fff; --muted:#a7b2c6;
 
     /* NEW border color */
     --line:#54968F;
@@ -155,14 +156,16 @@
   <div class="wrap">
     <div class="topbar">
       <div class="title">
-        <h1>Dark Realms — Warband Builder</h1>
-        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Warbands for later editing.
+        <h1>Dark Realms — Team Builder</h1>
+        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Teams for later editing.<br>
+        <strong>IMPORTANT: Safari seems to have problems with portraits going missing between exports/loads of teams.<br> 
+          However it seems to be working fine in Google Chrome and Firefox.</strong>
         </div>
       </div>
       <div class="controls">
         <label class="pill" for="fileInput">Load Fighters (.json)</label>
         <input id="fileInput" type="file" multiple accept=".json,application/json" />
-        <button class="accent" id="addFighterBtn">Build/Add Fighter</button>
+        <button class="accent" id="addFighterBtn">Add Fighter</button>
         <button class="accent" id="exportBtn">Export Warband (.json)</button>
         <label class="pill" for="teamInput">Load Warband (.json)</label>
         <input id="teamInput" type="file" accept=".json,application/json" />
