@@ -6,9 +6,9 @@
   <title>Dark Realms — Team Builder</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:linear-gradient(180deg, rgba(50,105,122,1), rgba(28,63,74,.5)); --panel2:#3D3D3D;--panel3: linear-gradient(180deg, rgba(0,179,166,.22), rgba(0,0,0,.12));
+    --bg:#0b0f14; --panel:linear-gradient(180deg, rgba(50,105,122,1), rgba(28,63,74,.5)); --panel2:#3D3D3D;--panel3: linear-gradient(0deg, rgba(0,179,166,.22), rgba(0,0,0,.12));
       border-color: rgba(0,179,166,.45);;
-    --text:#e9f0ff;--text2:#fff; --muted:#a7b2c6;
+    --text:#e9f0ff;--text2:#fff; --muted:#E3E3E3;
 
     /* NEW border color */
     --line:#54968F;
@@ -32,7 +32,7 @@
     border:1px solid var(--line); border-radius:10px;
     padding:10px 12px; cursor:pointer; font-weight:500;
   }
-  button:hover{filter:brightness(1.06)}
+  button:hover{background: #7DB6B8}
   button.danger{border-color:var(--line)}
   button.danger:hover{filter:brightness(1.06)}
   button.accent{border-color:var(--line)}
@@ -157,7 +157,9 @@
     <div class="topbar">
       <div class="title">
         <h1>Dark Realms — Warband Builder</h1>
-        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Teams for later editing.
+        <div class="sub">Load multiple Fighter .json files, edit, copy and remove Fighters, and export and load entire Teams for later editing.<br>
+        <strong>IMPORTANT: Safari seems to have problems with portraits going missing between exports/loads of teams.<br> 
+          However it seems to be working fine in Google Chrome and Firefox.</strong>
         </div>
       </div>
       <div class="controls">

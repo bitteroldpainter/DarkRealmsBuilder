@@ -73,7 +73,7 @@
       gap: 0.75rem;
     }
     .stat-pill {
-      background: linear-gradient(180deg, rgba(0,179,166,.12), rgba(0,0,0,.12));
+      background: linear-gradient(0deg, rgba(0,179,166,.12), rgba(0,0,0,.12));
       border: 1px solid #59A199;
       border-radius: 12px;
       padding: 0.45rem 0.7rem;
@@ -98,6 +98,7 @@
     .stat-pill-value {
       font-weight: 600;
       font-size: 1.2rem;
+    text-shadow: 0px 0px 4px #000000;
     }
     .stat-btn-vert {
       width: 26px;
@@ -156,7 +157,7 @@
       padding: 0.3rem 0.75rem;
       border-radius: 999px;
       border: 1px solid #374151;
-      background: linear-gradient(180deg, rgba(0,179,166,.5), rgba(0,0,0,.12));
+      background: linear-gradient(0deg, rgba(0,179,166,.5), rgba(0,0,0,.12));
       border-color: rgba(0,179,166,.45);
       color: #e5e7eb;
       font-size: 0.85rem;
@@ -167,16 +168,20 @@
       border-radius: 999px;
       border: 1px solid #374151;
       background: linear-gradient(180deg, rgba(94,204,196,1), rgba(0,179,166,.50));
-      color: #e5e7eb;
+      color: #000000;
       font-size: 0.85rem;
       cursor: pointer;
     }
+    .tab-pill-colour:hover {
+      background: #5ECCC4;
+    }
+      
     .tab-pill:hover {
       background: #030712;
     }
     .tab-pill.active {
       background: linear-gradient(180deg, rgba(94,204,196,1), rgba(0,179,166,.50));
-      color: #ffffff;
+      color: #000000;
       border-color: #101213;
     }
 
@@ -199,7 +204,7 @@
     .item-row {
       padding: 0.35rem 0.5rem;
       border-radius: 0.5rem;
-      background: linear-gradient(180deg, rgba(0,179,166,.15), rgba(0,0,0,.12));
+      background: linear-gradient(0deg, rgba(0,179,166,.15), rgba(0,0,0,.12));
       border: 1px solid #59A199;
       display: flex;
       flex-direction: column;
@@ -274,8 +279,8 @@
     }
 /* Summary category pill */
 .summary-pill {
-  background: linear-gradient(180deg, rgba(0,179,166,.15), rgba(0,0,0,.12));
-  border: 1px solid #2a2d31;
+  background: linear-gradient(0deg, rgba(0,179,166,.15), rgba(0,0,0,.12));
+  border: 1px solid #59A199;
   border-radius: 12px;
   padding: 0.7rem 1rem;
   margin-bottom: 0.75rem;
@@ -868,10 +873,10 @@
   },
   {
     id: "nullPariah",
-    name: "Null / Pariah",
+    name: "Magic Immunity",
     points: 5,
     effect:
-      "This Fighter cannot be targeted by Psychic Powers and cannot be a Psyker. Psykers (friend or foe) within 6\" cannot use Psychic Powers."
+      "This Fighter cannot be targeted by Spells and cannot be a Warlock. Warlocks (friend or foe) within 6\" cannot use Spells."
   },
   {
     id: "zealot",
@@ -918,7 +923,7 @@
   {
     id: "powerFromPain",
     name: "Power from Pain",
-    points: 2,
+    points: 4,
     effect:
       "This Fighter gains a PfP token each time it injures or slays an enemy. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
   },
