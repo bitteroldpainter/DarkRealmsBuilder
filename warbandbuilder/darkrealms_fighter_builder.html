@@ -4089,8 +4089,93 @@ updateSummary();
     return ov;
   }
 
-  // Replace the existing Generate Card with a clean DOM-based renderer.
-  window.generateFighterCard = function(){
+function exportCardPdfTight(cardEl){
+  try{
+    if(!cardEl) throw new Error("Card not found. Generate the card first.");
+
+    // Grab the clean-card CSS block so the card looks identical in the export window
+    var cssNode = document.getElementById("darkrealms-clean-card-css");
+    var cssText = cssNode ? cssNode.textContent : "";
+
+    // Clone card and absolutize any <img src> to avoid path issues in the popup
+    var clone = cardEl.cloneNode(true);
+    Array.from(clone.querySelectorAll("img")).forEach(function(img){
+      try{
+        // If already absolute, keep it; otherwise resolve against current document
+        var abs = new URL(img.getAttribute("src") || "", document.baseURI).href;
+        img.setAttribute("src", abs);
+      }catch(e){}
+    });
+
+    var W = 820, H = 660; // card size in px
+
+    // Inject base font + weapon icon CSS (matches your main page styling)
+    var baseCss =
+      `*{box-sizing:border-box;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+       .weapon-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-right:6px;vertical-align:middle;}
+       .weapon-icon img{width:100%;height:100%;display:block;}`;
+
+    var html =
+`<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<base href="${document.baseURI}">
+<title>Card Export</title>
+<style>
+  ${baseCss}
+  ${cssText}
+
+  /* Tight PDF page: exactly the card size, no margins */
+  @page { size: ${W}px ${H}px; margin: 0; }
+  html, body { width:${W}px; height:${H}px; margin:0; padding:0; background:#fff; overflow:hidden; }
+  body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+
+  /* Ensure no centering whitespace */
+  .print-card.clean-card{ margin:0 !important; box-shadow:none !important; }
+</style>
+</head>
+<body>
+${clone.outerHTML}
+<script>
+  (function(){
+    function whenImagesReady(cb){
+      try{
+        var imgs = Array.prototype.slice.call(document.images || []);
+        var pending = imgs.filter(function(im){ return !im.complete; });
+        if(!pending.length) return cb();
+        var left = pending.length;
+        function done(){ left--; if(left<=0) cb(); }
+        pending.forEach(function(im){
+          im.addEventListener("load", done, {once:true});
+          im.addEventListener("error", done, {once:true});
+        });
+        setTimeout(cb, 700);
+      }catch(e){
+        setTimeout(cb, 700);
+      }
+    }
+    whenImagesReady(function(){
+      setTimeout(function(){
+        try{ window.focus(); }catch(e){}
+        window.print();
+      }, 150);
+    });
+  })();
+<\/script>
+</body>
+</html>`;
+
+    var w = window.open("", "_blank");
+    if(!w) throw new Error("Popup blocked. Allow popups for this site.");
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+  }catch(e){
+    alert("Export PDF failed: " + e.message);
+  }
+}
+    window.generateFighterCard = function(){
     try{
       var ov = ensureOverlay();
       ov.innerHTML = "";
@@ -4119,14 +4204,19 @@ updateSummary();
         document.body.style.overflow = "";
       };
 
-      var btnPrint = document.createElement("button");
-      btnPrint.textContent = "Print";
-      btnPrint.onclick = function(){ window.print(); };
+var btnPrint = document.createElement("button");
+btnPrint.textContent = "Print";
+btnPrint.onclick = function(){ window.print(); };
 
-      tb.appendChild(texWrap);
-      tb.appendChild(btnBack);
-      tb.appendChild(btnPrint);
-      ov.appendChild(tb);
+var btnPdf = document.createElement("button");
+btnPdf.textContent = "Export PDF";
+btnPdf.onclick = function(){ exportCardPdfTight(card); };
+
+tb.appendChild(texWrap);
+tb.appendChild(btnBack);
+tb.appendChild(btnPrint);
+tb.appendChild(btnPdf);
+ov.appendChild(tb);
 
       // base URLs for assets (same as existing builder approach)
       var baseHref = getBaseHref();
