@@ -4379,6 +4379,15 @@ function parseDmg(profile){
   var m = String(profile||"").match(/\bDMG\s*([^,]+)/i);
   return m ? m[1].trim() : "";
 }
+
+function parseHitUserMod(profile){
+  // Supports: "Hit User", "Hit User+2", "Hit User -2" (whitespace tolerant)
+  var m = String(profile||"").match(/\bHit\s*User\s*([+-]\s*\d+)?\b/i);
+  if (!m) return 0;
+  if (!m[1]) return 0;
+  var n = parseInt(String(m[1]).replace(/\s+/g,""), 10);
+  return isNaN(n) ? 0 : n;
+}
 function stripProfile(p){
   if (!p) return "";
   var parts = String(p).split(",").map(function(x){return x.trim();}).filter(Boolean);
@@ -4403,7 +4412,7 @@ var weaponRows = [];
     name:  w ? String(getDisplayName(w)) : "",
     atk:   (atkVal!=null ? String(atkVal) : ""),
     dmg:   parseDmg(prof),
-    hit:   fmtPlus(fightVal),
+    hit:   fmtPlus(fightVal!=null ? ((parseInt(fightVal,10)||0) - parseHitUserMod(prof)) : null),
     rules: stripProfile(prof)
   });
 });
@@ -4415,7 +4424,7 @@ var weaponRows = [];
     name:  w ? String(getDisplayName(w)) : "",
     atk:   parseAtk(prof),
     dmg:   parseDmg(prof),
-    hit:   fmtPlus(shootVal),
+    hit:   fmtPlus(shootVal!=null ? ((parseInt(shootVal,10)||0) - parseHitUserMod(prof)) : null),
     rules: stripProfile(prof)
   });
 });
