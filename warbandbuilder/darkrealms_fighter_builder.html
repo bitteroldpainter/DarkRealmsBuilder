@@ -179,6 +179,43 @@
     .tab-pill:hover {
       background: #030712;
     }
+      .tab-pill-colour2 {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: linear-gradient(180deg, rgb(0, 255, 162), rgba(0, 87, 64, 0.5));
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tab-pill-colour2:hover {
+      background: #00e490;
+    }
+      .tab-pill-colour3 {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: linear-gradient(180deg, rgba(94,204,196,1), rgba(0,179,166,.50));
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tab-pill-colour3:hover {
+      background: #5ECCC4;
+    }
+      .tab-pill-colour4 {
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: linear-gradient(180deg, rgba(140,48,62,1), rgba(0,0,0,1)); 
+      color: #ffffff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .tab-pill-colour4:hover {
+      background: #930056;
+    }
+
     .tab-pill.active {
       background: linear-gradient(180deg, rgba(94,204,196,1), rgba(0,179,166,.50));
       color: #000000;
@@ -505,19 +542,23 @@
 <body>
   <div class="app">
     <header class="top-bar">
-     <div class="top-title">Dark Realms Fighter Builder</div>
-     <div class="top-actions">
-       <button class="tab-pill-colour" id="btn-save-json" type="button">Save Profile</button>
-       <label class="tab-pill" style="cursor:pointer;">
-         Load Profile
-         <input id="file-load-json" type="file" accept="application/json" hidden>
-       </label>
+     <div class="top-title">The Fighter Forge</div>
+<div class="top-actions">
+  <button class="tab-pill" id="btn-save-json" type="button">Export Fighter</button>
 
+  <label class="tab-pill" style="cursor:pointer;">
+    Load Fighter
+    <input id="file-load-json" type="file" accept="application/json" hidden>
+  </label>
 
-       <button class="tab-pill-colour" id="btn-save-roster" type="button" style="display:none">Save to Roster</button>
-       <button class="tab-pill" id="btn-back-roster" type="button" style="display:none">Back to Roster</button>
+  <button class="tab-pill-colour2" id="btn-save-roster" type="button" style="display:none">Save to Warband Roster</button>
 
-       <button class="tab-pill" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none">Portrait</button>     </div>
+  <button class="tab-pill-colour4" id="btn-back-roster" type="button" style="display:none">Back without Saving</button>
+
+  <button class="tab-pill-colour3" id="btn-generate-card" type="button">Generate/Print Card</button>
+
+  <button class="tab-pill" id="btn-portrait" type="button" title="Crop / set portrait" style="display:none">Portrait</button>
+</div>
     </header>
 
     <main>
@@ -1619,13 +1660,6 @@
           points: 5,
           effect:
             'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
-        }, 
-        {
-          id: "suicideBomber",
-          name: "Suicide Bomber",
-          points: 4,
-          effect:
-            "0 AP Action: Roll a D12. On 5+, Every Fighter within 1\” of this Fighter suffers D3+2 MW.   No matter the result of the dice roll, remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects."
         },
           {
           id: "sorcerousFamiliar",
@@ -3584,6 +3618,7 @@ updateSummary();
       function drLoadFromRosterIfNeeded(){
         var ctx = drSafeJsonParse(localStorage.getItem(DR_EDIT_KEY) || "");
         if (!ctx || typeof ctx !== "object") return null;
+        try{ window.__dr_roster_ctx = ctx; }catch(e){}
         // expose entryId for portrait-keying
         window.__dr_current_roster_entry_id = ctx.entryId || null;
 
@@ -3745,7 +3780,41 @@ updateSummary();
         updateSummary();
         initTabs();
         setupJsonUi();
-        drLoadFromRosterIfNeeded();
+        try{
+          var btnGenerateCard = document.getElementById("btn-generate-card");
+          if (btnGenerateCard) btnGenerateCard.onclick = function(){
+            if (window.generateFighterCard) window.generateFighterCard();
+          };
+        }catch(e){}
+        var drCtx = drLoadFromRosterIfNeeded();
+        try{
+          var shouldAutoCard = /(?:\?|&)autocard=1(?:&|$)/.test(window.location.search || "") || !!(drCtx && drCtx.autoCard);
+          try{ window.__dr_auto_card_launch = !!shouldAutoCard; }catch(_e){}
+          if (drCtx && drCtx.autoCard){
+            drCtx.autoCard = false;
+            try{ localStorage.setItem(DR_EDIT_KEY, JSON.stringify(drCtx)); }catch(_e){}
+          }
+          if (shouldAutoCard){
+            var tries = 0;
+            var maxTries = 8;
+            var tryOpenCard = function(){
+              tries += 1;
+              try{ if (window.generateFighterCard) window.generateFighterCard(); }catch(_e){}
+              var overlay = document.getElementById("generated-card-overlay");
+              var isOpen = !!(overlay && overlay.style && overlay.style.display === "block");
+              if (!isOpen && tries < maxTries){
+                setTimeout(tryOpenCard, 140);
+                return;
+              }
+              try{
+                if (window.history && window.history.replaceState){
+                  window.history.replaceState(null, document.title, window.location.pathname + window.location.hash);
+                }
+              }catch(_e){}
+            };
+            setTimeout(tryOpenCard, 120);
+          }
+        }catch(e){}
 });
     })();
   </script>
@@ -4220,6 +4289,13 @@ ${clone.outerHTML}
       var btnBack = document.createElement("button");
       btnBack.textContent = "Back";
       btnBack.onclick = function(){
+        try{
+          var ctx = window.__dr_roster_ctx || null;
+          if (window.__dr_auto_card_launch && ctx && ctx.returnUrl){
+            window.location.href = ctx.returnUrl;
+            return;
+          }
+        }catch(_e){}
         ov.style.display = "none";
         document.body.classList.remove("print-card-mode");
         document.body.style.overflow = "";
