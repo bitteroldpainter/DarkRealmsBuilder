@@ -91,6 +91,9 @@ button.pill.export-pill:hover{
 .controls > .pill{
   font-weight:500;
 }
+.controls > button:not(.danger){
+  white-space:nowrap;
+}
   .statsRow{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0 14px}
   @media (min-width:900px){
     .statsRow{grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))}
@@ -140,14 +143,51 @@ button.pill.export-pill:hover{
     border-radius:16px; overflow:hidden;
   }
   .fighterHead{
-    display:flex;align-items:center;justify-content:space-between;
+    display:flex;align-items:flex-start;justify-content:space-between;
     gap:10px;padding:12px 14px;background:linear-gradient(180deg, rgba(224,221,213,1), rgba(158,156,152,1));
   }
-  .fighterHead .left{display:flex;flex-direction:column;gap:2px;min-width:0}
-  .fighterHead .name{color:#000000;font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
-  .fighterHead .meta{color:#000000;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
-  .fighterHead .right{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-wrap:nowrap}
-  .fighterActionsRow{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+  .fighterHead .left{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+    flex:1 1 auto;
+  }
+  .fighterHead .name{
+    color:#000000;
+    font-weight:900;
+    font-size:15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+  }
+  .fighterHead .meta{
+    color:#000000;
+    font-size:12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+  }
+  .fighterHead .right{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-items:flex-end;
+    flex:0 0 auto;
+    min-width:max-content;
+  }
+  .fighterActionsRow{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:flex-end;
+    flex-wrap:nowrap;
+  }
+  .fighterActionsRow > *{
+    flex:0 0 auto;
+  }
 
   .costTag{
     font-weight:900;
@@ -623,7 +663,7 @@ button.pill.export-pill:hover{
             <div class="right">
               <div class="fighterActionsRow">
                 <div class="costTag">${fmtPts(totalPts)}</div>
-                <button class="accent" data-action="card" data-id="${entry.id}">Generate/Print Card</button>
+                <button class="accent" data-action="card" data-id="${entry.id}">Generate Card</button>
               </div>
               <div class="fighterActionsRow">
                 <button class="accent" data-action="edit" data-id="${entry.id}">Edit</button>
