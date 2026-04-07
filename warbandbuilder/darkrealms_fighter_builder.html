@@ -1898,7 +1898,7 @@ function promptRename(item, fallbackLabel){
           for (var j = 0; j < arr.length; j++) {
             var x = arr[j];
             var pts = x.points || 0;
-            lines.push("  - " + x.name + " (" + pts + " pts)");
+            lines.push("  - " + getDisplayName(x) + " (" + pts + " pts)");
 
             var main = cleanMultiline(x.profile || x.effect || "");
             if (main) {
@@ -2520,7 +2520,7 @@ function recalcStatCost () {
               + '<div class="item-row" data-idx="' + i + '">'
               + '  <div class="item-row-header">'
               + '    <div class="item-main">'
-              + '      <div class="item-name">' + a.name + '</div>'
+              + '      <div class="item-name">' + getDisplayName(a) + '</div>'
               + '      <div class="item-detail">' + (a.profile || a.effect || "") + '</div>'
               + '    </div>'
               + '    <div class="item-points">' + rightLabel + '</div>'
@@ -2665,7 +2665,7 @@ for (i = 0; i < renames.length; i++) {
                 + '<div class="item-row" data-idx="' + i + '" data-group="cc">'
                 + '  <div class="item-row-header">'
                 + '    <div class="item-main">'
-                + '      <div class="item-name">' + wc.name + '</div>'
+                + '      <div class="item-name">' + getDisplayName(wc) + '</div>'
                 + '      <div class="item-detail">' + prof + '</div>'
                 + '    </div>'
                 + '    <div class="item-points">' + wc.points + ' pts</div>'
@@ -2837,7 +2837,7 @@ for (i = 0; i < renames.length; i++) {
                 + '<div class="item-row" data-idx="' + i + '" data-group="ranged">'
                 + '  <div class="item-row-header">'
                 + '    <div class="item-main">'
-                + '      <div class="item-name">' + rw.name + '</div>'
+                + '      <div class="item-name">' + getDisplayName(rw) + '</div>'
                 + '      <div class="item-detail">' + profR + '</div>'
                 + '    </div>'
                 + '    <div class="item-points">' + rw.points + ' pts</div>'
@@ -3050,41 +3050,203 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
         Object.keys(src).forEach(function(k){ target[k] = src[k]; });
       }
 
+
+      function drNormText(v){
+        return String(v == null ? "" : v).trim().toLowerCase();
+      }
+
+      function drClone(obj){
+        try { return JSON.parse(JSON.stringify(obj)); }
+        catch(e){ return obj; }
+      }
+
+      function drNormalizeUpgrades(upgrades){
+        return {
+          poison: !!(upgrades && upgrades.poison),
+          enchanted: !!(upgrades && upgrades.enchanted),
+          cursed: !!(upgrades && upgrades.cursed),
+          truestrike: !!(upgrades && upgrades.truestrike),
+          masterCrafted: !!(upgrades && upgrades.masterCrafted)
+        };
+      }
+
+      function drFindCanonical(imported, srcArray, mode){
+        if (!imported || !Array.isArray(srcArray)) return null;
+        var i, src;
+        if (imported.id) {
+          for (i = 0; i < srcArray.length; i++) {
+            src = srcArray[i];
+            if (src && src.id === imported.id) return src;
+          }
+        }
+
+        var names = [];
+        if (imported.name != null) names.push(imported.name);
+        if (imported.displayNameOverride != null) names.push(imported.displayNameOverride);
+        if (imported.baseName != null) names.push(imported.baseName);
+        for (var n = 0; n < names.length; n++) {
+          var wantName = drNormText(names[n]);
+          if (!wantName) continue;
+          for (i = 0; i < srcArray.length; i++) {
+            src = srcArray[i];
+            if (drNormText(src && src.name) === wantName) return src;
+          }
+        }
+
+        if (mode === "weapon") {
+          var wantProfile = drNormText(imported.baseProfile != null ? imported.baseProfile : imported.profile);
+          if (wantProfile) {
+            for (i = 0; i < srcArray.length; i++) {
+              src = srcArray[i];
+              if (drNormText(src && src.profile) === wantProfile) return src;
+            }
+          }
+        } else {
+          var wantEffect = drNormText(imported.effect != null ? imported.effect : imported.profile);
+          var wantCv = (imported.cv != null) ? Number(imported.cv) : null;
+          if (wantEffect || wantCv != null) {
+            for (i = 0; i < srcArray.length; i++) {
+              src = srcArray[i];
+              var srcEffect = drNormText(src && (src.effect != null ? src.effect : src.profile));
+              var srcCv = (src && src.cv != null) ? Number(src.cv) : null;
+              if ((wantEffect && srcEffect === wantEffect) || (wantCv != null && srcCv === wantCv)) return src;
+            }
+          }
+        }
+
+        return null;
+      }
+
+      function drCarryDisplayName(target, imported, canonicalName){
+        if (!target || !imported) return;
+        var explicit = (imported.displayNameOverride != null) ? String(imported.displayNameOverride).trim() : "";
+        if (explicit) {
+          target.displayNameOverride = explicit;
+          return;
+        }
+        var importedName = (imported.name != null) ? String(imported.name).trim() : "";
+        if (importedName && drNormText(importedName) !== drNormText(canonicalName)) {
+          target.displayNameOverride = importedName;
+        }
+      }
+
+      function drNormalizeWeaponItem(imported, srcArray){
+        imported = imported || {};
+        var canonical = drFindCanonical(imported, srcArray, "weapon");
+        var out;
+        if (canonical) {
+          out = {
+            id: canonical.id,
+            name: canonical.name,
+            baseProfile: canonical.profile,
+            profile: canonical.profile,
+            basePoints: canonical.points,
+            points: canonical.points,
+            upgrades: drNormalizeUpgrades(imported.upgrades)
+          };
+          drCarryDisplayName(out, imported, canonical.name);
+        } else {
+          out = drClone(imported) || {};
+          out.name = (out.name != null) ? String(out.name) : "";
+          out.baseProfile = (out.baseProfile != null) ? out.baseProfile : (out.profile || "");
+          out.profile = out.baseProfile;
+          var fallbackBase = (out.basePoints != null) ? Number(out.basePoints) : Number(out.points || 0);
+          out.basePoints = Number.isFinite(fallbackBase) ? fallbackBase : 0;
+          out.points = out.basePoints;
+          out.upgrades = drNormalizeUpgrades(out.upgrades);
+        }
+        return out;
+      }
+
+      function drNormalizeSimpleItem(imported, srcArray){
+        imported = imported || {};
+        var canonical = drFindCanonical(imported, srcArray, "simple");
+        var out;
+        if (canonical) {
+          out = {
+            id: canonical.id,
+            name: canonical.name,
+            points: (canonical.points != null) ? canonical.points : 0,
+            profile: canonical.profile,
+            effect: canonical.effect,
+            dynamicType: canonical.dynamicType,
+            dynamicFactor: canonical.dynamicFactor,
+            cv: canonical.cv
+          };
+          drCarryDisplayName(out, imported, canonical.name);
+        } else {
+          out = drClone(imported) || {};
+          out.name = (out.name != null) ? String(out.name) : "";
+          if (out.points == null) out.points = 0;
+        }
+        return out;
+      }
+
+      function drNormalizeImportedFighter(imported){
+        imported = (imported && typeof imported === "object") ? imported : {};
+        var out = {
+          name: (typeof imported.name === "string") ? imported.name : "",
+          portraitDataUrl: (typeof imported.portraitDataUrl === "string") ? imported.portraitDataUrl : "",
+          portraitKey: (typeof imported.portraitKey === "string") ? imported.portraitKey : (fighter.portraitKey || ""),
+          stats: {},
+          ccWeapons: [],
+          rangedWeapons: [],
+          abilities: [],
+          leaderAbilities: [],
+          spells: [],
+          equipment: [],
+          isWarlock: !!imported.isWarlock,
+          isMasterWarlock: !!imported.isMasterWarlock,
+          points: { base: 16 }
+        };
+
+        for (var i = 0; i < STAT_CONFIG.length; i++) {
+          var cfg = STAT_CONFIG[i];
+          var raw = imported.stats && imported.stats[cfg.key];
+          var num = Number(raw);
+          out.stats[cfg.key] = Number.isFinite(num) ? num : cfg.base;
+        }
+
+        out.ccWeapons = Array.isArray(imported.ccWeapons) ? imported.ccWeapons.map(function(x){ return drNormalizeWeaponItem(x, CC_WEAPONS); }) : [];
+        out.rangedWeapons = Array.isArray(imported.rangedWeapons) ? imported.rangedWeapons.map(function(x){ return drNormalizeWeaponItem(x, RANGED_WEAPONS); }) : [];
+        out.abilities = Array.isArray(imported.abilities) ? imported.abilities.map(function(x){ return drNormalizeSimpleItem(x, FIGHTER_ABILITIES); }) : [];
+        out.leaderAbilities = Array.isArray(imported.leaderAbilities) ? imported.leaderAbilities.map(function(x){ return drNormalizeSimpleItem(x, LEADER_ABILITIES); }) : [];
+        out.spells = Array.isArray(imported.spells) ? imported.spells.map(function(x){ return drNormalizeSimpleItem(x, SPELLS); }) : [];
+        out.equipment = Array.isArray(imported.equipment) ? imported.equipment.map(function(x){ return drNormalizeSimpleItem(x, EQUIPMENT); }) : [];
+        out.points.base = (imported.points && typeof imported.points.base === "number") ? imported.points.base : 16;
+        return out;
+      }
+
+
       function applyImportedFighterState(imported){
         if (!imported || typeof imported !== "object") throw new Error("Invalid JSON (no fighter object).");
 
-        // Replace top-level scalar/flags
-        fighter.name = imported.name || "";
-        fighter.isWarlock = !!imported.isWarlock;
-        fighter.isMasterWarlock = !!imported.isMasterWarlock;
+        var normalized = drNormalizeImportedFighter(imported);
 
-        // Portrait (optional)
-        fighter.portraitDataUrl = (typeof imported.portraitDataUrl === "string") ? imported.portraitDataUrl : (fighter.portraitDataUrl || "");
+        fighter.name = normalized.name || "";
+        fighter.isWarlock = !!normalized.isWarlock;
+        fighter.isMasterWarlock = !!normalized.isMasterWarlock;
+        fighter.portraitDataUrl = normalized.portraitDataUrl || "";
+        fighter.portraitKey = normalized.portraitKey || fighter.portraitKey || "";
 
-        // Stats
         if (!fighter.stats) fighter.stats = {};
-        safeAssign(fighter.stats, imported.stats || {});
+        safeAssign(fighter.stats, normalized.stats || {});
 
-        // Lists (replace arrays)
-        fighter.ccWeapons = Array.isArray(imported.ccWeapons) ? imported.ccWeapons : [];
-        fighter.rangedWeapons = Array.isArray(imported.rangedWeapons) ? imported.rangedWeapons : [];
-        fighter.abilities = Array.isArray(imported.abilities) ? imported.abilities : [];
-        fighter.leaderAbilities = Array.isArray(imported.leaderAbilities) ? imported.leaderAbilities : [];
-        fighter.spells = Array.isArray(imported.spells) ? imported.spells : [];
-        fighter.equipment = Array.isArray(imported.equipment) ? imported.equipment : [];
+        fighter.ccWeapons = normalized.ccWeapons;
+        fighter.rangedWeapons = normalized.rangedWeapons;
+        fighter.abilities = normalized.abilities;
+        fighter.leaderAbilities = normalized.leaderAbilities;
+        fighter.spells = normalized.spells;
+        fighter.equipment = normalized.equipment;
 
-        // Points block: keep base if present, otherwise default
         if (!fighter.points) fighter.points = {};
-        var baseDefault = 16;
-        fighter.points.base = (imported.points && typeof imported.points.base === "number") ? imported.points.base : (fighter.points.base || baseDefault);
+        fighter.points.base = (normalized.points && typeof normalized.points.base === "number") ? normalized.points.base : 16;
 
-        // Recompute all derived points and refresh UI
         recalcStatCost();
         recalcWarlockCost();
         recalcWeaponPoints();
         recalcAbilityPoints();
 
-        // Re-render all panels to ensure checkboxes + selected lists match
         initStats();
         initWeaponsCC();
         initWeaponsRanged();
