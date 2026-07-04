@@ -2099,7 +2099,7 @@ html += "</div>";
           var baseHref = (window.location && window.location.href) ? window.location.href : "";
           baseHref = baseHref.replace(/[#?].*$/, "");
           baseHref = baseHref.replace(/[^\/]*$/, "");
-var texUrl  = (new URL("./img/mortalistexture.jpg", baseHref)).href;
+var texUrl  = (new URL("./img/darkrealmstextureparchment.jpg", baseHref)).href;
 
           // HP pips (rows of 15)
           var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
@@ -5276,7 +5276,7 @@ var weaponRows = [];
 // window.MORTALIS_WEAPON_ICON_CC = "./img/sword.svg";
 // window.MORTALIS_WEAPON_ICON_RANGED = "./img/gun.svg";
 var ICON_CC = window.MORTALIS_WEAPON_ICON_CC || "./img/sword.svg";
-var ICON_RANGED = window.MORTALIS_WEAPON_ICON_RANGED || "./img/crosshair.svg";
+var ICON_RANGED = window.MORTALIS_WEAPON_ICON_RANGED || "./img/bow.svg";
 
 
 (fighter.ccWeapons||[]).forEach(function(w){
