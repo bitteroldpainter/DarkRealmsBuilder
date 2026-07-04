@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dark Realms — Team Builder</title>
+  <title>Mortalis — Warband Builder</title>
 <style>
   :root{
     --bg:#0b0f14; --panel:linear-gradient(180deg, rgba(50,105,122,1), rgba(28,63,74,.5)); --panel2:#3D3D3D;--panel3: linear-gradient(180deg, rgba(0,133,123,1), rgba(0,0,0,1));
-      border-color: rgba(0,179,166,.45);;
+    
     --text:#e9f0ff;--text2:#fff; --muted:#E3E3E3;
 
     /* NEW border color */
     --line:#54968F;
-
+   --line2:#000000;
     --accent:#42d3ff; --danger:#ff5c73; --ok:#66ffb3;
   }
   *{box-sizing:border-box}
@@ -21,79 +21,104 @@
   /* NEW: match builders */
   .wrap{max-width:960px;margin:0 auto;padding:18px}
 
-  .topbar{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:10px}
-  .headerLogo{width:100%;display:flex;justify-content:center;align-items:center}
-  .headerLogo img{width:499px;height:150px;max-width:100%;object-fit:contain;display:block}
+  .topbar{
+  display:flex;
+  flex-direction:column;          /* stack logo + controls */
+  align-items:center;             /* center everything */
+  gap:6px;                        /* reduce vertical space */
+  margin-bottom:8px;              /* tighter overall spacing */
+}
+  .headerLogo{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-  .controls{
+.headerLogo img{
+  height:150px;
+  width:499px;
+  object-fit:contain;
+  display:block;
+}
+  .title{display:flex;flex-direction:column;gap:2px}
+  .title h1{margin:0;font-size:25px;letter-spacing:.3px}
+  .title .sub{color:var(--muted);font-size:12px}
+
+.controls{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+  width:100%;
+  margin-top:0;
 }
-button,.btn{
-  background:var(--panel3);
-  color:var(--text2);
-  border:1px solid var(--line);
-  border-radius:15px;
-  padding:7px 9px;
-  cursor:pointer;
-  font-weight:500;
-  font-size:12px;
-}
+
+  
+  button,.btn{
+    background:var(--panel3); color:var(--text2);
+    border:1px solid; var(--line2); border-radius:15px;
+    padding:7px 9px; cursor:pointer; font-weight:500;
+    font-size:11px;
+  }
 
   button.danger{
-    background:linear-gradient(180deg, rgba(140,48,62,1), rgba(0,0,0,1)); color:var(--text2);
-    border:1px solid; Border-color:#000000; border-radius:15px;
-    padding:7px 9px; cursor:pointer; font-weight:500;
-    font-size: 12px;
+    background:linear-gradient(180deg, rgba(140,48,62,1), rgb(56, 0, 0)); color:var(--text2);
+    border:1px solid; Border-color:#000000; border-radius:999px;text-shadow: #000000 2px 2px 4px;
+    padding:8px 8px; cursor:pointer; font-weight:700;
+    font-size:11px;
   }
+ 
   button:hover{background: #7DB6B8}
-  button.danger:hover{filter:brightness(1.06)}
-  button.accent{border-color:var(--line)}
+  button.danger:hover{background: #d30000}
+  button.accent{border-color:var(--line2);font-size:11px;font-weight: 700;text-shadow: #000000 2px 2px 4px; padding:8px 8px;border-radius:999px;}
   button.accent:hover{filter:brightness(1.06)}
+  button.accent2{border-color:var(--line);font-size:11px;font-weight: 700;text-shadow: #000000 2px 2px 4px; padding:8px 8px;border-radius:999px;background:rgba(17,24,35,.7);}
+  button.accent2:hover{background: #7DB6B8}
   input[type="file"]{display:none}
 
+
   .pill{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:10px 12px;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 9px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(17,24,35,.7);
+    color:var(--text); font-weight:700;
+    font-size:11px;
+    cursor:pointer;
+    text-shadow: #000000 2px 2px 4px;
+  }
+
+    .pill2{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 8px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(17,24,35,.7);
+    color:var(--text); font-weight:700;
+    cursor:pointer;
+  }
+  .pill:hover{background: #7DB6B8}
+
+#prebuiltTeamSelect {
   border-radius:999px;
-  border:1px solid var(--line);
+  padding:10px 30px 10px 12px; /* ← extra right padding for arrow */
   background:rgba(17,24,35,.7);
   color:var(--text);
   font-weight:700;
-  font-size:0.85rem;
-  cursor:pointer;
-}
-  .pill:hover{filter:brightness(1.06)}
-
-  button.pill.export-pill{
-  background:rgba(17,24,35,.7);
-  color:var(--text);
   border:1px solid var(--line);
-  border-radius:999px;
-  padding:10px 12px;
-  font-weight:500;
-  font-size:0.85rem;
+  cursor:pointer;
+  text-shadow: #000000 2px 2px 4px;
+
+  width: 220px;          /* ← control overall width */
+  appearance: none;      /* ← removes default browser styling (important) */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center; /* ← moves arrow inward */
+  background-size: 16px;
 }
 
-button.pill.export-pill:hover{
-  filter:brightness(1.06);
-  background:rgba(17,24,35,.7);
-}
-  .controls > button,
-.controls > .pill{
-  font-size:0.85rem;
-}
-.controls > .pill{
-  font-weight:500;
-}
-.controls > button:not(.danger){
-  white-space:nowrap;
-}
   .statsRow{display:grid;grid-template-columns:1fr;gap:10px;margin:10px 0 14px}
   @media (min-width:900px){
     .statsRow{grid-template-columns:repeat(auto-fit, minmax(220px, 1fr))}
@@ -104,13 +129,13 @@ button.pill.export-pill:hover{
   }
   .statCard .label{color:var(--muted);font-size:12px}
   .statCard .value{font-size:22px;font-weight:900;margin-top:4px}
-  .statCard .notice{color:var(--muted);font-size:12px;line-height:1.35;margin-top:6px}
+  .statCard .notice{color:var(--muted);font-size:11px;line-height:1.35;margin-top:6px}
 
   .rowInline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
   .field, select{
     background:#0E2226;
     border:1px solid var(--line);
-    border-radius:10px;
+    border-radius:999px;
     padding:8px 10px;
     color:var(--text);
     font-weight:800;
@@ -143,51 +168,14 @@ button.pill.export-pill:hover{
     border-radius:16px; overflow:hidden;
   }
   .fighterHead{
-    display:flex;align-items:flex-start;justify-content:space-between;
+    display:flex;align-items:center;justify-content:space-between;
     gap:10px;padding:12px 14px;background:linear-gradient(180deg, rgba(224,221,213,1), rgba(158,156,152,1));
   }
-  .fighterHead .left{
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-    min-width:0;
-    flex:1 1 auto;
-  }
-  .fighterHead .name{
-    color:#000000;
-    font-weight:900;
-    font-size:15px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:100%;
-  }
-  .fighterHead .meta{
-    color:#000000;
-    font-size:12px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:100%;
-  }
-  .fighterHead .right{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    align-items:flex-end;
-    flex:0 0 auto;
-    min-width:max-content;
-  }
-  .fighterActionsRow{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    justify-content:flex-end;
-    flex-wrap:nowrap;
-  }
-  .fighterActionsRow > *{
-    flex:0 0 auto;
-  }
+  .fighterHead .left{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .fighterHead .name{color:#000000;font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
+  .fighterHead .meta{color:#000000;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
+  .fighterHead .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:0 0 auto}
+  .fighterHead .actionsRow{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
 
   .costTag{
     font-weight:900;
@@ -209,13 +197,13 @@ button.pill.export-pill:hover{
     border-radius:14px;
     padding:10px 12px
   }
-  .section h3{margin:0 0 6px;font-size:12px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}
+  .section h3{margin:0 0 6px;font-size:11px;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}
 
   .row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed rgba(0,115,107,.55)}
   .row:last-child{border-bottom:none}
   .row .l{min-width:0}
   .row .l b{font-weight:900}
-  .row .l .small{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.25}
+  .row .l .small{color:var(--muted);font-size:11px;margin-top:2px;line-height:1.25}
   .row .r{white-space:nowrap;font-weight:900}
 
   .kvs{display:flex;gap:10px;flex-wrap:wrap}
@@ -229,60 +217,32 @@ button.pill.export-pill:hover{
   .kv .v{font-size:14px;font-weight:900;margin-top:2px}
 
   .muted{color:var(--muted)}
-  .notice{color:var(--muted);font-size:12px;line-height:1.35;margin-top:6px}
+  .notice{color:var(--muted);font-size:11px;line-height:1.35;margin-top:6px}
   .error{color:var(--danger);font-weight:800}
   .ok{color:var(--ok);font-weight:900}
 
   .toggle{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
   .toggle input{transform:scale(1.1)}
-
-  /* Normalize ALL top control pills (buttons + labels) */
-.controls > .pill,
-.controls > button.pill{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-
-  height:36px;              /* ← equal height */
-  padding:0 12px;           /* ← removes label vs button difference */
-
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(17,24,35,.7);
-
-  font-size:0.85rem;
-  font-weight:00;          /* ← removes bold difference */
-
-  line-height:1;            /* ← prevents vertical mismatch */
-}
-
-/* Keep hover consistent */
-.controls > .pill:hover,
-.controls > button.pill:hover{
-  filter:brightness(1.06);
-}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="topbar">
-           <div class="headerLogo">
-        <img src="darkrealmsheader.png" alt="Dark Realms">
+<div class="topbar">
+  <div class="headerLogo">
+    <img src="fighterforge.png" alt="Fighter Forge Logo">
+  </div>
+  <div class="controls">
+        <button class="accent" id="addFighterBtn">Build Fighter</button>
+        <button class="accent2" id="exportBtn">Export Warband (.json)</button>
+         <label class="pill" for="fileInput">Load Fighters (.json)</label>
+        <input id="fileInput" type="file" multiple accept=".json,application/json" />
+        <label class="pill" for="teamInput">Load Warband (.json)</label>
+        <input id="teamInput" type="file" accept=".json,application/json" />
+        <select id="prebuiltTeamSelect" title="Load one of the prebuilt warbands">
+          <option value="">Load Prebuilt Warband...</option>
+        </select>
+        <button class="danger" id="clearBtn">Clear Warband</button>
       </div>
-      <div class="controls">
-
-  <button class="accent" id="addFighterBtn"> Build Fighter</button>
-  <button class="pill export-pill" id="exportBtn">Export Warband (.json)</button>
-
-  <label class="pill" for="fileInput">Load Fighters (.json)</label>
-  <input id="fileInput" type="file" multiple accept=".json,application/json" />
-
-  <label class="pill" for="teamInput">Load Warband (.json)</label>
-  <input id="teamInput" type="file" accept=".json,application/json" />
-
-  <button class="danger" id="clearBtn">Clear Warband</button>
-
-</div>
     </div>
 
     <div class="statsRow">
@@ -292,9 +252,9 @@ button.pill.export-pill:hover{
         <div class="rowInline" style="margin-top:10px">
           <input id="warbandName" type="text"
                  placeholder="e.g. The Ashen Corsairs"
-                 style="width:100%;min-width:0;background:#0E2226;border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text);font-weight:900" />
+                 style="width:100%;min-width:0;background:#0E2226;border:1px solid var(--line);border-radius:10px;padding:8px 8px;color:var(--text);font-weight:900" />
         </div>
-        <div class="notice">Saved in this browser and included in team export.</div>
+        <div class="notice">Saved in this browser and included in warband export.</div>
       </div>
       <div class="statCard">
         <div class="label">Fighters</div>
@@ -311,7 +271,7 @@ button.pill.export-pill:hover{
       <div class="statCard">
   <div class="label">Points Limit</div>
   <div class="rowInline" style="margin-top:10px">
-    <input id="limitInput" class="field" type="number" min="0" step="1" value="375" title="0 disables limit"/>
+    <input id="limitInput" class="field" type="number" min="0" step="1" value="400" title="0 disables limit"/>
     </div>
 </div>
 
@@ -323,8 +283,8 @@ button.pill.export-pill:hover{
 
 <script>
 (() => {
-  // Team entries: { id, sourceFileName, data }
-  let team = [];
+  // Warband entries: { id, sourceFileName, data }
+  let warband = [];
 
   const el = (id) => document.getElementById(id);
   const listEl = el("list");
@@ -341,220 +301,38 @@ button.pill.export-pill:hover{
   const teamInput = el("teamInput");
   const exportBtn = el("exportBtn");
   const clearBtn = el("clearBtn");
+  const prebuiltTeamSelect = el("prebuiltTeamSelect");
+
 
   const addFighterBtn = el("addFighterBtn");
 
-  // ---- Roster <-> Fighter Builder bridge (localStorage) ----
-  const TEAM_KEY = "dr_roster_team_state_v1";
-  const EDIT_KEY = "dr_roster_edit_ctx_v1";
+  // ---- Prebuilt warband dropdown ----
+  // Put your exported warband JSON files in a /warbands/ folder next to this HTML file,
+  // then edit/add entries below. Example URL: warbands/ashen-corsairs.json
+  const PREBUILT_TEAMS = [
+    { label: "Eldar Aspect Warriors", url: "warbands/Eldar_Aspect_Warriors.json" },
+    { label: "Kroot Hunters", url: "warbands/Kroot.json" },
+    { label: "Noise Marines", url: "warbands/Church_of_Noise.json" },
+    { label: "Sisters of Battle", url: "warbands/Sisters_of_Battle.json" },
+    { label: "Mechanicus", url: "warbands/Mechanicus_Team.json" },
+    { label: "Creations of Ghaust", url: "warbands/Creations_of_Ghaust.json" },
+    { label: "Word Bearers", url: "warbands/Word_Bearers.json" },
+    { label: "Necron Canoptek Circle", url: "warbands/Necron_Canoptek.json" },
+    { label: "Necron Destroyer Cult", url: "warbands/Necron_Destroyers.json" }
+  ];
 
-  // Change this filename to match where you place the Fighter Builder.
-  const FIGHTER_BUILDER_URL = "darkrealms_fighter_builder.html";
+  // ---- Current Mortalis rules library (mirrors builder data for roster recalculation) ----
+  var STAT_CONFIG = [
+        { key: "move",  label: "Move",  unit: '"', base: 6, min: 5, max: 8,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "def",   label: "DEF",   unit: "+", base: 9, min: 5, max: 11, upCost: 1, downCost: 1, lowerIsBetter: true  },
+        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 4,  upCost: 4, downCost: 4, lowerIsBetter: false },
+        { key: "hp",    label: "HP",    unit: "",  base: 7, min: 3, max: 99, upCost: 1, downCost: 1, lowerIsBetter: false },
+        { key: "atk",   label: "ATK",   unit: "",  base: 3, min: 3, max: 5,  upCost: 2, downCost: 0, lowerIsBetter: false },
+        { key: "fight", label: "Fight", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  },
+        { key: "shoot", label: "Shoot", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  }
+      ];
 
-  // ---- IndexedDB Portrait Store (avoids localStorage quota) ----
-  const PORTRAIT_DB_NAME = "warband_portraits_v1";
-  const PORTRAIT_STORE   = "portraits";
-
-  function openPortraitDB(){
-    return new Promise((resolve, reject) => {
-      try{
-        const req = indexedDB.open(PORTRAIT_DB_NAME, 1);
-        req.onupgradeneeded = () => {
-          const db = req.result;
-          if (!db.objectStoreNames.contains(PORTRAIT_STORE)) db.createObjectStore(PORTRAIT_STORE);
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      }catch(err){ reject(err); }
-    });
-  }
-  async function portraitDBSet(key, dataUrl){
-    if (!key) return;
-    const db = await openPortraitDB();
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction(PORTRAIT_STORE, "readwrite");
-      tx.objectStore(PORTRAIT_STORE).put(String(dataUrl || ""), String(key));
-      tx.oncomplete = () => resolve(true);
-      tx.onerror = () => reject(tx.error);
-    });
-  }
-  async function portraitDBGet(key){
-    if (!key) return "";
-    const db = await openPortraitDB();
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction(PORTRAIT_STORE, "readonly");
-      const req = tx.objectStore(PORTRAIT_STORE).get(String(key));
-      req.onsuccess = () => resolve(String(req.result || ""));
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  async function ensurePortraitStoredOnFighter(fighter, fallbackKey){
-    try{
-      if (!fighter || typeof fighter !== "object") return;
-      const dataUrl = (typeof fighter.portraitDataUrl === "string") ? fighter.portraitDataUrl.trim() : "";
-      if (!dataUrl) return;
-      const key = (fighter.portraitKey && String(fighter.portraitKey).trim()) ? String(fighter.portraitKey).trim() : String(fallbackKey || "");
-      const finalKey = key || ("p_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16));
-      await portraitDBSet(finalKey, dataUrl);
-      fighter.portraitKey = finalKey;
-      fighter.portraitDataUrl = ""; // keep roster lean
-    }catch(_){}
-  }
-
-  async function attachPortraitForExport(fighter){
-    try{
-      if (!fighter || typeof fighter !== "object") return;
-      const has = (typeof fighter.portraitDataUrl === "string") ? fighter.portraitDataUrl.trim() : "";
-      if (has) return;
-      const key = (fighter.portraitKey && String(fighter.portraitKey).trim()) ? String(fighter.portraitKey).trim() : "";
-      if (!key) return;
-      const dataUrl = await portraitDBGet(key);
-      if (dataUrl) fighter.portraitDataUrl = dataUrl;
-    }catch(_){}
-  }
-
-
-    function saveTeamStateToBrowser(){
-    // Store a lean team state in localStorage (no portrait bytes).
-    // Portraits live in IndexedDB under fighter.portraitKey.
-    function buildPayload(){
-      return {
-        version: 1,
-        savedAt: new Date().toISOString(),
-        warbandName: (warbandNameEl?.value || "").trim(),
-        limit: safeNumber(limitInput.value),
-        team: team.map(entry=>{
-          const cloned = JSON.parse(JSON.stringify(entry));
-          if (cloned?.data?.fighter){
-            cloned.data.fighter.portraitDataUrl = "";
-          }
-          return cloned;
-        })
-      };
-    }
-    try{
-      localStorage.setItem(TEAM_KEY, JSON.stringify(buildPayload()));
-    }catch(e){
-      // If even a lean payload fails (should be rare), do nothing rather than corrupting state.
-    }
-  }
-
-  function loadTeamStateFromBrowser(){
-    try{
-      const raw = localStorage.getItem(TEAM_KEY);
-      if (!raw) return false;
-      const obj = JSON.parse(raw);
-      if (!obj || typeof obj !== "object" || !Array.isArray(obj.team)) return false;
-
-      // restore team
-      team = obj.team.map(normalizeTeamEntry);
-
-      // restore warband name / limit
-      if (typeof obj.warbandName === "string" && warbandNameEl){
-        warbandNameEl.value = obj.warbandName;
-        saveWarbandName(obj.warbandName);
-      }
-      if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
-      return true;
-    }catch(e){
-      return false;
-    }
-  }
-
-  async function migrateExistingPortraitsToIndexedDB(){
-    // If an older version stored portraitDataUrl inside roster entries, move them into IndexedDB once.
-    try{
-      for (const entry of (team || [])){
-        await ensurePortraitStoredOnFighter(entry?.data?.fighter, entry?.id);
-      }
-    }catch(_){}
-  }
-
-  function getReturnUrl(){
-    // Keep it simple: return to the current file without query/hash.
-    const href = (window.location && window.location.href) ? window.location.href : "";
-    return href.replace(/[#?].*$/, "");
-  }
-
-  function startEditFighter(entryId, options = {}){
-    try{
-      // persist current roster first
-      saveTeamStateToBrowser();
-
-      const ctx = {
-        version: 1,
-        mode: entryId ? "edit" : "new",
-        entryId: entryId || null,
-        returnUrl: getReturnUrl(),
-        autoCard: !!options.autoCard,
-        startedAt: new Date().toISOString()
-      };
-      localStorage.setItem(EDIT_KEY, JSON.stringify(ctx));
-    }catch(e){}
-
-    // navigate to fighter builder
-    window.location.href = FIGHTER_BUILDER_URL + (options.autoCard ? '?autocard=1' : '');
-  }
-
-
-  function uid() {
-    return "f_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-  }
-  function safeNumber(n) {
-    return Number.isFinite(+n) ? +n : 0;
-  }
-  function fmtPts(n) {
-    return `${safeNumber(n)} pts`;
-  }
-  function escapeHtml(s) {
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-
-  // ---- Warband Name ----
-  function loadWarbandName() {
-    try { return localStorage.getItem(WARBAND_KEY) || ""; }
-    catch { return ""; }
-  }
-  function saveWarbandName(name) {
-    try { localStorage.setItem(WARBAND_KEY, String(name || "")); }
-    catch {}
-  }
-
-  // ---- Fighter calculations & rendering ----
-  function calcFighterTotal(f) {
-    const p = f?.points;
-    if (!p || typeof p !== "object") return 0;
-    return Object.values(p).reduce((sum, v) => sum + safeNumber(v), 0);
-  }
-  function teamTotal() {
-    return team.reduce((sum, entry) => sum + calcFighterTotal(entry.data.fighter), 0);
-  }
-
-  function detectGameApp(obj) {
-    const app = (obj?.app || "").toLowerCase();
-    if (app.includes("mortalis")) return "Mortalis";
-    if (app.includes("dark realms")) return "Dark Realms";
-    return obj?.app ? String(obj.app) : "Unknown";
-  }
-
-  function validateFighterJson(obj) {
-    if (!obj || typeof obj !== "object") return "Not an object.";
-    if (!obj.fighter || typeof obj.fighter !== "object") return "Missing 'fighter' object.";
-    if (typeof obj.fighter.name !== "string") return "Missing fighter.name.";
-    if (!obj.fighter.stats || typeof obj.fighter.stats !== "object") return "Missing fighter.stats.";
-    if (!obj.fighter.points || typeof obj.fighter.points !== "object") return "Missing fighter.points breakdown.";
-    return null;
-  }
-
-  // ---- Canonical data snapshots from the current Dark Realms builder ----
-  const CC_WEAPONS = [
+  var CC_WEAPONS = [
   {
     id: "fistsClaws",
     name: "Fists/Claws",
@@ -647,7 +425,7 @@ button.pill.export-pill:hover{
   }
 ];
 
-  const RANGED_WEAPONS = [
+  var RANGED_WEAPONS = [
   {
     id: "blackpowderPistol",
     name: "Blackpowder Pistol",
@@ -777,10 +555,11 @@ button.pill.export-pill:hover{
   }
 ];
 
-  const FIGHTER_ABILITIES = [
+  var FIGHTER_ABILITIES = [
   {
     id: "counterstrike",
     name: "Counterstrike",
+    category: "Defensive",
     points: 4,
     effect:
       "Each time an enemy Fighter deals this Fighter damage from an attack dice in Close Combat, this Fighter deals that Fighter 1 MW."
@@ -788,6 +567,7 @@ button.pill.export-pill:hover{
   {
     id: "terrifying",
     name: "Terrifying",
+    category: "Defensive",
     points: 3,
     effect:
       'Enemy Fighters within 1" of this Fighter have -2 to hit in Close Combat.'
@@ -795,20 +575,15 @@ button.pill.export-pill:hover{
   {
     id: "expertGunfighter",
     name: "Expert Gunfighter",
+    category: "Offensive",
     points: 4,
     effect:
       "This Fighter can make Shooting attacks with Pistols even while within 1\" of enemy Fighters."
   },
   {
-    id: "expertDueller",
-    name: "Expert Dueller",
-    points: 4,
-    effect:
-      "This Fighter’s Close Combat weapons gain Reroll (SR)."
-  },
-  {
     id: "horrifyingDismemberment",
     name: "Horrifying Dismemberment",
+    category: "Offensive",
     points: 2,
     effect:
       "When this Fighter slays an enemy in Close Combat, enemy Fighters within 6\" of the slain Fighter get -1 AP for the rest of the turn."
@@ -816,13 +591,15 @@ button.pill.export-pill:hover{
   {
     id: "experiencedBrawler",
     name: "Experienced Brawler",
+    category: "Offensive",
     points: 2,
     effect:
       "This Fighter does not suffer -2 to hit from being outnumbered in CC, and enemies do not gain +2 to hit from outnumbering this Fighter."
   },
   {
     id: "nullPariah",
-    name: "Magic Immunity",
+    name: "Null / Pariah",
+    category: "Utility",
     points: 5,
     effect:
       "This Fighter cannot be targeted by Spells and cannot be a Warlock. Warlocks (friend or foe) within 6\" cannot use Spells."
@@ -830,6 +607,7 @@ button.pill.export-pill:hover{
   {
     id: "zealot",
     name: "Zealot",
+    category: "Offensive",
     points: 3,
     effect:
       "When this Fighter fights in Close Combat after Charging this activation, it gains +1 to hit."
@@ -837,6 +615,7 @@ button.pill.export-pill:hover{
   {
     id: "fast",
     name: "Fast",
+    category: "Mobility",
     points: 2,
     effect:
       "This Fighter may perform a free Dash action during its activation (no AP cost)."
@@ -844,6 +623,7 @@ button.pill.export-pill:hover{
   {
     id: "hyperAggressive",
     name: "Hyper Aggressive",
+    category: "Offensive",
     points: 4,
     effect:
       "This Fighter may perform either 2 Shooting actions (Pistols/Light/Medium only) or 2 Close Combat actions during its activation."
@@ -851,13 +631,15 @@ button.pill.export-pill:hover{
   {
     id: "gestaltMind",
     name: "Gestalt Mind",
+    category: "Utility",
     points: 2,
     effect:
-      "This Fighter may share its AP with other Fighters in the Team that also have Gestalt Mind. When activating a Fighter, you may give 1 AP to another unactivated Gestalt Mind Fighter (max 4 AP on a Fighter)."
+      "This Fighter may share its AP with other Fighters in the Warband that also have Gestalt Mind. When activating a Fighter, you may give 1 AP to another unactivated Gestalt Mind Fighter (max 4 AP on a Fighter)."
   },
   {
     id: "reanimation",
     name: "Reanimation",
+    category: "Offensive",
     points: 4,
     effect:
       "When a Fighter with Reanimation is slain, place a token within 1\". At the start of each turn, on 5+ it is reanimated within 1\" with D3+2 HP and may act as normal. A Fighter can only be reanimated once; fail = leave the token and try next turn."
@@ -865,6 +647,7 @@ button.pill.export-pill:hover{
   {
     id: "vengeance",
     name: "Vengeance",
+    category: "Mobility",
     points: 2,
     effect:
       "When an enemy slays one of your Fighters, that enemy gains a Vengeance token. Fighters with Vengeance may turn one normal hit into a Crit when attacking an enemy with a Vengeance token. Remove the token when the enemy is slain; Vengeance tokens stack."
@@ -872,6 +655,7 @@ button.pill.export-pill:hover{
   {
     id: "powerFromPain",
     name: "Power from Pain",
+    category: "Defensive",
     points: 4,
     effect:
       "This Fighter gains a PfP token each time it injures or slays an enemy. During its activation it may spend PfP to: gain 1 AP (this turn), regain D3+1 HP, or gain Reroll (SR) on all weapons (this turn)."
@@ -879,6 +663,7 @@ button.pill.export-pill:hover{
   {
     id: "ruthless",
     name: "Ruthless",
+    category: "Offensive",
     points: 2,
     effect:
       "This Fighter may shoot at enemies locked in Combat. Any failed To Hit rolls of 1–2 hit the friendly model as normal damage."
@@ -886,6 +671,7 @@ button.pill.export-pill:hover{
   {
     id: "regenerate",
     name: "Regenerate",
+    category: "Defensive",
     points: 4,
     effect:
       "At the beginning of this Fighter’s activation, it regains D3+1 lost HP."
@@ -893,6 +679,7 @@ button.pill.export-pill:hover{
   {
     id: "extremelyResilient",
     name: "Extremely Resilient",
+    category: "Mobility",
     points: "+33% of HP Stat",
     dynamicType: "percentHp",
     dynamicFactor: 1/3,
@@ -902,6 +689,7 @@ button.pill.export-pill:hover{
   {
     id: "unfetteredRage",
     name: "Unfettered Rage",
+    category: "Offensive",
     points: 4,
     effect:
       "If this Fighter does not score any Critical Hits in Close Combat, you may change one normal hit to a Critical Hit."
@@ -909,6 +697,7 @@ button.pill.export-pill:hover{
   {
     id: "noxiousPresence",
     name: "Noxious Presence",
+    category: "Defensive",
     points: 4,
     effect:
       'Enemy Fighters within 3" reduce their DEF by 1. This stacks with other Noxious Presence auras.'
@@ -916,6 +705,7 @@ button.pill.export-pill:hover{
   {
     id: "scarred",
     name: "Scarred",
+    category: "Defensive",
     points: 3,
     effect:
       "Once per turn in Close Combat, this Fighter may lose 1 HP to reroll one attack die. If the reroll hits, add +1 Damage; if it misses, the Fighter loses 1 additional HP."
@@ -923,6 +713,7 @@ button.pill.export-pill:hover{
   {
     id: "bornInDarkness",
     name: "Born in Darkness",
+    category: "Offensive",
     points: 5,
     effect:
       'This Fighter cannot be targeted by Shooting attacks from 12" or more away, and cannot make Shooting attacks at targets 12" or more away.'
@@ -930,6 +721,7 @@ button.pill.export-pill:hover{
   {
     id: "alchemist",
     name: "Alchemist",
+    category: "Offensive",
     points: 3,
     effect:
       "Damage from Poison/Fire tokens applied by this Fighter’s weapons instead deals D3+1 damage."
@@ -937,6 +729,7 @@ button.pill.export-pill:hover{
   {
     id: "trenchWarrior",
     name: "Trench Warrior",
+    category: "Offensive",
     points: 4,
     effect:
       "This Fighter can use the Shoot action even while Hidden."
@@ -944,6 +737,7 @@ button.pill.export-pill:hover{
   {
     id: "safeguard",
     name: "Safeguard",
+    category: "Offensive",
     points: 3,
     effect:
       "Whenever this Fighter is within proximity of an Objective, its weapons gain Reroll (SR)."
@@ -951,13 +745,15 @@ button.pill.export-pill:hover{
   {
     id: "gunslinger",
     name: "Gunslinger",
-    points: 4,
+    category: "Offensive",
+    points: 2,
     effect:
       "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
   },
   {
     id: "headTaker",
     name: "Head-taker",
+    category: "Offensive",
     points: 3,
     effect:
       "Whenever this Fighter kills an enemy in Melee, increase Crit Damage for all its Melee weapons by +2 for the rest of the battle."
@@ -965,6 +761,7 @@ button.pill.export-pill:hover{
   {
     id: "overwatch",
     name: "Overwatch",
+    category: "Mobility",
     points: 4,
     effect:
       'When an enemy ends a Move within 6" and visible (but not within 1"), this Fighter may immediately Shoot with -2 to hit. Counts as its Counteract action for the turn.'
@@ -972,6 +769,7 @@ button.pill.export-pill:hover{
   {
     id: "endlessHorde",
     name: "Endless Horde",
+    category: "Mobility",
     points: "= HP Stat",
     dynamicType: "hpStat",
     dynamicFactor: 1,
@@ -981,6 +779,7 @@ button.pill.export-pill:hover{
   {
     id: "volatileExpiration",
     name: "Volatile Expiration",
+    category: "Offensive",
     points: 3,
     effect:
       "When this Fighter is slain, you may roll a D12 (subtract 2 if within 1\" of another enemy). On 6+, each Fighter within 2\" suffers D3 MW."
@@ -988,6 +787,7 @@ button.pill.export-pill:hover{
   {
     id: "expendable",
     name: "Expendable",
+    category: "Utility",
     points: 3,
     effect:
       "When this Fighter dies, roll a D12; on 6+ you gain 1 FP."
@@ -995,20 +795,23 @@ button.pill.export-pill:hover{
   {
     id: "agent",
     name: "Agent",
+    category: "Defensive",
     points: 2,
     effect:
       "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
-  },
+  },  
   {
     id: "sacrificialFollower",
     name: "Sacrificial Follower",
+    category: "Defensive",
     points: 4,
     effect:
-      'When within 6" of a Friendly Warlock, add 1 WoM token to your Pool each turn. May also suffer any MW suffered by use of WoM tokens, instead of Warlock.'
+      'When within 6" of a Friendly Warlock, add 1 Warp Token to your Pool each turn. When within 6", may also suffer any MW suffered by use of Warp Tokens, instead of Warlock.'
   },
   {
     id: "patientandReactive",
     name: "Patient and Reactive",
+    category: "Utility",
     points: 10,
     effect:
       'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. '
@@ -1016,53 +819,77 @@ button.pill.export-pill:hover{
   {
     id: "finalDefiance",
     name: "Final Defiance",
+    category: "Defensive",
     points: 4,
     effect:
       'When this Fighter is slain, it may immediately perform one last action before removing it from play. '
   },
   {
+    id: "instinctive",
+    name: "Instinctive",
+    category: "Mobility",
+    points: 0,
+    effect:
+      'The Fighter can perform a free Dash action during its activation (no AP cost). This fighter cannot control objectives, and cannot perform Interact actions. No more than 1/3 your Warband can be Instinctive.'
+  },
+  {
+    id: "coordinated",
+    name: "Coordinated",
+    category: "Defensive",
+    points: 3,
+    effect:
+      'When activating a Fighter with Coordinated, you may choose and activate 1 other Fighter with Coordinated immediately after. This ability can only be taken on Fighters with 2 AP or less, 10 HP or less and max. 3/4 damage Weapons.'
+  },
+  {
     id: "superhumanWarrior",
     name: "Superhuman Warrior",
+    category: "Offensive",
     points: 10,
     effect:
       "This Fighter may perform 2 Shooting actions or 2 Close Combat actions in its activation. If using a Special/Heavy weapon, the second Shoot costs 2 AP. When Counteracting, it may perform 2 different actions."
   }
 ];
 
-  const LEADER_ABILITIES = [
+  var LEADER_ABILITIES = [
         {
           id: "inspiringPresence",
           name: "Inspiring Presence",
+    category: "Utility",
           points: 0,
           effect: '1 AP: Friendly Fighters within 3" of your Leader gain 1 AP until end of turn.'
         },
         {
           id: "masterTactician",
           name: "Master Tactician",
+    category: "Utility",
           points: 0,
           effect: "1 AP: You immediately gain 1 FP."
         },
         {
           id: "guidance",
           name: "Guidance",
+    category: "Utility",
           points: 0,
           effect: '1 AP: Choose a friendly Fighter within Line of Sight. That Fighter gains 1 AP until end of turn.'
         },
         {
           id: "grizzledVeteran",
           name: "Grizzled Veteran",
+    category: "Utility",
           points: 0,
           effect: "As long as this Fighter is on the battlefield, you can use the Tactical Reroll once per turn for 0 FP."
         },
         {
           id: "heroicLeader",
           name: "Heroic Leader",
+    category: "Utility",
           points: 0,
           effect: "May use a Feat for free once per turn, but only during this Fighter’s activation."
         },
         {
           id: "giveOrders",
           name: "Give Orders",
+    category: "Offensive",
           points: 0,
           effect:
             '1 AP: All friendly Fighters within 6" gain ONE of the following (chosen once for all) until end of turn: +1 to Hit, +1" Charge range, or Hide action for 0 AP.'
@@ -1070,6 +897,7 @@ button.pill.export-pill:hover{
         {
           id: "noEscape",
           name: "No Escape",
+    category: "Mobility",
           points: 0,
           effect:
             'Enemy Fighters within this Fighter’s melee range reduce their Move by 2" when performing a Fall Back action.'
@@ -1077,6 +905,7 @@ button.pill.export-pill:hover{
         {
           id: "getHimMark",
           name: "Get Him!",
+    category: "Offensive",
           points: 0,
           effect:
             '1 AP: Select an enemy Fighter within Line of Sight. All shooting attacks against that Fighter gain Reroll (SR) until end of turn.'
@@ -1084,24 +913,28 @@ button.pill.export-pill:hover{
         {
           id: "perfectDuellist",
           name: "Perfect Duellist",
+    category: "Defensive",
           points: 0,
           effect: "This Fighter can defend against Critical Hits in Close Combat using normal Defence rolls."
         },
         {
           id: "implacable",
           name: "Implacable",
+    category: "Defensive",
           points: 0,
           effect: "This Fighter is immune to Glancing Hits."
         },
         {
           id: "impermeable",
           name: "Impermeable",
+    category: "Defensive",
           points: 0,
           effect: "This Fighter is immune to effects from the Poison/Fire keyword."
         },
         {
           id: "infernal",
           name: "Infernal",
+    category: "Offensive",
           points: 0,
           effect:
             "This Fighter’s weapons gain Poison/Fire. When attacking enemy Fighters that have a Poison/Fire token, the weapon’s Damage values are improved by +1/+1."
@@ -1109,6 +942,7 @@ button.pill.export-pill:hover{
         {
           id: "uncontrolledEruption",
           name: "Uncontrolled Eruption",
+    category: "Defensive",
           points: 0,
           effect:
             '2 AP: Inflict D3+2 Mortal Wounds to each other Fighter that is within 2" and visible to this Fighter.'
@@ -1116,6 +950,7 @@ button.pill.export-pill:hover{
         {
           id: "whispersWarp",
           name: "Whispers of the Warp",
+    category: "Utility",
           points: 0,
           effect:
             'Whenever an opponent activates a Fighter within 6", roll a D6. If the result is higher than that Fighter’s AP, it loses 1 AP for this activation.'
@@ -1123,6 +958,7 @@ button.pill.export-pill:hover{
         {
           id: "spiritualPariah",
           name: "Spiritual Pariah",
+    category: "Defensive",
           points: 0,
           effect:
             'Enemy Fighters within 6" and visible to this Fighter cannot reroll attack or defence rolls.'
@@ -1130,21 +966,15 @@ button.pill.export-pill:hover{
         {
           id: "mercilessOnslaught",
           name: "Merciless Onslaught",
+    category: "Offensive",
           points: 0,
           effect:
             "1 AP: Activate before rolling to Hit with a Close Combat attack. For that attack, Glancing Hits deal 2 Damage."
         },
         {
-          id: "getHimWarcry",
-          name: "Get Him! (War Cry)",
-          points: 0,
-          effect:
-            '2 AP: All friendly Fighters visible and within 6" gain EITHER (+2\" Move and +2 to Fight) OR (+2 to Shoot) until end of turn. ' +
-            "Can only be used once per battle, and this Fighter is immediately Spent."
-        },
-        {
           id: "mindOnMission",
           name: "Mind on the Mission",
+    category: "Utility",
           points: 0,
           effect:
             'All friendly Fighters within 6" may use the Interact action for 0 AP.'
@@ -1152,36 +982,40 @@ button.pill.export-pill:hover{
         {
           id: "feedOnPain",
           name: "Feed on Pain",
+    category: "Defensive",
           points: 0,
           effect:
             "If this Fighter slays an enemy Fighter with an attack, it regains 3 lost HP."
         }
       ];
 
-  const SPELLS = [
+  var SPELLS = [
         {
           id: "tempest",
           name: "TEMPEST",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 16"<br><br>' +
             'Target suffers D3 MW; roll a D12: on 11–12, push target D6" directly away and Knock Prone (loses 1 AP next activation).<br><br>' +
-            "Power Surge (CV 9): Deals +2 MW before the push."
+            "Power Surge (MV 9): Deals +2 MW before the push."
         },
         {
           id: "graviticMaelstrom",
           name: "GRAVITIC MAELSTROM",
+    category: "Other",
           cv: 9,
           points: 0,
           effect:
             'Range: 12", 3" AoE<br><br>' +
             'All models inside must roll 7+ or be dragged D3" toward the center and suffer D3 MW.<br><br>' +
-            "Power Surge (CV 11): Fighters dragged suffer D3+2 MW."
+            "Power Surge (MV 11): Fighters dragged suffer D3+2 MW."
         },
-        {
+               {
           id: "spectralChains",
           name: "SPECTRAL CHAINS",
+    category: "Other",
           cv: 9,
           points: 0,
           effect:
@@ -1192,191 +1026,201 @@ button.pill.export-pill:hover{
         {
           id: "stolenSight",
           name: "STOLEN SIGHT",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
-            "Target suffers –3 to Shoot until end of Round; if Engaged, suffers –2 to Fight instead.<br><br>" +
-            "Power Surge (CV 9): –4 to Shoot, –3 to Fight."
+            "In its next activation, Target suffers –3 to Shoot; if Engaged, suffers –2 to Fight instead.<br><br>" +
+            "Power Surge (MV 9): –4 to Shoot, –3 to Fight."
         },
         {
           id: "twistOfWill",
           name: "TWIST OF WILL",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target must reroll all successful attack rolls on its next activation.<br><br>" +
-            "Power Surge (CV 9): Target also cannot Charge until next turn."
+            "Power Surge (MV 9): Target also cannot Charge until next turn."
         },
         {
           id: "voidfireBlast",
           name: "VOIDFIRE BLAST",
+    category: "Destructive",
           cv: 9,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Pick any point. All models within 2\" suffer 2D3 MW. Warlock suffers 1 MW.<br><br>" +
-            "Power Surge (CV 11): Radius becomes 4\"."
+            "Power Surge (MV 11): Radius becomes 4\"."
         },
         {
           id: "blazingWind",
           name: "BLAZING WIND",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             'Target suffers D3 Damage and is moved 2" directly away.<br><br>' +
-            "Power Surge (CV 9): D3+1 Damage and 4\" push."
+            "Power Surge (MV 9): D3+1 Damage and 4\" push."
         },
         {
           id: "fireblast",
           name: "FIREBLAST",
+    category: "Destructive",
           cv: 7,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target suffers D3+1 Damage.<br><br>" +
-            "Power Surge (CV 9): Target also gains a Fire token."
+            "Power Surge (MV 9): Target also gains a Fire token."
         },
         {
           id: "lightningBolt",
           name: "LIGHTNING BOLT",
+    category: "Destructive",
           cv: 8,
           points: 0,
           effect:
             "Range: —<br><br>" +
             "Target suffers D3+2 MW.<br><br>" +
-            "Power Surge (CV 10): D3+3 MW."
+            "Power Surge (MV 10): D3+3 MW."
         },
         {
           id: "mendFlesh",
           name: "MEND FLESH",
+    category: "Other",
           cv: 6,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Restore D3+1 HP to a friendly Fighter.<br><br>" +
-            "Power Surge (CV 8): Restore D3+2 HP and remove 1 Poison/Burning token."
+            "Power Surge (MV 10): Restore D3+2 HP and remove 1 Poison/Burning token."
         },
         {
           id: "circleOfWarding",
-          name: "CIRCLE OF WARDING",
+          name: "WARP FIELD",
+    category: "Buff",
           cv: 6,
           points: 0,
           effect:
             'Range: 3" aura<br><br>' +
             "Friendly Fighters inside gain +2 DEF (max 5+) and cannot be Charged this turn.<br><br>" +
-            "Power Surge (CV 8): Circle lasts until next activation."
+            "Power Surge (MV 8): Circle lasts until next activation."
         },
         {
           id: "arcaneAegis",
-          name: "ARCANE AEGIS",
+          name: "IMMATERIAL SHIELD",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 6"<br><br>' +
             "Target gains +2 DEF (max 5+) until next turn.<br><br>" +
-            "Power Surge (CV 9): Target ignores first 2 Damage from next attack."
+            "Power Surge (MV 9): Target ignores first 2 Damage from next attack."
         },
         {
           id: "spectralDecoy",
           name: "SPECTRAL DECOY",
+    category: "Other",
           cv: 6,
           points: 0,
           effect:
             "Range: Self<br><br>" +
-            "Until next activation, remove 1 succesful normal attack dice, for each attack on the Warlock.<br><br>" +
-            "Power Surge (CV 8): May remove second succesful attack dice, and suffer 2 MW."
+            "First attack against the Warlock before next activation automatically misses.<br><br>" +
+            "Power Surge (MV 8): On 5+, reflect that missed ranged attack for D3 Damage."
         },
         {
           id: "soulflameSurge",
           name: "SOULFLAME SURGE",
+    category: "Destructive",
           cv: 8,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             'A friendly Fighter gains +1 ATK and “Crits on 9+” on CC weapons until end of Turn.<br><br>' +
-            "Power Surge (CV 10): Affect two Fighters instead of one."
+            "Power Surge (MV 10): Affect two Fighters instead of one."
         },
         {
           id: "veilOfShadows",
           name: "VEIL OF SHADOWS",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 6"<br><br>' +
             "Target becomes Hidden, removed from engagement, placed up to 3\" away from enemies.<br><br>" +
-            "Power Surge (CV 9): Target may act normally; remove Hidden immediately."
+            "Power Surge (MV 9): Target may act normally; remove Hidden immediately."
         },
-        {
-          id: "reanimateTheDead",
-          name: "REANIMATE THE DEAD",
-          cv: 7,
-          points: 0,
-          effect:
-            "Range: Self (3\" placement)<br><br>" +
-            "Summon a Shambling Corpse (HP4, Move4\", Fight9+, AP1, ATK3, DMG2/3).<br><br>" +
-            "Power Surge (CV 9): Summon two instead."
-        },
+   
         {
           id: "phantasmalHorror",
           name: "PHANTASMAL HORROR",
+    category: "Other",
           cv: 8,
           points: 0,
           effect:
             'Range: 12"<br><br>' +
             "Target must roll ≤ AP×2 on D12 or cannot Charge/move closer this turn.<br><br>" +
-            "Power Surge (CV 10): Must roll ≤ AP instead."
+            "Power Surge (MV 10): Must roll ≤ AP instead."
         },
         {
           id: "siphonLife",
           name: "SIPHON LIFE",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             'Range: 8"<br><br>' +
             "Target suffers D3 MW; Warlock heals the same amount.<br><br>" +
-            "Power Surge (CV 9): D3+2 MW/heal."
+            "Power Surge (MV 9): D3+2 MW/heal."
         },
         {
           id: "veilOfSouls",
           name: "VEIL OF SOULS",
+    category: "Other",
           cv: 8,
           points: 0,
           effect:
             "Range: Self<br><br>" +
             "Until next activation, Warlock gains +1 DEF; enemies within 3\" suffer –1 to Hit.<br><br>" +
-            "Power Surge (CV 10): Warlock instead gains +2 DEF."
+            "Power Surge (MV 10): Warlock instead gains +2 DEF."
         },
         {
           id: "etherealBody",
           name: "ETHEREAL BODY",
+    category: "Other",
           cv: 7,
           points: 0,
           effect:
             "Range: Self<br><br>" +
             "Move through models and terrain (cannot end inside them or within 1\" of enemies unless Charging).<br><br>" +
-            "Power Surge (CV 9): Also gain +2 DEF until next turn."
+            "Power Surge (MV 9): Also gain +2 DEF until next turn."
         }
       ];
 
-  const EQUIPMENT = [
+  var EQUIPMENT = [
         {
-          id: "healingPotions",
-          name: "Healing Potions (+)",
+          id: "medipackKIT",
+          name: "Medipack Kit (+)",
+    category: "Defensive",
           points: 4,
           effect: '1 AP: Friendly Fighter within 1" regains 2D3 lost HP.'
         },
         {
-          id: "spotterFamiliar",
-          name: "Spotter Familiar",
+          id: "scannerAuspex",
+          name: "Scanner/Auspex",
+    category: "Offensive",
           points: 4,
           effect: "1 AP: Mark an enemy in LoS. Shooting vs that Fighter gains Reroll (SR) until next turn."
         },
         {
-          id: "teleportArtifact",
-          name: "Magical Teleport Artifact (+)",
+          id: "blinkPack",
+          name: "Blink Pack/Personal Teleporter (+)",
+    category: "Mobility",
           points: "+50% Stat cost",
           dynamicType: "percentStats",
           dynamicFactor: 0.5,
@@ -1385,7 +1229,8 @@ button.pill.export-pill:hover{
         },
         {
           id: "flightDevice",
-          name: "Magical Flight / Aerial Device / Wings",
+          name: "Jump Pack/Rokkit Pack/Wings",
+    category: "Mobility",
           points: "+33% Stat cost",
           dynamicType: "percentStats",
           dynamicFactor: 1/3,
@@ -1395,12 +1240,14 @@ button.pill.export-pill:hover{
         {
           id: "banner",
           name: "Banner (+)",
+    category: "Offensive",
           points: 2,
           effect: 'Friendly Fighters within 3" gain +1 to Hit with CC and Shooting attacks.'
         },
         {
-          id: "bomb",
-          name: "Bomb (+)",
+          id: "demolitions",
+          name: "Demolitions (+)",
+    category: "Offensive",
           points: 6,
           effect:
             "Once per game plant an Explosive Device while moving. 1 AP to detonate: ATK 4, Hit 2+, DMG 5/6, Piercing (-2), Blast (2\")."
@@ -1408,63 +1255,73 @@ button.pill.export-pill:hover{
         {
           id: "climbingEquipment",
           name: "Climbing Equipment",
+    category: "Mobility",
           points: 2,
           effect: 'Ignore the first 2" of vertical repositioning.'
         },
         {
-          id: "ancientRelic",
-          name: "Ancient Relic (+)",
+          id: "holyRelic",
+          name: "Holy Relic (+)",
+    category: "Defensive",
           points: 3,
           effect: "User may ignore 1 normal damage attack per game."
         },
         {
-          id: "enchantedCloak",
-          name: "Enchanted Cloak",
+          id: "camoCloak",
+          name: "Camo Cloak",
+    category: "Defensive",
           points: 4,
           effect:
             "User gains -1 to be hit when in Cover or Hidden (stacks with Cover/Hidden)."
         },
         {
-          id: "arcaneShield",
-          name: "Arcane Shield (+)",
+          id: "forceField",
+          name: "Force Field",
+    category: "Defensive",
           points: 5,
           effect: "User gains a 9+ Aegis save."
         },
         {
-          id: "enhancingPotions",
-          name: "Enhancing Potions",
-          points: 4,
+          id: "combatDrugs",
+          name: "Combat Drugs",
+    category: "Defensive",
+          points: 6,
           effect:
-            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn."
+            "At start of activation choose: (1) Heal 2D3 HP, (2) Reroll (SR) on CC attacks this turn, or (3) +2\" Move this turn. One use per Option only."
         },
         {
-          id: "rareArcaneShield",
-          name: "Rare Arcane Shield (+)",
+          id: "mastercraftedForcefield",
+          name: "Mastercrafted Force Field (+)",
+    category: "Defensive",
           points: 10,
           effect: "User gains a 7+ Aegis save."
         },
         {
-          id: "heavilyMuscled",
-          name: "Heavily Muscled",
+          id: "suspensorSystem",
+          name: "Suspensor System",
+    category: "Mobility",
           points: 3,
           effect: "User’s Heavy Weapons gain the “Heavy (Move)” Special Rule."
         },
         {
-          id: "arcaneFamiliar",
-          name: "Arcane Familiar",
+          id: "reconDrone",
+          name: "Recon Drone/Servo Skull",
+    category: "Defensive",
           points: 4,
           effect:
             "1 AP: Mark an enemy in LoS. Shooting vs that Fighter ignores negative To Hit modifiers from Light Cover and Hidden until end of turn."
         },
         {
-          id: "warHorn",
-          name: "War Horn / Instrument (+)",
+          id: "commsEquipment",
+          name: "Comms Equipment (+)",
+    category: "Utility",
           points: 4,
           effect: '1 AP: Grant a friendly Fighter within 9" +1 AP this round.'
         },
         {
-          id: "ringOfProtection",
-          name: "Ring of Protection (+)",
+          id: "shimmerShield",
+          name: "Shimmershield (+)",
+    category: "Defensive",
           points: 4,
           effect:
             "User and friendly Fighters within 2\" reduce Piercing of enemy Shooting attacks by 2."
@@ -1472,27 +1329,31 @@ button.pill.export-pill:hover{
         {
           id: "breachingRam",
           name: "Breaching Ram (+)",
+    category: "Mobility",
           points: 5,
           effect:
             'Treat any wall <1" thick as Accessible Terrain (may move through at cost of 1" Move).'
         },
         {
-          id: "clawedGloves",
-          name: "Clawed Gloves (+)",
+          id: "digitalWeapons",
+          name: "Digital Weapons (+)",
+    category: "Offensive",
           points: 2,
           effect:
             "At the start of this Fighter’s CC activation, deal 2 MW to the engaged enemy Fighter."
         },
         {
-          id: "magicalShield",
-          name: "Magical Shield (+)",
+          id: "stormShield",
+          name: "Storm Shield (+)",
+    category: "Defensive",
           points: 5,
           effect:
             "User gains a 7+ Aegis save and 4 Defense dice in CC when using this shield. May only have Pistol and/or CC weapons as ranged options."
         },
         {
-          id: "artifactOfDisruption",
-          name: "Artifact of Disruption (+)",
+          id: "commsJammer",
+          name: "Comms Jammer (+)",
+    category: "Utility",
           points: 5,
           effect:
             "1 AP: Select a visible enemy Fighter; that Fighter must be activated last by your opponent this turn."
@@ -1500,6 +1361,7 @@ button.pill.export-pill:hover{
         {
           id: "grapplingHookGun",
           name: "Grappling Hook Gun (+)",
+    category: "Mobility",
           points: 5,
           effect:
             '1 AP Move action: Place this Fighter within 1" of a chosen visible point on terrain, not within 1" of enemies. This Fighter may not have any Ranged Weapons.'
@@ -1507,80 +1369,111 @@ button.pill.export-pill:hover{
         {
           id: "macabreMemento",
           name: "Macabre Memento (+)",
+    category: "Defensive",
           points: 6,
           effect:
             'While visible and within 3" of enemy Fighters, those Fighters reduce the Attack characteristic of their Melee and Ranged weapons by 1.'
         },
         {
-          id: "spottingTelescope",
-          name: "Spotting Telescope (+)",
+          id: "commandUplink",
+          name: "Command Uplink (+)",
+    category: "Utility",
           points: 5,
           effect: "Gain 1 extra FP at the start of the battle."
         },
         {
           id: "blessedAmmunition",
-          name: "Blessid / Tainted Ammunition (+)",
+          name: "Blessed / Tainted Ammunition (+)",
+    category: "Offensive",
           points: 5,
           effect:
             "Add +1 to both Damage values of this Fighter’s Ranged weapons. Cannot be used on Heavy Weapons."
         },
         {
-          id: "cannonsBehindLines",
-          name: "Cannons Behind the Lines (+)",
+          id: "targetingDesignator",
+          name: "Targeting Designator (+)",
+    category: "Mobility",
           points: 14,
           effect:
             'Gain an additional Ranged weapon: Cannon Strike – ATK 4, Hit 6+, DMG 3/5, Blast (2"), Heavy (Dash), may be used while Hidden.'
         },
         {
-          id: "telescopicSight",
-          name: "Telescopic Sight",
+          id: "laserSight",
+          name: "Laser Sight",
+    category: "Offensive",
           points: 3,
           effect:
             'This Fighter’s Ranged weapons with “Rng X” gain +1" range (except Flamers and Grenades).'
         },
         {
-          id: "rope",
-          name: "Rope",
+          id: "gravShute",
+          name: "Grav Shute/Sliders",
+    category: "Defensive",
           points: 3,
           effect: "This Fighter ignores vertical height when dropping down."
         },
         {
           id: "gorgetProtection",
           name: "Gorget Protection",
+    category: "Offensive",
           points: 4,
           effect:
             "Enemy Fighters can only score Critical Hits on 11+ in CC against this Fighter."
         },
         {
-          id: "scoutingIntel",
-          name: "Scouting Intel",
+          id: "operationalIntelligence",
+          name: "Operational Intelligence",
+    category: "Utility",
           points: 4,
           effect:
             "Once per battle you may reroll the initiative roll. With Random Activation, return the drawn token and pull another."
         },
-        {
-          id: "voltaicSuit",
-          name: "Voltaic Suit",
+          {
+          id: "markerLights",
+          name: "Markerlights",
+    category: "Defensive",
+          points: 5,
+          effect:
+            "1 AP action: Place a Markerlight token on an enemy Fighter in this Fighters line of sight. When a Fighter with the Markerlights ability is shooting at a Fighter with Markerlights tokens, its weapons gain No Cover (if 1 token) and No Cover + Reroll(1) (if 2 tokens)"
+        },
+          {
+          id: "hyperstaticField",
+          name: "Hyperstatic Field",
+    category: "Mobility",
           points: 5,
           effect:
             'Whenever an enemy Fighter moves within 1", roll 3D12; for each 9+ that enemy suffers 1 MW.'
-        },
-          {
-          id: "sorcerousFamiliar",
-          name: "Sorcerous Familiar",
+        },  
+        {
+          id: "grenaDier",
+          name: "Grenadier",
+    category: "Offensive",
           points: 4,
           effect:
-            'Add an extra WoM token to your pool each turn.'
+            'This Fighter has +2 to hit when using Grenades'
+        },
+        {
+          id: "suicideBomber",
+          name: "Suicide Bomber",
+    category: "Mobility",
+          points: 4,
+          effect:
+            'The Fighter gains following:  0 AP Action: Roll a D12. On 5+, Every Fighter within 1” of this Fighter suffers D3+2 MW. No matter the result of the dice roll, Remove the Fighter from the Battlefield, although it does not count as Slain for VP purposes or triggering effects.'
+        },
+        {
+          id: "psychicFamiliar",
+          name: "Psychic Familiar",
+    category: "Utility",
+          points: 4,
+          effect:
+            'Add one Warp Token to your Pool each turn.'
         }
+          
       ];
 
-  function getDisplayName(it) {
-    const override = (it?.displayNameOverride != null) ? String(it.displayNameOverride).trim() : "";
-    return override || String(it?.name ?? "Unnamed");
-  }
-
-  function normText(v) {
-    return String(v == null ? "" : v).trim().toLowerCase();
+  function deepClone(obj) {
+    try { return JSON.parse(JSON.stringify(obj)); }
+    catch (e) { return null; }
   }
 
   function normalizeUpgrades(upgrades) {
@@ -1593,216 +1486,473 @@ button.pill.export-pill:hover{
     };
   }
 
-  function weaponUpgradeCost(w) {
-    const ups = normalizeUpgrades(w?.upgrades);
-    const count = [ups.poison, ups.enchanted, ups.cursed, ups.truestrike, ups.masterCrafted].filter(Boolean).length;
-    return count ? (2 + (count - 1) * 4) : 0;
-  }
+  function findCurrentItem(srcArray, importedItem) {
+    if (!Array.isArray(srcArray) || !importedItem) return null;
+    const impId = (importedItem.id != null) ? String(importedItem.id) : "";
+    const impName = (importedItem.name != null) ? String(importedItem.name) : "";
 
-  function findCanonical(imported, srcArray, mode) {
-    if (!imported || !Array.isArray(srcArray)) return null;
-    if (imported.id) {
-      const byId = srcArray.find(src => src && src.id === imported.id);
-      if (byId) return byId;
-    }
-
-    const names = [imported.name, imported.displayNameOverride, imported.baseName].filter(v => v != null);
-    for (const name of names) {
-      const want = normText(name);
-      if (!want) continue;
-      const byName = srcArray.find(src => normText(src?.name) === want);
-      if (byName) return byName;
-    }
-
-    if (mode === "weapon") {
-      const wantProfile = normText(imported.baseProfile != null ? imported.baseProfile : imported.profile);
-      if (wantProfile) {
-        const byProfile = srcArray.find(src => normText(src?.profile) === wantProfile);
-        if (byProfile) return byProfile;
-      }
-    } else {
-      const wantEffect = normText(imported.effect != null ? imported.effect : imported.profile);
-      const wantCv = (imported.cv != null) ? Number(imported.cv) : null;
-      if (wantEffect || wantCv != null) {
-        const byEffect = srcArray.find(src => {
-          const srcEffect = normText(src && (src.effect != null ? src.effect : src.profile));
-          const srcCv = (src && src.cv != null) ? Number(src.cv) : null;
-          return (wantEffect && srcEffect === wantEffect) || (wantCv != null && srcCv === wantCv);
-        });
-        if (byEffect) return byEffect;
+    if (impId) {
+      for (const it of srcArray) {
+        if (String(it.id) === impId) return it;
       }
     }
-
+    if (impName) {
+      for (const it of srcArray) {
+        if (String(it.name) === impName) return it;
+      }
+    }
     return null;
   }
 
-  function carryDisplayName(target, imported, canonicalName) {
-    if (!target || !imported) return;
-    const explicit = (imported.displayNameOverride != null) ? String(imported.displayNameOverride).trim() : "";
-    if (explicit) {
-      target.displayNameOverride = explicit;
-      return;
-    }
-    const importedName = (imported.name != null) ? String(imported.name).trim() : "";
-    if (importedName && normText(importedName) !== normText(canonicalName)) {
-      target.displayNameOverride = importedName;
-    }
-  }
-
-  function normalizeWeapon(imported, srcArray) {
-    imported = imported || {};
-    const canonical = findCanonical(imported, srcArray, "weapon");
-    if (canonical) {
-      const out = {
-        id: canonical.id,
-        name: canonical.name,
-        baseProfile: canonical.profile,
-        profile: canonical.profile,
-        basePoints: safeNumber(canonical.points),
-        points: safeNumber(canonical.points),
-        upgrades: normalizeUpgrades(imported.upgrades)
-      };
-      carryDisplayName(out, imported, canonical.name);
-      return out;
-    }
-    const fallbackBase = imported.basePoints != null ? safeNumber(imported.basePoints) : safeNumber(imported.points);
-    return {
-      id: imported.id,
-      name: String(imported.name ?? "Unnamed"),
-      baseProfile: imported.baseProfile ?? imported.profile ?? "",
-      profile: imported.baseProfile ?? imported.profile ?? "",
-      basePoints: fallbackBase,
-      points: fallbackBase,
-      upgrades: normalizeUpgrades(imported.upgrades),
-      displayNameOverride: imported.displayNameOverride
-    };
-  }
-
-  function normalizeSimple(imported, srcArray) {
-    imported = imported || {};
-    const canonical = findCanonical(imported, srcArray, "simple");
-    if (canonical) {
-      const out = {
-        id: canonical.id,
-        name: canonical.name,
-        points: (canonical.points != null) ? canonical.points : 0,
-        profile: canonical.profile,
-        effect: canonical.effect,
-        dynamicType: canonical.dynamicType,
-        dynamicFactor: canonical.dynamicFactor,
-        cv: canonical.cv
-      };
-      carryDisplayName(out, imported, canonical.name);
-      return out;
-    }
-    return JSON.parse(JSON.stringify({
-      id: imported.id,
-      name: String(imported.name ?? "Unnamed"),
-      points: safeNumber(imported.points),
-      profile: imported.profile,
-      effect: imported.effect,
-      dynamicType: imported.dynamicType,
-      dynamicFactor: imported.dynamicFactor,
-      cv: imported.cv,
-      displayNameOverride: imported.displayNameOverride
-    }));
-  }
-
-  function recalcStatsCost(stats) {
-    const config = [
-      { key: "move",  base: 6, upCost: 4, downCost: 4, lowerIsBetter: false },
-      { key: "def",   base: 9, upCost: 1, downCost: 1, lowerIsBetter: true  },
-      { key: "ap",    base: 2, upCost: 4, downCost: 4, lowerIsBetter: false },
-      { key: "hp",    base: 7, upCost: 1, downCost: 1, lowerIsBetter: false },
-      { key: "atk",   base: 3, upCost: 2, downCost: 0, lowerIsBetter: false },
-      { key: "fight", base: 7, upCost: 2, downCost: 1, lowerIsBetter: true  },
-      { key: "shoot", base: 7, upCost: 2, downCost: 1, lowerIsBetter: true  }
-    ];
-    let total = 0;
-    for (const cfg of config) {
-      const value = safeNumber(stats?.[cfg.key]);
-      const diff = value - cfg.base;
-      if (!diff) continue;
-      if (cfg.lowerIsBetter) {
-        total += (diff < 0) ? Math.abs(diff) * cfg.upCost : diff * -cfg.downCost;
+  function rebindWeaponList(importedList, srcArray) {
+    if (!Array.isArray(importedList)) return [];
+    const out = [];
+    for (const item of importedList) {
+      if (!item || typeof item !== "object") continue;
+      const current = findCurrentItem(srcArray, item);
+      if (current) {
+        const rebound = {
+          id: current.id,
+          name: current.name,
+          baseProfile: current.profile,
+          profile: current.profile,
+          basePoints: current.points,
+          points: current.points,
+          upgrades: normalizeUpgrades(item.upgrades)
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          rebound.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(rebound);
       } else {
-        total += (diff > 0) ? diff * cfg.upCost : Math.abs(diff) * -cfg.downCost;
+        const fallback = {
+          id: item.id,
+          name: item.name || "Unknown",
+          baseProfile: item.baseProfile || item.profile || "",
+          profile: item.baseProfile || item.profile || "",
+          basePoints: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+          points: (item.basePoints != null ? item.basePoints : (item.points || 0)),
+          upgrades: normalizeUpgrades(item.upgrades)
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          fallback.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(fallback);
       }
-    }
-    return total;
-  }
-
-  function normalizeAndRecalcFighter(rawFighter) {
-    const incoming = (rawFighter && typeof rawFighter === "object") ? rawFighter : {};
-    const fighter = JSON.parse(JSON.stringify(incoming));
-    fighter.stats = fighter.stats || {};
-    fighter.points = fighter.points || {};
-    fighter.points.base = (typeof fighter.points.base === "number") ? fighter.points.base : 16;
-
-    fighter.ccWeapons = Array.isArray(incoming.ccWeapons) ? incoming.ccWeapons.map(w => normalizeWeapon(w, CC_WEAPONS)) : [];
-    fighter.rangedWeapons = Array.isArray(incoming.rangedWeapons) ? incoming.rangedWeapons.map(w => normalizeWeapon(w, RANGED_WEAPONS)) : [];
-    fighter.abilities = Array.isArray(incoming.abilities) ? incoming.abilities.map(x => normalizeSimple(x, FIGHTER_ABILITIES)) : [];
-    fighter.leaderAbilities = Array.isArray(incoming.leaderAbilities) ? incoming.leaderAbilities.map(x => normalizeSimple(x, LEADER_ABILITIES)) : [];
-    fighter.spells = Array.isArray(incoming.spells) ? incoming.spells.map(x => normalizeSimple(x, SPELLS)) : [];
-    fighter.equipment = Array.isArray(incoming.equipment) ? incoming.equipment.map(x => normalizeSimple(x, EQUIPMENT)) : [];
-
-    fighter.points.stats = recalcStatsCost(fighter.stats);
-    const basePlusStats = Math.max(0, safeNumber(fighter.points.base) + safeNumber(fighter.points.stats));
-    fighter.points.warlock = fighter.isMasterWarlock ? Math.ceil(basePlusStats * (2/3)) : (fighter.isWarlock ? Math.ceil(basePlusStats * 0.5) : 0);
-
-    fighter.points.ccWeapons = fighter.ccWeapons.reduce((sum, w) => {
-      w.points = safeNumber(w.basePoints) + weaponUpgradeCost(w);
-      return sum + safeNumber(w.points);
-    }, 0);
-    fighter.points.rangedWeapons = fighter.rangedWeapons.reduce((sum, w) => {
-      w.points = safeNumber(w.basePoints) + weaponUpgradeCost(w);
-      return sum + safeNumber(w.points);
-    }, 0);
-
-    fighter.points.abilities = fighter.abilities.reduce((sum, it) => {
-      if (it.dynamicType === "percentHp") {
-        it.points = Math.ceil(safeNumber(fighter.stats.hp) * safeNumber(it.dynamicFactor));
-      } else if (it.dynamicType === "hpStat") {
-        const factor = (it.dynamicFactor != null) ? safeNumber(it.dynamicFactor) : 1;
-        it.points = Math.round(safeNumber(fighter.stats.hp) * factor);
-      } else {
-        it.points = safeNumber(it.points);
-      }
-      return sum + safeNumber(it.points);
-    }, 0);
-
-    fighter.points.leaderAbilities = fighter.leaderAbilities.reduce((sum, it) => {
-      it.points = safeNumber(it.points);
-      return sum + safeNumber(it.points);
-    }, 0);
-
-    fighter.points.spells = fighter.spells.reduce((sum, it) => {
-      it.points = safeNumber(it.points);
-      return sum + safeNumber(it.points);
-    }, 0);
-
-    fighter.points.equipment = fighter.equipment.reduce((sum, it) => {
-      if (it.dynamicType === "percentStats") {
-        it.points = Math.ceil(basePlusStats * safeNumber(it.dynamicFactor));
-      } else {
-        it.points = safeNumber(it.points);
-      }
-      return sum + safeNumber(it.points);
-    }, 0);
-
-    return fighter;
-  }
-
-  function normalizeTeamEntry(entry) {
-    if (!entry || typeof entry !== "object") return entry;
-    const out = JSON.parse(JSON.stringify(entry));
-    const fighter = out?.data?.fighter;
-    if (fighter && typeof fighter === "object") {
-      out.data.fighter = normalizeAndRecalcFighter(fighter);
     }
     return out;
   }
 
+  function rebindSimpleList(importedList, srcArray, isSpell) {
+    if (!Array.isArray(importedList)) return [];
+    const out = [];
+    for (const item of importedList) {
+      if (!item || typeof item !== "object") continue;
+      const current = findCurrentItem(srcArray, item);
+      if (current) {
+        const rebound = {
+          id: current.id,
+          name: current.name,
+          points: (isSpell ? 0 : (current.points || 0)),
+          profile: current.profile,
+          effect: current.effect,
+          dynamicType: current.dynamicType,
+          dynamicFactor: current.dynamicFactor,
+          cv: current.cv,
+          category: current.category || item.category
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          rebound.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(rebound);
+      } else {
+        const fallback = {
+          id: item.id,
+          name: item.name || "Unknown",
+          points: (isSpell ? 0 : (item.points || 0)),
+          profile: item.profile,
+          effect: item.effect,
+          dynamicType: item.dynamicType,
+          dynamicFactor: item.dynamicFactor,
+          cv: item.cv,
+          category: item.category
+        };
+        if (item.displayNameOverride != null && String(item.displayNameOverride).trim()) {
+          fallback.displayNameOverride = String(item.displayNameOverride);
+        }
+        out.push(fallback);
+      }
+    }
+    return out;
+  }
+
+  function computeWeaponUpgradeCostFor(weapon) {
+    if (!weapon || !weapon.upgrades) return 0;
+    let count = 0;
+    if (weapon.upgrades.poison) count++;
+    if (weapon.upgrades.enchanted) count++;
+    if (weapon.upgrades.cursed) count++;
+    if (weapon.upgrades.truestrike) count++;
+    if (weapon.upgrades.masterCrafted) count++;
+    if (count === 0) return 0;
+    return 2 + (count - 1) * 4;
+  }
+
+  function recalcStatCostFor(f) {
+    let total = 0;
+    for (const cfg of STAT_CONFIG) {
+      const base = cfg.base;
+      const cur = f?.stats?.[cfg.key];
+      if (cur === base) continue;
+      const step = (cur > base) ? 1 : -1;
+      const lowerIsBetter = !!cfg.lowerIsBetter;
+
+      for (let v = base; v !== cur; v += step) {
+        const next = v + step;
+        const improving = lowerIsBetter ? (next < v) : (next > v);
+        if (improving) total += cfg.upCost || 0;
+        else total -= cfg.downCost || 0;
+      }
+    }
+    f.points.stats = total;
+  }
+
+  function recalcWarlockCostFor(f) {
+    let baseline = (f.points.base || 0) + (f.points.stats || 0);
+    if (baseline < 0) baseline = 0;
+
+    if (f.isMasterWarlock) f.points.warlock = Math.ceil(baseline * 0.66);
+    else if (f.isWarlock) f.points.warlock = Math.ceil(baseline * 0.5);
+    else f.points.warlock = 0;
+  }
+
+  function recalcWeaponPointsFor(f) {
+    let sumCC = 0;
+    let sumR = 0;
+
+    for (const wc of (f.ccWeapons || [])) {
+      const base = (wc.basePoints != null) ? wc.basePoints : (wc.points || 0);
+      wc.points = base + computeWeaponUpgradeCostFor(wc);
+      sumCC += wc.points;
+    }
+
+    for (const rw of (f.rangedWeapons || [])) {
+      const baseR = (rw.basePoints != null) ? rw.basePoints : (rw.points || 0);
+      rw.points = baseR + computeWeaponUpgradeCostFor(rw);
+      sumR += rw.points;
+    }
+
+    f.points.ccWeapons = sumCC;
+    f.points.rangedWeapons = sumR;
+  }
+
+  function recalcAbilityPointsFor(f) {
+    let sumA = 0, sumL = 0, sumS = 0, sumE = 0;
+
+    for (const ab of (f.abilities || [])) {
+      let p = 0;
+      if (ab.dynamicType === "percentHp") {
+        const hp = f?.stats?.hp || 0;
+        const factor = ab.dynamicFactor || 0;
+        p = Math.ceil(hp * factor);
+        ab.points = p;
+      } else if (ab.dynamicType === "hpStat") {
+        const hp2 = f?.stats?.hp || 0;
+        const factor2 = (ab.dynamicFactor != null) ? ab.dynamicFactor : 1;
+        p = Math.round(hp2 * factor2);
+        ab.points = p;
+      } else {
+        p = ab.points || 0;
+      }
+      sumA += p;
+    }
+
+    for (const la of (f.leaderAbilities || [])) sumL += la.points || 0;
+    for (const sp of (f.spells || [])) sumS += sp.points || 0;
+
+    let baseline = (f.points.base || 0) + (f.points.stats || 0);
+    if (baseline < 0) baseline = 0;
+
+    for (const eq of (f.equipment || [])) {
+      let ep = 0;
+      if (eq.dynamicType === "percentStats") {
+        const factorEq = eq.dynamicFactor || 0;
+        ep = Math.ceil(baseline * factorEq);
+        eq.points = ep;
+      } else {
+        ep = eq.points || 0;
+      }
+      sumE += ep;
+    }
+
+    f.points.abilities = sumA;
+    f.points.leaderAbilities = sumL;
+    f.points.spells = sumS;
+    f.points.equipment = sumE;
+  }
+
+  function normalizeImportedFighter(f) {
+    if (!f || typeof f !== "object") return f;
+
+    const normalized = {
+      name: f.name || "",
+      isWarlock: !!f.isWarlock,
+      isMasterWarlock: !!f.isMasterWarlock,
+      portraitDataUrl: (typeof f.portraitDataUrl === "string") ? f.portraitDataUrl : "",
+      portraitKey: (typeof f.portraitKey === "string") ? f.portraitKey : "",
+      stats: Object.assign({}, f.stats || {}),
+      ccWeapons: rebindWeaponList(f.ccWeapons, CC_WEAPONS),
+      rangedWeapons: rebindWeaponList(f.rangedWeapons, RANGED_WEAPONS),
+      abilities: rebindSimpleList(f.abilities, FIGHTER_ABILITIES, false),
+      leaderAbilities: rebindSimpleList(f.leaderAbilities, LEADER_ABILITIES, false),
+      spells: rebindSimpleList(f.spells, SPELLS, true),
+      equipment: rebindSimpleList(f.equipment, EQUIPMENT, false),
+      points: {}
+    };
+
+    const importedPoints = (f.points && typeof f.points === "object") ? f.points : {};
+    normalized.points.base = (typeof importedPoints.base === "number") ? importedPoints.base : 16;
+
+    recalcStatCostFor(normalized);
+    recalcWarlockCostFor(normalized);
+    recalcWeaponPointsFor(normalized);
+    recalcAbilityPointsFor(normalized);
+
+    return normalized;
+  }
+
+  function normalizePayloadWithCurrentRules(payload) {
+    if (!payload || typeof payload !== "object") return payload;
+    const cloned = deepClone(payload) || payload;
+    if (cloned.fighter && typeof cloned.fighter === "object") {
+      cloned.fighter = normalizeImportedFighter(cloned.fighter);
+      return cloned;
+    }
+    return { fighter: normalizeImportedFighter(cloned) };
+  }
+
+
+  // ---- Roster <-> Fighter Builder bridge (localStorage) ----
+  const TEAM_KEY = "mortalis_roster_team_state_v1";
+  const EDIT_KEY = "mortalis_roster_edit_ctx_v1";
+
+  // Change this filename to match where you place the Fighter Builder.
+  const FIGHTER_BUILDER_URL = "darkrealms_fighter_builder.html";
+
+  // ---- IndexedDB Portrait Store (avoids localStorage quota) ----
+  const PORTRAIT_DB_NAME = "warband_portraits_v1";
+  const PORTRAIT_STORE   = "portraits";
+
+  function openPortraitDB(){
+    return new Promise((resolve, reject) => {
+      try{
+        const req = indexedDB.open(PORTRAIT_DB_NAME, 1);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(PORTRAIT_STORE)) db.createObjectStore(PORTRAIT_STORE);
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      }catch(err){ reject(err); }
+    });
+  }
+  async function portraitDBSet(key, dataUrl){
+    if (!key) return;
+    const db = await openPortraitDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(PORTRAIT_STORE, "readwrite");
+      tx.objectStore(PORTRAIT_STORE).put(String(dataUrl || ""), String(key));
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+  async function portraitDBGet(key){
+    if (!key) return "";
+    const db = await openPortraitDB();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(PORTRAIT_STORE, "readonly");
+      const req = tx.objectStore(PORTRAIT_STORE).get(String(key));
+      req.onsuccess = () => resolve(String(req.result || ""));
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function ensurePortraitStoredOnFighter(fighter, fallbackKey){
+    try{
+      if (!fighter || typeof fighter !== "object") return;
+      const dataUrl = (typeof fighter.portraitDataUrl === "string") ? fighter.portraitDataUrl.trim() : "";
+      if (!dataUrl) return;
+      const key = (fighter.portraitKey && String(fighter.portraitKey).trim()) ? String(fighter.portraitKey).trim() : String(fallbackKey || "");
+      const finalKey = key || ("p_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16));
+      await portraitDBSet(finalKey, dataUrl);
+      fighter.portraitKey = finalKey;
+      fighter.portraitDataUrl = ""; // keep roster lean
+    }catch(_){}
+  }
+
+  async function attachPortraitForExport(fighter){
+    try{
+      if (!fighter || typeof fighter !== "object") return;
+      const has = (typeof fighter.portraitDataUrl === "string") ? fighter.portraitDataUrl.trim() : "";
+      if (has) return;
+      const key = (fighter.portraitKey && String(fighter.portraitKey).trim()) ? String(fighter.portraitKey).trim() : "";
+      if (!key) return;
+      const dataUrl = await portraitDBGet(key);
+      if (dataUrl) fighter.portraitDataUrl = dataUrl;
+    }catch(_){}
+  }
+
+
+    function saveTeamStateToBrowser(){
+    // Store a lean warband state in localStorage (no portrait bytes).
+    // Portraits live in IndexedDB under fighter.portraitKey.
+    function buildPayload(){
+      return {
+        version: 1,
+        savedAt: new Date().toISOString(),
+        warbandName: (warbandNameEl?.value || "").trim(),
+        limit: safeNumber(limitInput.value),
+        warband: warband.map(entry=>{
+          const cloned = JSON.parse(JSON.stringify(entry));
+          if (cloned?.data?.fighter){
+            cloned.data.fighter.portraitDataUrl = "";
+          }
+          return cloned;
+        })
+      };
+    }
+    try{
+      localStorage.setItem(TEAM_KEY, JSON.stringify(buildPayload()));
+    }catch(e){
+      // If even a lean payload fails (should be rare), do nothing rather than corrupting state.
+    }
+  }
+
+  function loadTeamStateFromBrowser(){
+    try{
+      const raw = localStorage.getItem(TEAM_KEY);
+      if (!raw) return false;
+      const obj = JSON.parse(raw);
+      if (!obj || typeof obj !== "object" || !Array.isArray(obj.warband)) return false;
+
+      // restore warband and normalize fighters against current Mortalis rules
+      warband = obj.warband.map(entry => {
+        if (!entry || typeof entry !== "object") return entry;
+        const cloned = deepClone(entry) || entry;
+        if (cloned.data) cloned.data = normalizePayloadWithCurrentRules(cloned.data);
+        return cloned;
+      });
+
+      // restore warband name / limit
+      if (typeof obj.warbandName === "string" && warbandNameEl){
+        warbandNameEl.value = obj.warbandName;
+        saveWarbandName(obj.warbandName);
+      }
+      if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  async function migrateExistingPortraitsToIndexedDB(){
+    // If an older version stored portraitDataUrl inside roster entries, move them into IndexedDB once.
+    try{
+      for (const entry of (warband || [])){
+        await ensurePortraitStoredOnFighter(entry?.data?.fighter, entry?.id);
+      }
+    }catch(_){}
+  }
+
+  function getReturnUrl(){
+    // Keep it simple: return to the current file without query/hash.
+    const href = (window.location && window.location.href) ? window.location.href : "";
+    return href.replace(/[#?].*$/, "");
+  }
+
+  function openFighterBuilder(mode, entryId){
+    try{
+      // persist current roster first
+      saveTeamStateToBrowser();
+
+      const ctx = {
+        version: 1,
+        mode: mode || (entryId ? "edit" : "new"),
+        entryId: entryId || null,
+        returnUrl: getReturnUrl(),
+        startedAt: new Date().toISOString()
+      };
+      localStorage.setItem(EDIT_KEY, JSON.stringify(ctx));
+    }catch(e){}
+
+    // navigate to fighter builder
+    window.location.href = FIGHTER_BUILDER_URL;
+  }
+
+  function startEditFighter(entryId){
+    openFighterBuilder(entryId ? "edit" : "new", entryId || null);
+  }
+
+  function startGenerateCard(entryId){
+    if (!entryId) return;
+    openFighterBuilder("card", entryId);
+  }
+
+
+  function uid() {
+    return "f_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+  }
+  function safeNumber(n) {
+    return Number.isFinite(+n) ? +n : 0;
+  }
+  function fmtPts(n) {
+    return `${safeNumber(n)} pts`;
+  }
+  function escapeHtml(s) {
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+
+  // ---- Warband Name ----
+  function loadWarbandName() {
+    try { return localStorage.getItem(WARBAND_KEY) || ""; }
+    catch { return ""; }
+  }
+  function saveWarbandName(name) {
+    try { localStorage.setItem(WARBAND_KEY, String(name || "")); }
+    catch {}
+  }
+
+  // ---- Fighter calculations & rendering ----
+  function calcFighterTotal(f) {
+    const p = f?.points;
+    if (!p || typeof p !== "object") return 0;
+    return Object.values(p).reduce((sum, v) => sum + safeNumber(v), 0);
+  }
+  function teamTotal() {
+    return warband.reduce((sum, entry) => sum + calcFighterTotal(entry.data.fighter), 0);
+  }
+
+  function detectGameApp(obj) {
+    const app = (obj?.app || "").toLowerCase();
+    if (app.includes("mortalis")) return "Mortalis";
+    if (app.includes("dark realms")) return "Dark Realms";
+    return obj?.app ? String(obj.app) : "Unknown";
+  }
+
+  function validateFighterJson(obj) {
+    if (!obj || typeof obj !== "object") return "Not an object.";
+    if (!obj.fighter || typeof obj.fighter !== "object") return "Missing 'fighter' object.";
+    if (typeof obj.fighter.name !== "string") return "Missing fighter.name.";
+    if (!obj.fighter.stats || typeof obj.fighter.stats !== "object") return "Missing fighter.stats.";
+    if (!obj.fighter.points || typeof obj.fighter.points !== "object") return "Missing fighter.points breakdown.";
+    return null;
+  }
 
   function weaponUpgradesText(w) {
     const ups = w?.upgrades;
@@ -1814,7 +1964,7 @@ button.pill.export-pill:hover{
 
   function render() {
     const total = teamTotal();
-    const count = team.length;
+    const count = warband.length;
     fighterCountEl.textContent = count;
     teamTotalEl.textContent = total;
 
@@ -1856,7 +2006,7 @@ button.pill.export-pill:hover{
       return `
         <div class="row">
           <div class="l">
-            <b>${escapeHtml(getDisplayName(w))}</b>
+            <b>${escapeHtml(w?.name ?? "Unnamed")}</b>
             ${smallLines}
           </div>
           <div class="r">${fmtPts(w?.points ?? 0)}</div>
@@ -1867,7 +2017,7 @@ button.pill.export-pill:hover{
     const simpleItem = (it) => `
       <div class="row">
         <div class="l">
-          <b>${escapeHtml(getDisplayName(it))}</b>
+          <b>${escapeHtml(it?.name ?? "Unnamed")}</b>
           ${it?.effect ? `<div class="small">${it.effect}</div>` : ""}
           ${typeof it?.cv === "number" ? `<div class="small muted">CV: ${escapeHtml(it.cv)}</div>` : ""}
         </div>
@@ -1875,7 +2025,7 @@ button.pill.export-pill:hover{
       </div>
     `;
 
-    listEl.innerHTML = team.map((entry) => {
+    listEl.innerHTML = warband.map((entry) => {
       const f = entry.data.fighter;
       const totalPts = calcFighterTotal(f);
       const appName = detectGameApp(entry.data);
@@ -1912,11 +2062,11 @@ button.pill.export-pill:hover{
               <div class="meta">Source: ${escapeHtml(entry.sourceFileName || "—")}</div>
             </div>
             <div class="right">
-              <div class="fighterActionsRow">
+              <div class="actionsRow">
                 <div class="costTag">${fmtPts(totalPts)}</div>
-                <button class="accent" data-action="card" data-id="${entry.id}">Generate Card</button>
+                <button class="accent2" data-action="card" data-id="${entry.id}">Generate/Print Card</button>
               </div>
-              <div class="fighterActionsRow">
+              <div class="actionsRow">
                 <button class="accent" data-action="edit" data-id="${entry.id}">Edit</button>
                 <button class="accent" data-action="dup" data-id="${entry.id}">Duplicate</button>
                 <button class="danger" data-action="remove" data-id="${entry.id}">Remove</button>
@@ -1925,7 +2075,7 @@ button.pill.export-pill:hover{
           </div>
 
           <details>
-            <summary>Show details</summary>
+            <summary>Show Profile</summary>
             <div class="body">
               <div class="section">
                 <h3>Stats</h3>
@@ -1984,10 +2134,10 @@ button.pill.export-pill:hover{
         const obj = JSON.parse(txt);
         const err = validateFighterJson(obj);
         if (err) { skipped++; continue; }
-                const id = uid();
-        obj.fighter = normalizeAndRecalcFighter(obj.fighter);
-        await ensurePortraitStoredOnFighter(obj?.fighter, id);
-        team.push({ id, sourceFileName: file.name, data: obj });
+        const normalized = normalizePayloadWithCurrentRules(obj);
+        const id = uid();
+        await ensurePortraitStoredOnFighter(normalized?.fighter, id);
+        warband.push({ id, sourceFileName: file.name, data: normalized });
         added++;
       } catch {
         skipped++;
@@ -2004,7 +2154,7 @@ button.pill.export-pill:hover{
   }
 
   function removeFighter(id) {
-    team = team.filter(x => x.id !== id);
+    warband = warband.filter(x => x.id !== id);
     // Persist roster in-browser (used by the Fighter Builder bridge)
     saveTeamStateToBrowser();
 
@@ -2012,13 +2162,13 @@ button.pill.export-pill:hover{
   }
 
   function duplicateFighter(id) {
-    const entry = team.find(x => x.id === id);
+    const entry = warband.find(x => x.id === id);
     if (!entry) return;
     const clone = JSON.parse(JSON.stringify(entry.data));
-    clone.fighter = normalizeAndRecalcFighter(clone.fighter);
     const name = clone?.fighter?.name || "Fighter";
     clone.fighter.name = name + " (Copy)";
-    team.push({ id: uid(), sourceFileName: entry.sourceFileName, data: clone });
+    const normalizedClone = normalizePayloadWithCurrentRules(clone);
+    warband.push({ id: uid(), sourceFileName: entry.sourceFileName, data: normalizedClone });
     // Persist roster in-browser (used by the Fighter Builder bridge)
     saveTeamStateToBrowser();
 
@@ -2027,7 +2177,7 @@ button.pill.export-pill:hover{
 
     async function exportTeam() {
     const exported = {
-      app: "Mortalis / Dark Realms Team Builder",
+      app: "Mortalis / Dark Realms Warband Builder",
       version: 1,
       savedAt: new Date().toISOString(),
       warbandName: (warbandNameEl?.value || "").trim(),
@@ -2035,9 +2185,8 @@ button.pill.export-pill:hover{
       fighters: []
     };
 
-    for (const entry of team){
+    for (const entry of warband){
       const data = JSON.parse(JSON.stringify(entry.data));
-      if (data?.fighter) data.fighter = normalizeAndRecalcFighter(data.fighter);
       // Re-attach portrait bytes only for exported file
       if (data?.fighter){
         await attachPortraitForExport(data.fighter);
@@ -2059,45 +2208,78 @@ button.pill.export-pill:hover{
     URL.revokeObjectURL(a.href);
     setStatus("Exported team_roster.json");
   }
+  function populatePrebuiltTeams() {
+    if (!prebuiltTeamSelect) return;
+    // Keep first placeholder option, then add configured warbands.
+    while (prebuiltTeamSelect.options.length > 1) {
+      prebuiltTeamSelect.remove(1);
+    }
+    for (const teamInfo of PREBUILT_TEAMS) {
+      const opt = document.createElement("option");
+      opt.value = teamInfo.url;
+      opt.textContent = teamInfo.label;
+      prebuiltTeamSelect.appendChild(opt);
+    }
+  }
 
+  async function importTeamObject(obj, sourceLabel) {
+    if (!obj || typeof obj !== "object" || !Array.isArray(obj.fighters)) {
+      setStatus("Not a valid warband file (missing fighters array).", true);
+      return false;
+    }
+
+    // Restore warband name if present
+    if (typeof obj.warbandName === "string" && warbandNameEl) {
+      warbandNameEl.value = obj.warbandName;
+      saveWarbandName(obj.warbandName);
+    }
+
+    // Restore limit if present (optional)
+    if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
+
+    const loaded = [];
+    for (const item of obj.fighters) {
+      const fighterFile = item?.fighterFile;
+      const err = validateFighterJson(fighterFile);
+      if (err) continue;
+      const normalized = normalizePayloadWithCurrentRules(fighterFile);
+      const id = uid();
+      await ensurePortraitStoredOnFighter(normalized?.fighter, id);
+      loaded.push({ id, sourceFileName: item?.sourceFileName || sourceLabel || "", data: normalized });
+    }
+
+    warband = loaded;
+    setStatus(`Imported warband: ${warband.length} fighter(s).`);
+    // Persist roster in-browser (used by the Fighter Builder bridge)
+    saveTeamStateToBrowser();
+
+    render();
+    return true;
+  }
 
   async function importTeamFile(file) {
     if (!file) return;
     try {
       const txt = await readFileAsText(file);
       const obj = JSON.parse(txt);
-      if (!obj || typeof obj !== "object" || !Array.isArray(obj.fighters)) {
-        setStatus("Not a valid team file (missing fighters array).", true);
-        return;
-      }
-
-      // Restore warband name if present
-      if (typeof obj.warbandName === "string" && warbandNameEl) {
-        warbandNameEl.value = obj.warbandName;
-        saveWarbandName(obj.warbandName);
-      }
-
-      // Restore limit if present (optional)
-      if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
-
-      const loaded = [];
-      for (const item of obj.fighters) {
-        const fighterFile = item?.fighterFile;
-        const err = validateFighterJson(fighterFile);
-        if (err) continue;
-                const id = uid();
-        fighterFile.fighter = normalizeAndRecalcFighter(fighterFile.fighter);
-        await ensurePortraitStoredOnFighter(fighterFile?.fighter, id);
-        loaded.push({ id, sourceFileName: item?.sourceFileName || "", data: fighterFile });
-      }
-      team = loaded;
-      setStatus(`Imported team: ${team.length} fighter(s).`);
-      // Persist roster in-browser (used by the Fighter Builder bridge)
-      saveTeamStateToBrowser();
-
-      render();
+      await importTeamObject(obj, file.name || "warband file");
     } catch (e) {
-      setStatus(`Failed importing team file: ${e?.message || e}`, true);
+      setStatus(`Failed importing warband file: ${e?.message || e}`, true);
+    }
+  }
+
+  async function importPrebuiltTeam(url) {
+    if (!url) return;
+    try {
+      setStatus("Loading prebuilt warband...");
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Could not load ${url} (${response.status})`);
+      }
+      const obj = await response.json();
+      await importTeamObject(obj, url.split("/").pop() || "prebuilt warband");
+    } catch (e) {
+      setStatus(`Failed loading prebuilt warband: ${e?.message || e}`, true);
     }
   }
 
@@ -2115,14 +2297,23 @@ button.pill.export-pill:hover{
     teamInput.value = "";
   });
 
+  if (prebuiltTeamSelect) {
+    prebuiltTeamSelect.addEventListener("change", async (e) => {
+      const url = e.target.value;
+      if (!url) return;
+      await importPrebuiltTeam(url);
+      prebuiltTeamSelect.value = "";
+    });
+  }
+
   exportBtn.addEventListener("click", async () => {
-    if (team.length === 0) return setStatus("Nothing to export.", true);
+    if (warband.length === 0) return setStatus("Nothing to export.", true);
     await exportTeam();
   });
 
   clearBtn.addEventListener("click", () => {
-    team = [];
-    setStatus("Cleared team.");
+    warband = [];
+    setStatus("Cleared warband.");
     // Persist roster in-browser (used by the Fighter Builder bridge)
     saveTeamStateToBrowser();
 
@@ -2140,8 +2331,8 @@ button.pill.export-pill:hover{
     if (!btn) return;
     const action = btn.getAttribute("data-action");
     const id = btn.getAttribute("data-id");
+    if (action === "card") startGenerateCard(id);
     if (action === "edit") startEditFighter(id);
-    if (action === "card") startEditFighter(id, { autoCard: true });
     if (action === "remove") removeFighter(id);
     if (action === "dup") duplicateFighter(id);
   });
@@ -2153,6 +2344,8 @@ button.pill.export-pill:hover{
     warbandNameEl.value = loadWarbandName();
     warbandNameEl.addEventListener("input", () => { saveWarbandName(warbandNameEl.value); saveTeamStateToBrowser(); });
   }
+
+  populatePrebuiltTeams();
 
   // Try to restore an in-browser roster (used by the Fighter Builder bridge)
   loadTeamStateFromBrowser();
