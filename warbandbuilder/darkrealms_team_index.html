@@ -1848,7 +1848,11 @@
         warbandNameEl.value = obj.warbandName;
         saveWarbandName(obj.warbandName);
       }
-      if (typeof obj.limit === "number") limitInput.value = String(Math.max(0, obj.limit));
+      // Migrate the old default Warband limit from 375 to 400.
+      // Leave deliberately customized limits untouched.
+      if (typeof obj.limit === "number") {
+        limitInput.value = String(obj.limit === 375 ? 400 : Math.max(0, obj.limit));
+      }
       return true;
     }catch(e){
       return false;
