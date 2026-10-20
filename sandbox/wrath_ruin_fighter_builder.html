@@ -6,7 +6,7 @@
   <script>
     /* Bump this number whenever you replace img/darkrealmstextureparchment.jpg,
        so browsers fetch the new texture instead of a cached copy. */
-    window.WR_TEXTURE_VERSION = "3";
+    window.WR_TEXTURE_VERSION = "2";
   </script>
 
   <style>
@@ -5027,7 +5027,11 @@ document.addEventListener("DOMContentLoaded", function () {
     padding-bottom: 10px;
   }
   .cc-sec{break-inside:auto; page-break-inside:auto; margin: 0 0 0.9em 0;}
-  .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;}
+  .cc-sec-title{font-weight:900; margin: 0 0 6px 0; color:#111; font-size:1.15em;
+    /* Indent the title so it starts where the bullet dots start. The dots move
+       as the text auto-scales (list indent is a fixed 18px, the dot scales with
+       the font), so the indent is a fixed part minus a font-relative part. */
+    padding-left: 14px;}
 
   .cc-sec + .cc-sec{
     border-top: 1px solid rgba(0,0,0,0.15);
