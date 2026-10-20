@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
  <title>Wrath & Ruin — Fighter Forge</title>
+  <script>
+    /* Bump this number whenever you replace img/darkrealmstextureparchment.jpg,
+       so browsers fetch the new texture instead of a cached copy. */
+    window.WR_TEXTURE_VERSION = "2";
+  </script>
 
   <style>
     * {
@@ -2220,7 +2225,7 @@ html += "</div>";
           var baseHref = (window.location && window.location.href) ? window.location.href : "";
           baseHref = baseHref.replace(/[#?].*$/, "");
           baseHref = baseHref.replace(/[^\/]*$/, "");
-var texUrl  = (new URL("./img/darkrealmstextureparchment.jpg", baseHref)).href;
+var texUrl  = (new URL("./img/darkrealmstextureparchment.jpg?v=" + (window.WR_TEXTURE_VERSION || "2"), baseHref)).href;
 
           // HP pips (rows of 15)
           var hpVal = Number(fighter.stats && fighter.stats.hp ? fighter.stats.hp : 0) || 0;
@@ -5254,7 +5259,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // base URLs for assets (same as existing builder approach)
       var baseHref = getBaseHref();
-var texUrl  = (new URL("./img/darkrealmstextureparchment.jpg", baseHref)).href;
+var texUrl  = (new URL("./img/darkrealmstextureparchment.jpg?v=" + (window.WR_TEXTURE_VERSION || "2"), baseHref)).href;
 
       // card
       var card = document.createElement("div");
