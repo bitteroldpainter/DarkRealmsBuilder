@@ -711,7 +711,7 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
       var STAT_CONFIG = [
         { key: "move",  label: "Move",  unit: '"', base: 6, min: 5, max: 8,  upCost: 4, downCost: 4, lowerIsBetter: false },
         { key: "def",   label: "DEF",   unit: "+", base: 9, min: 5, max: 11, upCost: 1, downCost: 1, lowerIsBetter: true  },
-        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 3,  upCost: 5, downCost: 5, lowerIsBetter: false },
+        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 3,  upCost: 7, downCost: 7, lowerIsBetter: false },
         { key: "hp",    label: "HP",    unit: "",  base: 7, min: 3, max: 99, upCost: 1, downCost: 1, lowerIsBetter: false },
         { key: "atk",   label: "ATK",   unit: "",  base: 3, min: 3, max: 5,  upCost: 2, downCost: 0, lowerIsBetter: false },
         { key: "fight", label: "Fight", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  },
@@ -737,7 +737,49 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
         }
       }
       // Pairs of abilities that cannot be taken together
-      var EXCLUSIVE_ABILITIES = [["reanimation", "endlessHorde"]];
+      var EXCLUSIVE_ABILITIES = [["reanimation", "endlessHorde"], ["patientandReactive", "hyperAggressive"]];
+      // Sustained Fire costs the same as the Fighter's most expensive ranged weapon
+      // Gunslinger costs the same as the Fighter's most expensive Pistol (Pistols/Grenades category)
+      function maxPistolWeaponCost (f) {
+        var cat = null, m = 0, rw = (f && f.rangedWeapons) || [];
+        for (var ci = 0; ci < RANGED_CATEGORIES.length; ci++) if (RANGED_CATEGORIES[ci].key === "pistols") cat = RANGED_CATEGORIES[ci];
+        for (var i = 0; i < rw.length; i++) {
+          if (!rw[i] || !cat || cat.ids.indexOf(rw[i].id) === -1) continue;
+          var p = Number(rw[i].points) || 0;
+          if (p > m) m = p;
+        }
+        return m;
+      }
+      function maxRangedWeaponCost (f) {
+        var m = 0, rw = (f && f.rangedWeapons) || [];
+        for (var i = 0; i < rw.length; i++) {
+          var p = Number(rw[i].points) || 0;
+          if (p > m) m = p;
+        }
+        return m;
+      }
+      // Old "Hyper Aggressive" (shoot OR fight twice): Fighters with a Pistol/Light/Medium ranged
+      // weapon become Sustained Fire, all others become Aggressive (the melee half).
+      function isDoubleShotWeaponId (id) {
+        for (var i = 0; i < RANGED_CATEGORIES.length; i++) {
+          var c = RANGED_CATEGORIES[i];
+          if ((c.key === "pistols" || c.key === "light") && c.ids.indexOf(id) !== -1) return true;
+        }
+        return false;
+      }
+      function migrateLegacyAbilities (imp) {
+        if (!imp || !Array.isArray(imp.abilities)) return;
+        var eligible = false, rw = imp.rangedWeapons || [];
+        for (var i = 0; i < rw.length; i++) if (rw[i] && isDoubleShotWeaponId(rw[i].id)) eligible = true;
+        for (var k = 0; k < imp.abilities.length; k++) {
+          var ab = imp.abilities[k];
+          if (!ab) continue;
+          if (ab.name === "Hyper Aggressive" || (ab.id === "hyperAggressive" && ab.name == null)) {
+            if (eligible) { ab.id = "hyperAggressive"; ab.name = "Sustained Fire"; }
+            else { ab.id = "aggressive"; ab.name = "Aggressive"; }
+          }
+        }
+      }
       function findExclusiveConflict (list, item) {
         var id = item && item.id;
         for (var pi = 0; pi < EXCLUSIVE_ABILITIES.length; pi++) {
@@ -1129,19 +1171,26 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
     id: "fast",
     name: "Fast",
     category: "Mobility",
-    points: 2,
+    points: 3,
     effect:
       "This Fighter may perform a free Dash action during its activation (no AP cost)."
   },
   {
     id: "hyperAggressive",
-    name: "Hyper Aggressive",
+    name: "Sustained Fire",
     category: "Offensive",
-    points: "4 + 6 per AP above 2",
-    dynamicType: "apScaled",
-    dynamicFactor: 4,
+    points: "= priciest Ranged Weapon",
+    dynamicType: "maxRanged",
     effect:
-      "This Fighter's second Shoot action (Pistols/Grenades/Light/Medium only) in an activation costs 1 AP instead of 2."
+      "This Fighter may perform 2 Shooting actions (Pistols/Light/Medium only) during its activation, but if it does, its ranged weapons gain Heavy (Dash). (Max. 1 instance of this ability per 3 models in the Warband.) Cost equals this Fighter’s most expensive Ranged Weapon. Cannot be combined with Patient and Reactive."
+  },
+  {
+    id: "aggressive",
+    name: "Aggressive",
+    category: "Offensive",
+    points: 2,
+    effect:
+      "This Fighter may perform 2 Fight actions during its activation."
   },
   {
     id: "gestaltMind",
@@ -1271,9 +1320,10 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
     id: "gunslinger",
     name: "Gunslinger",
     category: "Offensive",
-    points: 2,
+    points: "= priciest Pistol",
+    dynamicType: "maxPistol",
     effect:
-      "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
+      "If the Fighter can make multiple Shoot Actions with pistols in the same Activation, the second Shoot Action made with a pistol on their Activation may be for free."
   },
   {
     id: "headTaker",
@@ -1313,7 +1363,7 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
     id: "agent",
     name: "Agent",
     category: "Utility",
-    points: 2,
+    points: 3,
     effect:
       "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
   },  
@@ -1353,9 +1403,9 @@ input[type=text],input[type=number],select {color:var(--wr-ink);background:#1416
     id: "patientandReactive",
     name: "Patient and Reactive",
     category: "Utility",
-    points: 10,
+    points: 17,
     effect:
-      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. May not Reposition more than the Fighters Move Stat + 4" per Turn.'
+      'This Fighter may make two activations per turn and split its AP between those activations. For all intents and purposes, this counts as two separate activations. Additionally, this Fighter can take any one action for free once each turn, but it may not perform any other free actions outside of Hide. This Fighter may not Reposition more than its Move Stat + 4" per Turn. Cannot be combined with Sustained Fire.'
   },
   {
     id: "finalDefiance",
@@ -2062,11 +2112,15 @@ function promptRename(item, fallbackLabel){
       function recalcPercentTotal () {
         var abl = fighter.abilities || [];
         var others = 0, pctItems = [];
+        for (var mi = 0; mi < abl.length; mi++) {
+          if (abl[mi].dynamicType === "maxRanged") abl[mi].points = maxRangedWeaponCost(fighter);
+          if (abl[mi].dynamicType === "maxPistol") abl[mi].points = maxPistolWeaponCost(fighter);
+        }
         for (var ai = 0; ai < abl.length; ai++) {
           if (abl[ai].dynamicType === "percentTotal") pctItems.push(abl[ai]);
           else others += Number(abl[ai].points) || 0;
         }
-        if (!pctItems.length) return;
+        if (!pctItems.length) { fighter.points.abilities = others; return; }
         var pp = fighter.points;
         var rest = (pp.base || 0) + (pp.stats || 0) + (pp.warlock || 0) + (pp.ccWeapons || 0) +
                    (pp.rangedWeapons || 0) + others + (pp.leaderAbilities || 0) + (pp.spells || 0) + (pp.equipment || 0);
@@ -2655,7 +2709,7 @@ window.copyFighterText = function () {
 
         // Boost (x) stacks like Reroll (x); "Boost (x) Cover" is a different rule and is left alone.
         function applyBoost (text) {
-          if (!up.boost) return text;
+          return text; // Boost (1) upgrade removed
           var m = /Boost\s*\((\d+)\)(?!\s*Cover)/i.exec(text);
           if (m) return text.replace(m[0], "Boost (" + (parseInt(m[1], 10) + 1) + ")");
           return text + (text ? ", " : "") + "Boost (1)";
@@ -2835,7 +2889,6 @@ var upBtn = pill.querySelector(".stat-up");
         if (weapon.upgrades.cursed)        count++;
         if (weapon.upgrades.truestrike)    count++;
         if (weapon.upgrades.masterCrafted) count++;
-        if (weapon.upgrades.boost) count++;
         if (count === 0) return 0;
         return 2 + (count - 1) * 4; // first = 2, others = 4
       }
@@ -2864,6 +2917,7 @@ var upBtn = pill.querySelector(".stat-up");
 
         fighter.points.ccWeapons = sumCC;
         fighter.points.rangedWeapons = sumR;
+        if (typeof recalcAbilityPoints === "function") recalcAbilityPoints();
       }
 
       // ABILITY / SPELL / EQUIPMENT COST
@@ -2890,6 +2944,12 @@ var upBtn = pill.querySelector(".stat-up");
             // base cost + 6 per AP above 2
             var apNow = fighter.stats.ap || 2;
             p = (ab.dynamicFactor || 0) + 6 * Math.max(0, apNow - 2);
+            ab.points = p;
+          } else if (ab.dynamicType === "maxRanged") {
+            p = maxRangedWeaponCost(fighter);
+            ab.points = p;
+          } else if (ab.dynamicType === "maxPistol") {
+            p = maxPistolWeaponCost(fighter);
             ab.points = p;
           } else if (ab.dynamicType === "percentTotal") {
             p = 0; // filled in by recalcPercentTotal() once everything else is known
@@ -3237,7 +3297,6 @@ for (i = 0; i < renames.length; i++) {
                 + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="cursed"' + (wc.upgrades && wc.upgrades.cursed ? ' checked' : '') + '>Add "MW (2)"</label>'
                   + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="truestrike"' + (wc.upgrades && wc.upgrades.truestrike ? ' checked' : '') + '>Add "Reroll (1)"</label>'
                 + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="masterCrafted"' + (wc.upgrades && wc.upgrades.masterCrafted ? ' checked' : '') + '>Add "Piercing (-2)"</label>'
-                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="boost"' + (wc.upgrades && wc.upgrades.boost ? ' checked' : '') + '>Add "Boost (1)"</label>'
                 + '  </div>'
                 + '  <div class="item-footer">'
                 + '    <div></div>'
@@ -3442,7 +3501,6 @@ for (i = 0; i < renames.length; i++) {
                 + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="cursed"' + (rw.upgrades && rw.upgrades.cursed ? ' checked' : '') + '>Add "MW (2)"</label>'
                    + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="truestrike"' + (rw.upgrades && rw.upgrades.truestrike ? ' checked' : '') + '>Add "Reroll (1)"</label>'
                 + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="masterCrafted"' + (rw.upgrades && rw.upgrades.masterCrafted ? ' checked' : '') + '>Add "Piercing (-2)"</label>'
-                + '    <label><input type="checkbox" class="upgrade-toggle" data-upg="boost"' + (rw.upgrades && rw.upgrades.boost ? ' checked' : '') + '>Add "Boost (1)"</label>'
                 + '  </div>'
                 + '  <div class="item-footer">'
                 + '    <div></div>'
@@ -3689,7 +3747,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
             cursed: !!(upgrades && upgrades.cursed),
             truestrike: !!(upgrades && upgrades.truestrike),
             masterCrafted: !!(upgrades && upgrades.masterCrafted),
-            boost: !!(upgrades && upgrades.boost)
+            boost: false /* Boost (1) upgrade removed */
           };
         }
 
@@ -3820,6 +3878,7 @@ var upgToggles = container.getElementsByClassName("upgrade-toggle");
         clampStatsToConfig(fighter.stats);
 
         // Lists: rebuild from CURRENT in-code libraries so updated costs/rules are used
+        migrateLegacyAbilities(imported);
         fighter.ccWeapons      = rebindWeaponList(imported.ccWeapons, CC_WEAPONS);
         fighter.rangedWeapons  = rebindWeaponList(imported.rangedWeapons, RANGED_WEAPONS);
         fighter.abilities      = rebindSimpleList(imported.abilities, FIGHTER_ABILITIES, false);

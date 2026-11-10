@@ -471,7 +471,7 @@ body {background:#17191b!important;}
   var STAT_CONFIG = [
         { key: "move",  label: "Move",  unit: '"', base: 6, min: 5, max: 8,  upCost: 4, downCost: 4, lowerIsBetter: false },
         { key: "def",   label: "DEF",   unit: "+", base: 9, min: 5, max: 11, upCost: 1, downCost: 1, lowerIsBetter: true  },
-        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 3,  upCost: 5, downCost: 5, lowerIsBetter: false },
+        { key: "ap",    label: "AP",    unit: "",  base: 2, min: 2, max: 3,  upCost: 7, downCost: 7, lowerIsBetter: false },
         { key: "hp",    label: "HP",    unit: "",  base: 7, min: 3, max: 99, upCost: 1, downCost: 1, lowerIsBetter: false },
         { key: "atk",   label: "ATK",   unit: "",  base: 3, min: 3, max: 5,  upCost: 2, downCost: 0, lowerIsBetter: false },
         { key: "fight", label: "Fight", unit: "+", base: 7, min: 5, max: 11, upCost: 2, downCost: 1, lowerIsBetter: true  },
@@ -762,19 +762,26 @@ body {background:#17191b!important;}
     id: "fast",
     name: "Fast",
     category: "Mobility",
-    points: 2,
+    points: 3,
     effect:
       "This Fighter may perform a free Dash action during its activation (no AP cost)."
   },
   {
     id: "hyperAggressive",
-    name: "Hyper Aggressive",
+    name: "Sustained Fire",
     category: "Offensive",
-    points: "4 + 6 per AP above 2",
-    dynamicType: "apScaled",
-    dynamicFactor: 4,
+    points: "= priciest Ranged Weapon",
+    dynamicType: "maxRanged",
     effect:
-      "This Fighter's second Shoot action (Pistols/Grenades/Light/Medium only) in an activation costs 1 AP instead of 2."
+      "This Fighter may perform 2 Shooting actions (Pistols/Light/Medium only) during its activation, but if it does, its ranged weapons gain Heavy (Dash). (Max. 1 instance of this ability per 3 models in the Warband.) Cost equals this Fighter’s most expensive Ranged Weapon. Cannot be combined with Patient and Reactive."
+  },
+  {
+    id: "aggressive",
+    name: "Aggressive",
+    category: "Offensive",
+    points: 2,
+    effect:
+      "This Fighter may perform 2 Fight actions during its activation."
   },
   {
     id: "gestaltMind",
@@ -904,9 +911,10 @@ body {background:#17191b!important;}
     id: "gunslinger",
     name: "Gunslinger",
     category: "Offensive",
-    points: 2,
+    points: "= priciest Pistol",
+    dynamicType: "maxPistol",
     effect:
-      "1 AP: If this Fighter has not yet used a Shoot action this activation, it may make two free Shooting actions with Pistol weapons."
+      "If the Fighter can make multiple Shoot Actions with pistols in the same Activation, the second Shoot Action made with a pistol on their Activation may be for free."
   },
   {
     id: "headTaker",
@@ -946,7 +954,7 @@ body {background:#17191b!important;}
     id: "agent",
     name: "Agent",
     category: "Utility",
-    points: 2,
+    points: 3,
     effect:
       "The AP cost of all Interact actions for this Fighter is reduced by 1 (to a minimum of 0)."
   },  
@@ -986,9 +994,9 @@ body {background:#17191b!important;}
     id: "patientandReactive",
     name: "Patient and Reactive",
     category: "Utility",
-    points: 10,
+    points: 17,
     effect:
-      'This Fighter may make two activations per turn, and split his AP between 2 those activations. For all intents and purposes, this counts as two separate activations. May not Reposition more than the Fighters Move Stat + 4" per Turn.'
+      'This Fighter may make two activations per turn and split its AP between those activations. For all intents and purposes, this counts as two separate activations. Additionally, this Fighter can take any one action for free once each turn, but it may not perform any other free actions outside of Hide. This Fighter may not Reposition more than its Move Stat + 4" per Turn. Cannot be combined with Sustained Fire.'
   },
   {
     id: "finalDefiance",
@@ -1610,7 +1618,7 @@ body {background:#17191b!important;}
       cursed: !!(upgrades && upgrades.cursed),
       truestrike: !!(upgrades && upgrades.truestrike),
       masterCrafted: !!(upgrades && upgrades.masterCrafted),
-      boost: !!(upgrades && upgrades.boost)
+      boost: false /* Boost (1) upgrade removed */
     };
   }
 
@@ -1731,6 +1739,78 @@ body {background:#17191b!important;}
     }
   }
 
+var RANGED_CATEGORIES = [
+        { key: "pistols", label: "Pistols/Grenades", ids: [
+          "blackpowderPistol",
+          "handCrossbow",
+          "throwingKnives",
+          "thrownGlassOrbExplosive",
+          "thrownGlassOrbFire",
+          "thrownGlassOrbPoison",
+          "thrownRock",
+          "thrownSpear"
+        ]},
+        { key: "light", label: "Light/Medium Ranged", ids: [
+          "bow",
+          "crossbow",
+          "sling",
+          "blunderbuss",
+          "flamespurter"
+        ]},
+        { key: "special", label: "Special", ids: [
+          "breathWeaponBeasts",
+          "blackpowderRifle"
+        ]},
+        { key: "heavy", label: "Heavy", ids: [
+          "longBow",
+          "repeaterBlackpowderGun",
+          "repeatingCrossbow",
+          "rocketGun"
+        ]}
+      ];
+  const ABILITY_EXCLUSIONS = [["reanimation", "endlessHorde"], ["patientandReactive", "hyperAggressive"]];
+  function abilityConflictMessage(id, list) {
+    for (const pair of ABILITY_EXCLUSIONS) {
+      const k = pair.indexOf(id);
+      if (k === -1) continue;
+      const other = (list || []).find(a => a && a.id === pair[1 - k]);
+      if (other) {
+        const me = FIGHTER_ABILITIES.find(a => a.id === id);
+        return (me ? me.name : id) + " cannot be combined with " + (other.name || pair[1 - k]) + ".";
+      }
+    }
+    return null;
+  }
+  // Gunslinger costs the same as the Fighter's most expensive Pistol (Pistols/Grenades category)
+  function maxPistolWeaponCost (f) {
+    var cat = null, m = 0, rw = (f && f.rangedWeapons) || [];
+    for (var ci = 0; ci < RANGED_CATEGORIES.length; ci++) if (RANGED_CATEGORIES[ci].key === "pistols") cat = RANGED_CATEGORIES[ci];
+    for (var i = 0; i < rw.length; i++) {
+      if (!rw[i] || !cat || cat.ids.indexOf(rw[i].id) === -1) continue;
+      var p = Number(rw[i].points) || 0;
+      if (p > m) m = p;
+    }
+    return m;
+  }
+  function maxRangedWeaponCost(f) {
+    return Math.max(0, ...((f && f.rangedWeapons) || []).map(w => Number(w.points) || 0));
+  }
+  function isDoubleShotWeaponId(id) {
+    return RANGED_CATEGORIES.some(c => (c.key === "pistols" || c.key === "light") && c.ids.includes(id));
+  }
+  // Old "Hyper Aggressive" -> Sustained Fire (has a Pistol/Light/Medium weapon) or Aggressive
+  function migrateLegacyAbilities(imp) {
+    if (!imp || !Array.isArray(imp.abilities)) return;
+    const eligible = (imp.rangedWeapons || []).some(w => w && isDoubleShotWeaponId(w.id));
+    for (const ab of imp.abilities) {
+      if (!ab) continue;
+      if (ab.name === "Hyper Aggressive" || (ab.id === "hyperAggressive" && ab.name == null)) {
+        if (eligible) { ab.id = "hyperAggressive"; ab.name = "Sustained Fire"; }
+        else { ab.id = "aggressive"; ab.name = "Aggressive"; }
+      }
+    }
+  }
+
   function computeWeaponUpgradeCostFor(weapon) {
     if (!weapon || !weapon.upgrades) return 0;
     let count = 0;
@@ -1739,7 +1819,6 @@ body {background:#17191b!important;}
     if (weapon.upgrades.cursed) count++;
     if (weapon.upgrades.truestrike) count++;
     if (weapon.upgrades.masterCrafted) count++;
-    if (weapon.upgrades.boost) count++;
     if (count === 0) return 0;
     return 2 + (count - 1) * 4;
   }
@@ -1812,6 +1891,12 @@ body {background:#17191b!important;}
       } else if (ab.dynamicType === "apScaled") {
         p = (ab.dynamicFactor || 0) + 6 * Math.max(0, (f?.stats?.ap || 2) - 2);
         ab.points = p;
+      } else if (ab.dynamicType === "maxRanged") {
+        p = maxRangedWeaponCost(f);
+        ab.points = p;
+          } else if (ab.dynamicType === "maxPistol") {
+            p = maxPistolWeaponCost(f);
+            ab.points = p;
       } else if (ab.dynamicType === "percentTotal") {
         p = 0; // filled in below once everything else is known
       } else {
@@ -1858,6 +1943,8 @@ body {background:#17191b!important;}
 
   function normalizeImportedFighter(f) {
     if (!f || typeof f !== "object") return f;
+    f = deepClone(f) || f;
+    migrateLegacyAbilities(f);
 
     const normalized = {
       name: f.name || "",
@@ -2146,6 +2233,26 @@ body {background:#17191b!important;}
         : `<span class="ok">Remaining: ${remaining} pts</span>`;
     } else {
       limitNotice.textContent = "Limit disabled (0).";
+    }
+
+    // Rules checks
+    const issues = [];
+    let sfCount = 0;
+    for (const entry of warband) {
+      const fx = entry?.data?.fighter;
+      if (!fx) continue;
+      const abs = fx.abilities || [];
+      sfCount += abs.filter(a => a && a.id === "hyperAggressive").length;
+      for (const a of abs) {
+        const msg = a && abilityConflictMessage(a.id, abs.filter(b => b !== a));
+        const line = (fx.name || "Unnamed") + ": " + msg;
+        if (msg && !issues.includes(line)) issues.push(line);
+      }
+    }
+    const sfMax = Math.floor(count / 3);
+    if (sfCount > sfMax) issues.push(`Sustained Fire: ${sfCount} taken, max ${sfMax} for ${count} Fighters (1 per 3).`);
+    if (issues.length) {
+      limitNotice.innerHTML += issues.map(m => `<br><span class="error">${escapeHtml(m)}</span>`).join("");
     }
 
     if (count === 0) {
